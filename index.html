@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Harsh Ranjan — Computer Engineer</title>
+<meta name="description" content="Harsh Ranjan’s engineering portfolio. Technical project stories in residential energy systems, FPGA design, concurrent C programming and applied machine learning.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#E9EDF0;
+  --panel:#FFFFFF;
+  --ink:#0F1A22;
+  --ink-2:#3E515E;
+  --ink-3:#6B7C88;
+  --amber:#C9860F;
+  --teal:#125C55;
+  --line:rgba(15,26,34,.16);
+  --line-soft:rgba(15,26,34,.08);
+  --measure:66ch;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4,.ui{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-variant-numeric:tabular-nums}
+a{color:inherit}
+.wrap{width:min(1120px,100% - 3rem);margin-inline:auto}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:20;
+  background:rgba(233,237,240,.92);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid var(--line-soft);
+}
+.bar__in{display:flex;align-items:baseline;gap:1.5rem;padding:.7rem 0}
+.bar__name{font-family:Archivo;font-weight:600;letter-spacing:-.01em;font-size:.98rem}
+.bar__nav{margin-left:auto;display:flex;gap:1.35rem;flex-wrap:wrap}
+.bar__nav a{
+  font-family:Archivo;font-size:.86rem;color:var(--ink-2);
+  text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent;
+}
+.bar__nav a:hover,.bar__nav a:focus-visible{color:var(--ink);border-bottom-color:var(--amber)}
+
+/* ---------- hero ---------- */
+.hero{
+  background:var(--ink);
+  color:#DCE4E9;
+  padding:4.4rem 0 2.6rem;
+  position:relative;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+  background-size:34px 34px;
+  mask-image:linear-gradient(180deg,transparent,#000 25%,#000 70%,transparent);
+}
+.hero__in{position:relative}
+.hero h1{
+  font-size:clamp(2.6rem,7.4vw,5.1rem);
+  line-height:.94;letter-spacing:-.035em;font-weight:600;
+  margin:0 0 1rem;color:#FFF;
+}
+.hero__lede{
+  font-size:clamp(1.05rem,1.9vw,1.28rem);
+  max-width:44ch;margin:0;color:#B9C6CE;
+}
+.hero__meta{
+  margin:1.9rem 0 0;display:flex;gap:1.4rem 2.6rem;flex-wrap:wrap;
+  font-family:Archivo;font-size:.84rem;color:#7F919D;
+}
+.hero__meta strong{color:#DCE4E9;font-weight:500;display:block}
+.trace{margin-top:2.6rem}
+.trace svg{width:100%;height:auto;display:block}
+.trace__path{
+  fill:none;stroke:var(--amber);stroke-width:2;
+  stroke-linejoin:round;stroke-linecap:round;
+  stroke-dasharray:9000;stroke-dashoffset:9000;
+  animation:draw 2.6s cubic-bezier(.32,.72,.3,1) .25s forwards;
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.trace__cap{
+  margin:.75rem 0 0;font-family:Archivo;font-size:.8rem;color:#7F919D;max-width:60ch;
+}
+@media (prefers-reduced-motion:reduce){
+  .trace__path{animation:none;stroke-dashoffset:0}
+  html{scroll-behavior:auto}
+}
+
+/* ---------- sections ---------- */
+section{padding:4.2rem 0}
+.head{
+  display:flex;align-items:baseline;gap:1rem;
+  border-bottom:2px solid var(--ink);padding-bottom:.55rem;margin-bottom:2.4rem;
+}
+.head h2{font-size:1.35rem;font-weight:600;letter-spacing:-.02em;margin:0}
+.head span{font-family:Archivo;font-size:.82rem;color:var(--ink-3);margin-left:auto}
+p{max-width:var(--measure)}
+
+/* ---------- projects ---------- */
+.project{
+  background:var(--panel);
+  border:1px solid var(--line-soft);
+  border-top:2px solid var(--ink);
+  padding:1.9rem;
+  margin-bottom:1.5rem;
+  display:grid;grid-template-columns:minmax(0,1fr) 19rem;gap:2.4rem;
+}
+.project--live{border-top-color:var(--amber)}
+.project h3{
+  font-size:1.42rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .3rem;
+}
+.project__kicker{
+  font-family:Archivo;font-size:.85rem;color:var(--ink-3);
+  margin:0 0 1.1rem;max-width:none;
+}
+.project p{margin:0 0 .95rem}
+.project p:last-child{margin-bottom:0}
+
+.status{
+  margin:1.2rem 0 0;padding:0;list-style:none;
+  font-family:Archivo;font-size:.86rem;line-height:1.5;
+}
+.status li{display:flex;gap:.7rem;padding:.42rem 0;border-top:1px solid var(--line-soft)}
+.status b{font-weight:500;color:var(--ink-3);flex:0 0 4.6rem}
+.tools{margin:1.2rem 0 0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:.35rem}
+.tools li{
+  font-family:Archivo;font-size:.76rem;color:var(--ink-2);
+  border:1px solid var(--line);padding:.16rem .5rem;
+}
+
+/* ---------- experience ---------- */
+.role{
+  display:grid;grid-template-columns:11rem minmax(0,1fr);gap:2rem;
+  padding:1.5rem 0;border-top:1px solid var(--line);
+}
+.role:last-child{border-bottom:1px solid var(--line)}
+.role__when{font-family:Archivo;font-size:.85rem;color:var(--ink-3)}
+.role h3{font-size:1.08rem;font-weight:600;margin:0 0 .15rem}
+.role__org{font-family:Archivo;font-size:.86rem;color:var(--ink-3);margin:0 0 .6rem}
+.role p{margin:0}
+
+/* ---------- skills ---------- */
+.skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:1.6rem}
+.skills h3{
+  font-family:Archivo;font-size:.88rem;font-weight:600;margin:0 0 .55rem;
+  padding-bottom:.4rem;border-bottom:1px solid var(--line);
+}
+.skills p{font-size:.94rem;color:var(--ink-2);margin:0;max-width:none}
+
+/* ---------- education + contact ---------- */
+.edu{display:grid;grid-template-columns:repeat(auto-fit,minmax(19rem,1fr));gap:1.6rem}
+.edu article{background:var(--panel);border:1px solid var(--line-soft);border-left:2px solid var(--teal);padding:1.4rem}
+.edu h3{font-size:1.05rem;margin:0 0 .2rem}
+.edu .role__when{margin-bottom:.6rem}
+.edu p{font-size:.94rem;margin:0;max-width:none;color:var(--ink-2)}
+
+.contact{background:var(--ink);color:#B9C6CE;margin-top:2rem}
+.contact h2{color:#FFF;font-size:clamp(1.7rem,4vw,2.6rem);letter-spacing:-.03em;margin:0 0 .8rem;font-weight:600}
+.contact p{color:#B9C6CE;max-width:52ch}
+.contact__links{margin:2rem 0 0;display:flex;gap:2rem;flex-wrap:wrap;font-family:Archivo;font-size:.95rem}
+.contact__links a{color:#FFF;text-decoration:none;border-bottom:1px solid var(--amber);padding-bottom:2px}
+.contact__links a:hover{color:var(--amber)}
+footer{padding:1.6rem 0;font-family:Archivo;font-size:.78rem;color:var(--ink-3)}
+
+:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+@media (max-width:860px){
+  .project{grid-template-columns:1fr;gap:1.6rem;padding:1.4rem}
+  .role{grid-template-columns:1fr;gap:.5rem}
+  .hero{padding-top:3rem}
+}
+/* Responsive and accessible finishing touches */
+:root{--ink-3:#526672}
+section[id]{scroll-margin-top:6rem}
+.skip-link{position:fixed;top:.5rem;left:1rem;z-index:100;padding:.6rem 1rem;background:#fff;color:var(--ink);transform:translateY(-160%);font-family:Archivo,Arial,sans-serif}
+.skip-link:focus{transform:translateY(0)}
+.hero h1{line-height:1.05}
+.hero__meta,.trace__cap{color:#A3B3BE}
+.bar__nav a,.hero__meta,.project__kicker,.status,.role__when,.role__org,.skills h3{font-size:.875rem}
+.tools li,.trace__cap,.head span,footer{font-size:.8125rem}
+.edu{grid-template-columns:repeat(auto-fit,minmax(min(100%,19rem),1fr))}
+.skills{grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr))}
+.contact__links a{overflow-wrap:anywhere}
+@media(max-width:600px){
+ .wrap{width:calc(100% - 2rem)}
+ .bar__in{flex-direction:column;gap:.2rem;padding:.5rem 0}
+ .bar__nav{margin-left:0;gap:0 .9rem;width:100%}
+ .bar__nav a{display:inline-flex;align-items:center;min-height:44px}
+ section{padding:2.8rem 0}
+ section[id]{scroll-margin-top:8rem}
+ .head{flex-wrap:wrap;gap:.25rem .75rem;margin-bottom:1.5rem}
+ .head span{margin-left:0}
+ .hero__meta{gap:1rem 2rem}
+ .project{padding:1.2rem}
+ .project h3{font-size:1.3rem;line-height:1.3}
+ .contact__links{gap:1.2rem}
+}
+
+.project__state{font-size:.8125rem;color:var(--teal);font-weight:500;letter-spacing:.015em;margin-bottom:.65rem!important}
+.project__result{border-top:2px solid var(--teal);padding-top:1rem;display:grid;gap:.35rem;font-family:Archivo,Arial,sans-serif}
+.project__result strong{font-size:clamp(1.4rem,2.7vw,2rem);line-height:1.15;font-weight:600;letter-spacing:-.03em;overflow-wrap:anywhere}
+.project__result span{font-size:.875rem;line-height:1.5;color:var(--ink-2)}
+.status li{display:block;padding:.7rem 0}
+.status b{display:block;color:var(--ink);font-weight:600;margin-bottom:.2rem}
+.project__details{border-top:1px solid var(--line);margin-top:1.3rem;padding-top:.8rem}
+.project__details summary{font-family:Archivo,Arial,sans-serif;font-size:.9375rem;font-weight:500;cursor:pointer;min-height:44px;line-height:1.6}
+.project__details[open] summary{margin-bottom:.5rem}
+.project__details p{font-size:1rem}
+article[id]{scroll-margin-top:7rem}
+@media(min-width:861px){.project{grid-template-columns:minmax(0,1fr) 17rem}}
+
+/* Motion-led engineering portfolio */
+:root{--paper:#0d0e12;--panel:#12141b;--ink:#f0f2f7;--ink-2:#bdc2cf;--ink-3:#9aa3b5;--teal:#82aaff;--amber:#82aaff;--line:rgba(224,233,255,.19);--line-soft:rgba(224,233,255,.09)}
+body{font-family:Archivo,Arial,sans-serif;font-size:16px;line-height:1.7}
+.wrap{width:min(1180px,100% - 4rem)}
+.bar{background:rgba(13,14,18,.92);backdrop-filter:blur(16px)}
+.bar__in{padding:1rem 0}.bar__name{font-size:1rem}.bar__nav a{color:var(--ink-2);font-size:.875rem}
+.hero{background:var(--paper);padding:5rem 0 4rem;min-height:690px;border-bottom:1px solid var(--line-soft)}
+.hero::before{display:none}.hero__in{isolation:isolate}
+.hero h1{font-size:clamp(4.3rem,11vw,9rem);letter-spacing:-.075em;line-height:.92;margin:1.7rem 0 2rem;max-width:8ch}
+.hero__period{color:var(--teal)}.hero__eyebrow{font-size:.75rem;letter-spacing:.16em;color:var(--ink-3);margin:0}
+.hero__lede{font-family:Archivo,Arial,sans-serif;font-size:clamp(1rem,1.6vw,1.2rem);line-height:1.65;max-width:38ch;color:var(--ink-2)}
+.hero__meta{margin-top:2.5rem;gap:1rem 2rem;max-width:660px;position:relative}.hero__meta strong{color:var(--ink)}
+.motion-field{position:absolute;right:-1rem;top:0;width:56%;height:470px;z-index:-1;pointer-events:none;opacity:.8}
+.motion-field canvas{width:100%;height:100%;display:block}
+.motion-toggle{position:absolute;right:0;bottom:1rem;background:transparent;border:1px solid var(--line);border-radius:99px;color:var(--ink-2);padding:.6rem 1rem;cursor:pointer;font-size:.8125rem;min-height:44px}
+.motion-toggle:hover{border-color:var(--teal);color:var(--ink)}
+section{padding:5rem 0}.head{border-bottom:1px solid var(--line);padding-bottom:1rem;margin-bottom:0}.head h2{font-size:1.1rem}.head span{font-size:.8125rem}
+#work{counter-reset:project}.project{background:transparent;border:0;border-bottom:1px solid var(--line);padding:3.5rem 0;margin:0;gap:4rem;grid-template-columns:minmax(0,1fr) 18rem;position:relative;transition:background .25s}
+.project>div{position:relative;padding-left:3rem}.project>div::before{counter-increment:project;content:counter(project,decimal-leading-zero);position:absolute;left:0;top:0;color:var(--ink-3);font-size:.8rem;line-height:1.8}
+.project h3{font-size:clamp(1.5rem,2.8vw,2.3rem);line-height:1.2;letter-spacing:-.045em;margin:.8rem 0}.project p{color:var(--ink-2);font-size:1rem;line-height:1.75}.project__kicker{font-size:.875rem!important;color:var(--ink-3)!important}
+.project__state{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:.12rem .65rem;font-size:.75rem!important;color:var(--ink)!important;margin:0!important}
+.project[data-status="ongoing"] .project__state{border-color:#4966a1;color:#a5c1ff!important}
+.project__result{border:0;padding:2.8rem 0 1rem}.project__result strong{font-size:1.7rem;color:var(--teal)}.project__result span{color:var(--ink-2)}
+.status{margin:0}.status li{font-size:.875rem}.status b{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3)}
+.tools{gap:.4rem}.tools li{border-color:var(--line-soft);border-radius:4px;font-size:.75rem;color:var(--ink-2);padding:.2rem .5rem}
+.project__details summary{color:var(--ink);transition:color .2s}.project__details summary:hover{color:var(--teal)}
+.project__details p{font-size:.9375rem}.role h3{font-size:1.125rem}.edu article{background:var(--panel);border-color:var(--line);border-left-color:var(--teal)}
+.contact{background:var(--panel);border-block:1px solid var(--line);margin:0}.contact h2{font-size:clamp(2rem,6vw,4rem)}.contact__links a{transition:color .2s}
+.revealed{animation:arrive .75s cubic-bezier(.2,.7,.2,1) both}
+@keyframes arrive{from{transform:translateY(22px);opacity:.5}to{transform:translateY(0);opacity:1}}
+@media(max-width:860px){.project{grid-template-columns:1fr;gap:.8rem}.project aside{padding-left:3rem}.project__result{padding-top:1rem}.motion-field{width:55%;right:0;opacity:.4}.hero{min-height:640px}}
+@media(max-width:600px){.wrap{width:calc(100% - 2rem)}.bar__in{padding:.5rem 0}.hero{padding:3rem 0 2rem;min-height:660px}.hero h1{font-size:clamp(4.5rem,20vw,7rem)}.motion-field{top:6rem;right:-.5rem;width:80%;height:350px;opacity:.22}.motion-toggle{position:relative;margin-top:1.5rem;bottom:auto}.hero__meta{gap:1rem}.project{padding:2.5rem 0}.project>div,.project aside{padding-left:2rem}.head{flex-direction:column;align-items:flex-start;gap:.5rem}section{padding:3rem 0}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.revealed{animation:none}*{transition:none!important}}
+.hero__links{display:flex;flex-wrap:wrap;gap:.7rem 1.4rem;margin-top:1.5rem;font-size:.875rem}.hero__links a{padding:.35rem 0;border-bottom:1px solid var(--line);text-decoration:none;min-height:44px}.hero__links a:first-child{color:var(--teal);border-color:var(--teal)}.hero__lede{max-width:43ch}.contact h2{max-width:20ch}.hero{min-height:760px}.motion-field{top:2rem}@media(max-width:600px){.hero{min-height:auto}.hero__meta{margin-top:1.5rem}.hero__links{gap:.4rem 1.1rem}}
+</style>
+<meta name="theme-color" content="#0F1A22">
+<meta property="og:title" content="Harsh Ranjan — Computer Engineer">
+<meta property="og:description" content="Engineering projects in live energy systems, structural RTL, concurrent C programming and applied machine learning.">
+<meta property="og:type" content="website">
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to content</a>
+
+<header class="bar">
+  <div class="wrap bar__in">
+    <span class="bar__name">Harsh Ranjan</span>
+    <nav class="bar__nav" aria-label="Sections">
+      <a href="#work">Work</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#education">Education</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap hero__in">
+    <p class="hero__eyebrow ui">COMPUTER ENGINEER / UC SANTA CRUZ</p><h1>Harsh<br>Ranjan<span class="hero__period">.</span></h1>
+    <p class="hero__lede">I’m a computer engineering student at UC Santa Cruz, graduating in December 2026. I build software that works with real hardware, from a home energy system to FPGA games. I like finding out why something breaks and making it work reliably.</p>
+
+    <div class="hero__links"><a href="#work">Explore my projects</a><a href="./Harsh_Ranjan_Resume.pdf" download>Download CV (PDF)</a><a href="mailto:ranjan.harsh22@hotmail.com">Email me</a><a href="https://github.com/hranjan004">GitHub</a></div>
+    <div class="hero__meta">
+      <div><strong>UC Santa Cruz</strong>B.S. Computer Engineering, Dec 2026</div>
+      <div><strong>Looking for my next role</strong>Systems, embedded software &amp; applied ML</div>
+      <div><strong>Campbell, California</strong>Open to new grad roles</div>
+    </div>
+
+    <div class="motion-field" aria-hidden="true"><canvas id="flow-field"></canvas></div>
+    <button class="motion-toggle ui" id="motion-toggle" type="button" aria-pressed="false">Pause animation</button>
+  </div>
+</div>
+
+<main id="main-content">
+
+<section id="work" class="wrap">
+  <div class="head">
+    <h2>Projects I’ve built and learned from</h2>
+    <span>Software, hardware and the work between them</span>
+  </div>
+
+<article class="project" data-status="ongoing" id="microgrid-manager" aria-labelledby="microgrid-manager-title">
+ <div><p class="project__state ui">Ongoing</p><h3 id="microgrid-manager-title">Microgrid Manager</h3><p class="project__kicker">Residential energy management · UCSC capstone and continued development</p><p>A home energy meter can tell you how much power you’re using. Our UCSC capstone set out to make that data useful: show it live and estimate which appliances are running. Working with Dr. Pat Mantey and AnyLog, I built the data and inference path using Kafka, PostgreSQL, PyTorch and ONNX, then packaged the services in Docker for the residential deployment.</p>
+<p>I spent much of the project making the pieces work together. When thousands of readings stopped short of the database, I traced the problem to AnyLog’s cluster registration. When appliance labels said a heat pump was always off, I audited the data and rebuilt the labeling rules. The system now brings together live dashboards and local inference across three panels; I’m continuing to improve how we validate appliance predictions.</p>
+<details class="project__details"><summary>Engineering details</summary><p>For non-intrusive load monitoring, I audited the labels before training. The original label stream marked the heat pump OFF in all 3,433 sampled windows, including high-load periods. I built physics-informed rules using power thresholds and temporal behavior, then used PyTorch BiLSTMs and ONNX for local inference across HVAC, water-heater and kitchen panels. For mixed kitchen loads, I separated sustained baseline changes, compressor oscillations, discrete events and paired pulses so one detector did not have to explain every load shape.</p><p>I extended the inference rules to prefer measured PV and battery snapshots over weather estimates, with a fallback when telemetry is missing. A regression test caught Python’s truthiness turning 0% cloud cover into 100% overcast. I replaced the fallback with an explicit missing-value check. All 11 solar-path tests passed locally and inside the deployed inference container, including a real-ONNX disaggregation cycle with a synthetic solar snapshot; the existing 17 application tests also passed locally.</p></details><details class="project__details"><summary>Experimental model development</summary><p>I tested a MATNilm model with input perturbations and found that its predictions barely changed. The original targets apportioned panel power using the same rules the model was supposed to learn. I rebuilt the experimental training path around two measured appliance targets, masked state supervision for unmeasured heads, an energy-balance loss and a residual-power head. I also made ambiguous rules abstain during strong 240 V events instead of manufacturing labels.</p><p>In the recorded retraining experiment, maximum probability shifts under input perturbation increased from 0.0004 to 0.3818 on Panel 1 and 0.8134 on Panel 2. That demonstrated input responsiveness, not generalization. The measured test events were limited and Panel 3 training remained incomplete, so I kept this work separate from the deployed BiLSTM path.</p></details></div>
+ <aside aria-label="Microgrid Manager highlights"><div class="project__result"><strong>3 panels</strong><span>Local appliance inference</span></div><ul class="status"><li><b>Built</b><span>Streaming ingestion, time-series dashboards and local inference</span></li><li><b>Method</b><span>Label audits, signal decomposition and service-level diagnosis</span></li><li><b>Next</b><span>Broader independent appliance validation and completed model evaluation</span></li></ul><ul class="tools" aria-label="Technologies"><li>Python</li><li>Kafka</li><li>AnyLog</li><li>PostgreSQL</li><li>Grafana</li><li>Docker Compose</li><li>PyTorch</li><li>ONNX</li><li>FastAPI</li><li>React</li><li>Node.js</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="caching-proxy" aria-labelledby="caching-proxy-title">
+<div><p class="project__state ui">Completed</p><h3 id="caching-proxy-title">HTTP / HTTPS forward proxy</h3><p class="project__kicker">Concurrent networking and cache design in C</p>
+<p>I built this C proxy to get closer to what happens between a browser and a server. It handles concurrent clients with POSIX threads and reuses complete HTTP responses through a shared cache. I implemented FIFO and LRU on the same linked-list structure so I could compare how insertion order and recent use affect eviction.</p>
+<p>The interesting part was deciding what was safe to reuse. I limited cached responses to 1 MB, kept incomplete responses out of the cache, and protected shared state with a mutex. For HTTPS, I added CONNECT tunneling so encrypted traffic passes between the client and origin without the proxy decrypting it.</p>
+<details class="project__details"><summary>Engineering details</summary><p>For HTTPS, I implemented CONNECT tunneling: the proxy opens a TCP connection to the destination and relays encrypted bytes in both directions. TLS stays end to end between client and origin, so the proxy does not terminate TLS or cache the encrypted response as HTTP content. The thread-per-connection design keeps connection handling straightforward; a bounded worker pool is a separate design for controlling concurrency.</p></details></div>
+<aside aria-label="Proxy highlights"><div class="project__result"><strong>FIFO / LRU</strong><span>Shared cache structure, distinct eviction behavior</span></div><ul class="status"><li><b>Concurrency</b><span>Detached pthread per client; mutex-guarded cache</span></li><li><b>Cache bound</b><span>Only complete HTTP responses up to 1 MB each</span></li><li><b>HTTPS</b><span>CONNECT tunnel preserves end-to-end TLS</span></li></ul><ul class="tools" aria-label="Technologies"><li>C</li><li>POSIX threads</li><li>TCP sockets</li><li>Mutexes</li><li>FIFO / LRU</li><li>HTTP CONNECT</li><li>Make</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="osmosis" aria-labelledby="osmosis-title">
+ <div><p class="project__state ui">Completed</p><h3 id="osmosis-title">Osmosis</h3><p class="project__kicker">FPGA game · CSE 100L, UC Santa Cruz</p><p>I built a game in which eight moving molecules have to be separated by color before the timer runs out. It runs on a Basys3 FPGA and a VGA display. Using structural Verilog, I built the display timing, movement, collisions and game controller as hardware modules.</p>
+<p>One bug taught me more than a clean simulation could: the molecules all appeared at the origin because reset finished before their clock started. I fixed the initialization in the FPGA flip-flops, then rendered a frame to check what the player would actually see. I also added randomized positions, speeds and directions and used focused Icarus Verilog tests to check the display and game logic.</p>
+<details class="project__details"><summary>Engineering details</summary><p>Full-game simulation was expensive with the clock primitives and continuously toggling LFSR. I used Icarus Verilog with behavioral primitive stubs, a directly driven pixel clock for VGA checks, and accelerated frame pulses for game-logic tests. Rendering an idle frame to a bitmap exposed placement errors that passing sync and FSM tests had missed.</p></details></div>
+ <aside aria-label="Osmosis highlights"><div class="project__result"><strong>640 × 480</strong><span>VGA rendering in structural RTL</span></div><ul class="status"><li><b>Design</b><span>Eight molecules, membrane control, timer and win/lose states</span></li><li><b>Verified</b><span>Focused VGA timing and accelerated game-logic testbenches passed</span></li><li><b>Lesson</b><span>Reset timing and rendered output need separate checks</span></li></ul><ul class="tools" aria-label="Technologies"><li>Verilog</li><li>Basys3 / Artix-7</li><li>Vivado</li><li>Icarus Verilog</li><li>FDRE</li><li>VGA</li><li>FSM</li><li>LFSR</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="gpt2-performance" aria-labelledby="gpt2-performance-title">
+ <div><p class="project__state ui">Completed</p><h3 id="gpt2-performance-title">GPT-2 CPU performance analysis</h3><p class="project__kicker">Computer architecture · UC San Diego summer session</p><p>I wanted to understand where a GPT-2 training loop was spending its CPU time before trying to make it faster. Linux perf showed that matrix multiplication dominated the work, with the backward pass alone accounting for about a third of sampled cycles.</p>
+<p>I used cache tiling to reuse data and AVX2 intrinsics to process several values per instruction, without changing the test drivers or adding libraries. The follow-up profiling put the L1 data-cache miss rate at roughly 2–3%, down from about 9%. It gave me a concrete way to connect a code change with what the processor was doing.</p>
+<details class="project__details"><summary>Engineering details</summary><p>I also studied OpenMP thread scaling against Amdahl’s law, TLB behavior across page sizes and NUMA locality. The work taught me to separate kernel-level improvements from whole-program speedup and to use hardware counters to explain where an optimization helped.</p></details></div>
+ <aside aria-label="GPT-2 CPU performance analysis highlights"><div class="project__result"><strong>≈9% → 2–3%</strong><span>L1 data-cache miss rate after optimization</span></div><ul class="status"><li><b>Bottleneck</b><span>Matrix multiplication dominated sampled CPU cycles</span></li><li><b>Approach</b><span>Cache tiling, vectorization and memory-locality analysis</span></li><li><b>Measured</b><span>Kernel memory behavior through hardware counters</span></li></ul><ul class="tools" aria-label="Technologies"><li>C</li><li>Linux perf</li><li>AVX2</li><li>Cache tiling</li><li>OpenMP</li><li>TLB</li><li>NUMA</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="tesphase" aria-labelledby="tesphase-title">
+ <div><p class="project__state ui">Completed</p><h3 id="tesphase-title">Tesphase</h3><p class="project__kicker">Renewable-energy product · Co-founder and CTO</p><p>At Tesphase, I worked on a simple question: how could solar homeowners use more of the energy they generate without buying more hardware? As co-founder and CTO, I led the product and engineering work and built the app with React Native, Supabase and Node.js.</p>
+<p>I also conducted more than 30 customer-discovery interviews through NSF I-Corps. Those conversations shaped the backlog and helped me decide which workflows to build first. This project pushed me to connect engineering choices with what people actually needed from the product.</p></div>
+ <aside aria-label="Tesphase highlights"><div class="project__result"><strong>30+</strong><span>Customer-discovery interviews</span></div><ul class="status"><li><b>Role</b><span>Product direction and application engineering</span></li><li><b>Stack</b><span>React Native client with Supabase and Node.js</span></li><li><b>Discovery</b><span>NSF I-Corps interviews informed feature priorities</span></li></ul><ul class="tools" aria-label="Technologies"><li>React Native</li><li>Supabase</li><li>Node.js</li><li>REST APIs</li><li>NSF I-Corps</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="slug-board" aria-labelledby="slug-board-title">
+ <div><p class="project__state ui">Completed</p><h3 id="slug-board-title">Slug Board</h3><p class="project__kicker">UCSC events platform · Team software project, summer 2025</p><p>Our team built Slug Board to help UCSC students discover events and participate in campus life. I focused on the backend: event creation and editing, the SQL data model, and the logic behind RSVPs, upvotes and comments as we moved the app to React and Supabase.</p>
+<p>I brought authentication, event and profile lookups onto a shared Profiles model to remove inconsistent user data paths. I also served as Scrum Master for Sprint 2, helping coordinate the stack migration alongside feature work. It was hands-on experience keeping my own code moving while helping the team deliver together.</p></div>
+ <aside aria-label="Slug Board highlights"><div class="project__result"><strong>React + SQL</strong><span>Event workflows and backend data model</span></div><ul class="status"><li><b>Owned</b><span>Event CRUD and SQL/backend interaction logic</span></li><li><b>Features</b><span>Upvotes, RSVPs and comments</span></li><li><b>Team role</b><span>Sprint 2 Scrum Master and developer</span></li></ul><ul class="tools" aria-label="Technologies"><li>React</li><li>JavaScript</li><li>Supabase</li><li>PostgreSQL</li><li>Google SSO</li><li>SQL</li><li>Scrum</li></ul></aside>
+</article>
+
+<article class="project" data-status="ongoing" id="fpga-http" aria-labelledby="fpga-http-title">
+<div><p class="project__state ui">Ongoing</p><h3 id="fpga-http-title">HTTP server on FPGA</h3><p class="project__kicker">Independent project · connecting networking and digital design</p>
+<p>I’m working on bringing my HTTP server onto FPGA hardware. It’s a way to connect two areas I’ve worked in separately: networking in C and digital design in Verilog.</p>
+<p>I’m using the software server as a reference while exploring request handling, buffering and board bring-up. The next milestone is an end-to-end HTTP request served on hardware. This is still an experiment, rather than a finished hardware server.</p></div>
+<aside aria-label="FPGA HTTP server highlights"><div class="project__result"><strong>Software → RTL</strong><span>Exploring HTTP serving on FPGA hardware</span></div><ul class="status"><li><b>Starting point</b><span>C HTTP server and Verilog design experience</span></li><li><b>Current scope</b><span>Porting and board bring-up attempt</span></li><li><b>Milestone</b><span>Demonstrate an end-to-end HTTP request on hardware</span></li></ul><ul class="tools" aria-label="Technologies"><li>C</li><li>Verilog</li><li>HTTP</li><li>FPGA</li></ul></aside>
+</article>
+
+<article class="project" data-status="completed" id="quick-add" aria-labelledby="quick-add-title">
+<div><p class="project__state ui">Completed</p><h3 id="quick-add-title">Two-player Quick Add</h3><p class="project__kicker">Structural RTL game controller · Basys3 FPGA</p>
+<p>I turned a single-player arithmetic game into a two-player FPGA game. I used a nine-state controller and synchronized, latched button inputs so both players could answer within the same time window and the game could resolve a win, loss or tie.</p>
+<p>The trickiest bug happened when a player reached zero points: the score changed one clock cycle too late for the controller to stop the next round. I traced the state transitions and added the missing game-over checks. Both Icarus Verilog testbenches passed afterward, including ties, simultaneous wrong answers and game-over lockout.</p>
+<details class="project__details"><summary>Engineering details</summary><p>I checked the fix with a focused state trace, then ran both verification testbenches in Icarus Verilog. The recorded scenarios passed for solo wins and losses, ties, both players losing, neither player pressing, game-over lockout and the debug switch modes.</p></details></div>
+<aside aria-label="Quick Add highlights"><div class="project__result"><strong>9-state FSM</strong><span>Two-player timing and score control</span></div><ul class="status"><li><b>Inputs</b><span>Two-flop synchronizers and per-round button memory</span></li><li><b>Debugged</b><span>One-cycle mismatch between score updates and game-over detection</span></li><li><b>Verified</b><span>Both recorded testbenches passed after the fix</span></li></ul><ul class="tools" aria-label="Technologies"><li>Verilog</li><li>FDRE</li><li>Basys3</li><li>One-hot FSM</li><li>Icarus Verilog</li><li>LFSR</li><li>Seven-segment display</li></ul></aside>
+</article>
+
+<article class="project" data-status="ongoing" id="spiking-networks" aria-labelledby="spiking-networks-title">
+ <div><p class="project__state ui">Ongoing</p><h3 id="spiking-networks-title">Spiking neural networks</h3><p class="project__kicker">Brain-inspired machine-learning experiments</p><p>I’m exploring how neural networks learn when information arrives as spikes over time. Using PyTorch and snnTorch, I built a convolutional spiking network for CIFAR-10 with Poisson encoding, threshold-dependent batch normalization and learnable membrane decay.</p>
+<p>A recurring challenge was keeping neurons active enough to learn. I investigated layers that stopped spiking and experimented with how inputs are encoded over time. I’m now working toward a controlled accuracy and latency comparison with a conventional convolutional network.</p></div>
+ <aside aria-label="Spiking neural networks highlights"><div class="project__result"><strong>Temporal learning</strong><span>Encoding, neuron dynamics and training stability</span></div><ul class="status"><li><b>Implemented</b><span>Convolutional SNN with tdBN and learnable decay</span></li><li><b>Investigated</b><span>Input encoding and training stability</span></li><li><b>Next</b><span>Complete reproducible baseline comparisons</span></li></ul><ul class="tools" aria-label="Technologies"><li>Python</li><li>PyTorch</li><li>snnTorch</li><li>CIFAR-10</li><li>Poisson encoding</li><li>Surrogate gradients</li><li>tdBN</li></ul></aside>
+</article>
+</section>
+
+<section id="experience" class="wrap">
+<div class="head"><h2>Experience</h2><span>2022 to present</span></div>
+<div class="role"><div class="role__when">Sep 2026 — Present</div><div><h3>Student Researcher — EADS (Electrical Anomaly Detection System)</h3><p class="role__org">UC Santa Cruz — Baskin School of Engineering · Santa Cruz, CA</p><p>I support the EADS team under Dr. Pat Mantey, deploying AnyLog / EdgeLake nodes for distributed sensor data.</p></div></div>
+<div class="role"><div class="role__when">Fall 2025 — Present</div><div><h3>Reader — Linear Algebra, Differential Equations, Statistics</h3><p class="role__org">UC Santa Cruz — Applied Mathematics &amp; Statistics · Santa Cruz, CA</p><p>I grade coursework, write grading rubrics and hold weekly office hours across three math and statistics courses.</p></div></div>
+<div class="role"><div class="role__when">Apr 2025 — Sep 2025</div><div><h3>Chief Technology Officer</h3><p class="role__org">Tesphase · San Francisco, CA</p><p>I owned the roadmap for a React Native, Node.js and Supabase mobile app. After running more than 30 customer interviews, I shipped authentication, real-time database sync and push notifications end to end. Tesphase won SC Launchpad 2025.</p></div></div>
+<div class="role"><div class="role__when">Jun 2024 — Sep 2024</div><div><h3>Product Management Intern</h3><p class="role__org">Balat Enterprises · Chennai, India</p><p>I turned customer feedback into product specifications for a React / Firebase app, cutting post-release bugs by 40%. I also redesigned an internal customer-service tool, reducing response times and increasing user retention by 30%.</p></div></div>
+<div class="role"><div class="role__when">Jul 2022 — Aug 2022</div><div><h3>Marketing Intern</h3><p class="role__org">Vyavshay Technologies · Chennai, India</p><p>I analyzed campaign performance metrics to guide feature prioritization, contributing to a 15% increase in user retention.</p></div></div>
+</section>
+
+<section id="skills" class="wrap">
+  <div class="head">
+    <h2>Skills</h2>
+    <span>Grouped by where they get used</span>
+  </div>
+  <div class="skills">
+    <div>
+      <h3>Languages</h3>
+      <p>C, C++, Python, JavaScript, SQL, Swift, assembly across MIPS, PIC32 and RISC-V.</p>
+    </div>
+    <div>
+      <h3>Hardware and embedded</h3>
+      <p>Verilog, RTL design, FPGA, finite state machines, VGA pipelines, PIC32, Arduino, UART, SPI, I2C, JTAG, SWD, GDB, OpenOCD, Vivado, Quartus.</p>
+    </div>
+    <div>
+      <h3>Machine learning and data</h3>
+      <p>PyTorch, BiLSTM, snnTorch, time-series analysis, non-intrusive load monitoring, Kafka, AnyLog, PostgreSQL, Grafana, ONNX.</p>
+    </div>
+    <div>
+      <h3>Systems and performance</h3>
+      <p>Linux perf, AVX2, cache optimisation, tiled matrix multiplication, OpenMP, POSIX threads, NUMA, Docker, sanitizers.</p>
+    </div>
+    <div>
+      <h3>Software and tooling</h3>
+      <p>React, React Native, Node.js, REST APIs, Firebase, Supabase, Git, GitHub Actions, CI/CD, MATLAB.</p>
+    </div>
+  </div>
+</section>
+
+<section id="education" class="wrap">
+  <div class="head">
+    <h2>Education</h2>
+    <span>Graduating December 2026</span>
+  </div>
+  <div class="edu">
+    <article>
+      <h3>University of California, Santa Cruz</h3>
+      <p class="role__when">2022 — December 2026</p>
+      <p>B.S. Computer Engineering, computer systems track. Coursework in logic design, computer architecture, operating systems, data structures and algorithms, signals and systems, differential equations, probability and statistics, and brain-inspired machine learning.</p>
+    </article>
+    <article>
+      <h3>University of California, San Diego</h3>
+      <p class="role__when">Summer 2025</p>
+      <p>Summer session in computer architecture from a software perspective, alongside logic design. Cache hierarchy optimisation, AVX2 vectorisation, OpenMP scaling, TLB latency analysis and pipeline tuning.</p>
+    </article>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <h2>Let’s talk about what you’re building.</h2>
+    <p>I’m looking for a new-grad role where I can work on systems, embedded software or applied machine learning. If something here fits what your team is building, I’d be glad to talk.</p>
+    <div class="contact__links">
+      <a href="./Harsh_Ranjan_Resume.pdf" download>Download CV (PDF)</a>
+      <a href="mailto:ranjan.harsh22@hotmail.com">ranjan.harsh22@hotmail.com</a>
+      <a href="https://www.linkedin.com/in/harsh-ranjan-064376317/">LinkedIn</a>
+      <a href="https://github.com/hranjan004">GitHub</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="wrap">Harsh Ranjan, Campbell, California.</footer>
+
+<script src="motion.js" defer></script>
+</body>
+</html>
