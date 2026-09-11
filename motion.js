@@ -1,11 +1,9 @@
 (() => {
   const canvas = document.getElementById('flow-field');
-  const button = document.getElementById('motion-toggle');
-  if (!canvas || !button) return;
+  if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  if (!ctx) { button.hidden = true; return; }
+  if (!ctx) return;
   const preference = matchMedia('(prefers-reduced-motion: reduce)');
-  let paused = preference.matches;
   let frame = 0, phase = 0, last = 0, visible = true;
   let width = 0, height = 0;
   function draw() {
@@ -29,7 +27,7 @@
   }
   function loop(now) {
     frame = 0;
-    if (paused || !visible || document.hidden) return;
+    if (!visible || document.hidden) return;
     if (last) phase += Math.min(now - last, 50) * .00025;
     last = now;
     draw();
@@ -37,10 +35,8 @@
   }
   function sync() {
     cancelAnimationFrame(frame); frame = 0; last = 0;
-    button.textContent = paused ? 'Play animation' : 'Pause animation';
-    button.setAttribute('aria-pressed', String(paused));
     draw();
-    if (!paused && visible && !document.hidden) frame = requestAnimationFrame(loop);
+    if (visible && !document.hidden) frame = requestAnimationFrame(loop);
   }
   function resize() {
     const bounds = canvas.getBoundingClientRect();
@@ -49,8 +45,6 @@
     canvas.width = Math.round(width * ratio); canvas.height = Math.round(height * ratio);
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0); draw();
   }
-  button.addEventListener('click', () => { paused = !paused; sync(); });
-  preference.addEventListener('change', () => { paused = preference.matches; sync(); });
   document.addEventListener('visibilitychange', sync);
   new ResizeObserver(resize).observe(canvas);
   new IntersectionObserver(entries => { visible = entries[0].isIntersecting; sync(); }).observe(canvas);

@@ -236,8 +236,8 @@ body{font-family:Archivo,Arial,sans-serif;font-size:16px;line-height:1.7}
 .hero__meta{margin-top:2.5rem;gap:1rem 2rem;max-width:660px;position:relative}.hero__meta strong{color:var(--ink)}
 .motion-field{position:absolute;right:-1rem;top:0;width:56%;height:470px;z-index:-1;pointer-events:none;opacity:.8}
 .motion-field canvas{width:100%;height:100%;display:block}
-.motion-toggle{position:absolute;right:0;bottom:1rem;background:transparent;border:1px solid var(--line);border-radius:99px;color:var(--ink-2);padding:.6rem 1rem;cursor:pointer;font-size:.8125rem;min-height:44px}
-.motion-toggle:hover{border-color:var(--teal);color:var(--ink)}
+
+
 section{padding:5rem 0}.head{border-bottom:1px solid var(--line);padding-bottom:1rem;margin-bottom:0}.head h2{font-size:1.1rem}.head span{font-size:.8125rem}
 #work{counter-reset:project}.project{background:transparent;border:0;border-bottom:1px solid var(--line);padding:3.5rem 0;margin:0;gap:4rem;grid-template-columns:minmax(0,1fr) 18rem;position:relative;transition:background .25s}
 .project>div{position:relative;padding-left:3rem}.project>div::before{counter-increment:project;content:counter(project,decimal-leading-zero);position:absolute;left:0;top:0;color:var(--ink-3);font-size:.8rem;line-height:1.8}
@@ -253,7 +253,7 @@ section{padding:5rem 0}.head{border-bottom:1px solid var(--line);padding-bottom:
 .revealed{animation:arrive .75s cubic-bezier(.2,.7,.2,1) both}
 @keyframes arrive{from{transform:translateY(22px);opacity:.5}to{transform:translateY(0);opacity:1}}
 @media(max-width:860px){.project{grid-template-columns:1fr;gap:.8rem}.project aside{padding-left:3rem}.project__result{padding-top:1rem}.motion-field{width:55%;right:0;opacity:.4}.hero{min-height:640px}}
-@media(max-width:600px){.wrap{width:calc(100% - 2rem)}.bar__in{padding:.5rem 0}.hero{padding:3rem 0 2rem;min-height:660px}.hero h1{font-size:clamp(4.5rem,20vw,7rem)}.motion-field{top:6rem;right:-.5rem;width:80%;height:350px;opacity:.22}.motion-toggle{position:relative;margin-top:1.5rem;bottom:auto}.hero__meta{gap:1rem}.project{padding:2.5rem 0}.project>div,.project aside{padding-left:2rem}.head{flex-direction:column;align-items:flex-start;gap:.5rem}section{padding:3rem 0}}
+@media(max-width:600px){.wrap{width:calc(100% - 2rem)}.bar__in{padding:.5rem 0}.hero{padding:3rem 0 2rem;min-height:660px}.hero h1{font-size:clamp(4.5rem,20vw,7rem)}.motion-field{top:6rem;right:-.5rem;width:80%;height:350px;opacity:.22}.hero__meta{gap:1rem}.project{padding:2.5rem 0}.project>div,.project aside{padding-left:2rem}.head{flex-direction:column;align-items:flex-start;gap:.5rem}section{padding:3rem 0}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.revealed{animation:none}*{transition:none!important}}
 .hero__links{display:flex;flex-wrap:wrap;gap:.7rem 1.4rem;margin-top:1.5rem;font-size:.875rem}.hero__links a{padding:.35rem 0;border-bottom:1px solid var(--line);text-decoration:none;min-height:44px}.hero__links a:first-child{color:var(--teal);border-color:var(--teal)}.hero__lede{max-width:43ch}.contact h2{max-width:20ch}.hero{min-height:760px}.motion-field{top:2rem}@media(max-width:600px){.hero{min-height:auto}.hero__meta{margin-top:1.5rem}.hero__links{gap:.4rem 1.1rem}}
 </style>
@@ -291,7 +291,6 @@ section{padding:5rem 0}.head{border-bottom:1px solid var(--line);padding-bottom:
     </div>
 
     <div class="motion-field" aria-hidden="true"><canvas id="flow-field"></canvas></div>
-    <button class="motion-toggle ui" id="motion-toggle" type="button" aria-pressed="false">Pause animation</button>
   </div>
 </div>
 
@@ -440,6 +439,6 @@ section{padding:5rem 0}.head{border-bottom:1px solid var(--line);padding-bottom:
 
 <footer class="wrap">Harsh Ranjan, Campbell, California.</footer>
 
-<script src="motion.js" defer></script>
+<script src="motion.js?v=2" defer></script>
 </body>
 </html>
