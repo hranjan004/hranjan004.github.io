@@ -37,7 +37,6 @@
       "Our published LF Edge report describes single-digit milliseconds of CPU inference per panel, with appliance predictions written every 30 seconds."
     ],
     "note": "Rule-derived evaluation is not independent appliance accuracy. Rare loads still need broader ground-truth coverage; fully automated appliance control was outside the completed capstone scope.",
-    "visual": "solar",
     "technical": [
       "Model outputs are independent appliance probabilities, allowing multiple loads to be ON at once. Physics-informed rules add temporal and power constraints; ambiguous windows are excluded instead of forced into training labels.",
       "A model deployment couples the ONNX graph with feature normalization, appliance names and thresholds. Checking those contracts prevents a numerically valid output vector from being interpreted against the wrong labels.",
@@ -76,7 +75,6 @@
       "The project produced a concrete link between memory access patterns, vectorized computation and hardware-counter measurements."
     ],
     "note": "This is a kernel cache-behavior result. The archived material does not establish a reproducible end-to-end training speedup.",
-    "visual": "compute",
     "technical": [
       "The optimization targets memory reuse inside matrix multiplication. Tiling changes the working set; AVX2 changes the arithmetic issued per instruction. These mechanisms need separate measurements because lower cache-miss rates alone do not establish total speedup.",
       "The benchmark account should retain compiler flags, matrix dimensions and thread settings. The published portfolio metric remains the measured cache-miss change rather than an inferred training-throughput figure."
@@ -112,7 +110,6 @@
       "Implemented eight moving molecules, color-selective membrane control and randomized positions, speeds and directions."
     ],
     "note": "The animated card is a visual interpretation of the game, not a recording of the FPGA output.",
-    "visual": "osmosis",
     "technical": [
       "Pixel counters produce display coordinates and blanking signals; frame pulses advance object motion. Separating these time scales keeps collision and game-state updates independent of pixel traversal.",
       "Configuration-time FDRE INIT values solve a different problem from synchronous runtime reset. The start-position failure required checking the clock-start sequence and rendered pixels, not just the state-machine transitions."
@@ -149,7 +146,6 @@
       "The archived test record reports argument validation, cache-policy sequences, response-body checks, sanitizer runs and concurrent-request exercises."
     ],
     "note": "The 50% result applies to the cached-response benchmark reported on my resume; it is not a universal speedup across uncached requests or HTTPS tunnels.",
-    "visual": "network",
     "technical": [
       "A cache entry is reusable only when the full HTTP response is available and within the size bound. A mutex protects shared cache mutation; the linked-list order implements FIFO insertion order or LRU recency.",
       "HTTPS CONNECT is a bidirectional byte tunnel in the documented variant. TLS remains between client and origin, so the proxy cannot treat the encrypted payload as an ordinary cacheable HTTP response."
@@ -186,7 +182,6 @@
       "Kept the anomaly layer separate from the BiLSTM / ONNX production inference path."
     ],
     "note": "Completed refers to the prototype. Independent anomaly-detection accuracy and production alert outcomes are not established.",
-    "visual": "agents",
     "technical": [
       "Panel identity conditions a shared adapter rather than requiring three separately fine-tuned models. The incident coordinator combines those panel-level outputs into one reviewable event.",
       "QLoRA reduces the fine-tuning memory requirement; vLLM handles serving. Respan traces and the Sheets review workflow expose model behavior, but do not by themselves establish anomaly accuracy."
@@ -220,7 +215,6 @@
       "Tesphase won SC Launchpad 2025. My CTO role ran from April through September 2025."
     ],
     "note": "Proposed bill savings in the early lean canvas were product hypotheses, not measured customer outcomes.",
-    "visual": "solar",
     "technical": [
       "Authentication establishes the user identity used by application data. Real-time synchronization and push notifications serve different paths: updating shared state in the app versus drawing attention to an event. Product interviews informed which workflows received engineering effort first."
     ],
@@ -256,7 +250,6 @@
       "The course retrospective records an incomplete MVP and significant backend integration failures. The project is marked completed as coursework, not as a fully delivered production service."
     ],
     "note": "The archived reflection reports a 37.5% team completion rate for the MVP stage. It documents the learning and integration failures rather than a successful product launch.",
-    "visual": "network",
     "technical": [
       "The retrospective identifies the critical integration boundary: event-card interactions depended on authentication, API behavior and database queries that were not consistently verified together.",
       "The corrective approach is to validate endpoints and database contracts before wiring the interface, integrate across user stories earlier, and keep local branches synchronized. These are lessons from the retrospective, not claims of a subsequently rebuilt MVP."
@@ -291,7 +284,6 @@
       "The next milestone is an end-to-end HTTP request served on hardware."
     ],
     "note": "A working hardware server and hardware performance figures are not yet established.",
-    "visual": "circuit",
     "technical": [
       "The software server provides reference behavior for request parsing and responses. Buffering, state sequencing and the hardware network interface remain design constraints to resolve before an end-to-end board demonstration."
     ],
@@ -322,7 +314,6 @@
       "Both recorded testbenches passed after the fix, including ties, simultaneous wrong answers, no-response rounds and game-over lockout."
     ],
     "note": "The project demonstrates structural control logic and focused verification.",
-    "visual": "osmosis",
     "technical": [
       "Two-flop synchronizers bring button signals into the clock domain; round latches retain each player’s response. The one-hot FSM resolves the shared window into scoring and the next round.",
       "The score register and game controller observe values on clock boundaries. Explicit game-over transitions handle the updated score on the following cycle rather than assuming it is immediately visible."
@@ -355,7 +346,6 @@
       "Completed the counter and reaction-game labs, building the synchronous design foundation used later in the Osmosis VGA game."
     ],
     "note": "Coursework progression; no hardware performance benchmark is claimed.",
-    "visual": "compute",
     "technical": [
       "The counter lab exercises registered state, direction and load control. The reaction games add state sequencing and pseudo-random behavior; Osmosis extends the progression into display timing and moving objects."
     ],
@@ -389,7 +379,6 @@
       "Moving experiments to Colab Pro reduced reported epoch time from about seven minutes to under two."
     ],
     "note": "No validated accuracy or energy-efficiency advantage over a conventional CNN is claimed.",
-    "visual": "agents",
     "technical": [
       "Spike encoding maps image intensity into temporal events. LIF neurons integrate current with membrane decay and emit spikes at a threshold; surrogate gradients approximate the non-differentiable threshold during training.",
       "Spike-health traces, loss behavior and optimizer updates must be checked together. Active neurons alone did not guarantee learning, while normalization changes could leave initialized currents too weak to cross threshold."
@@ -422,7 +411,6 @@
       "Implemented the coursework device/server workflow described in the October record; embedded coursework is ongoing."
     ],
     "note": "The onboard sensor reading should not be presented as a calibrated ambient-temperature measurement.",
-    "visual": "circuit",
     "technical": [
       "The device obtains location from GET /location and posts its readings to the Raspberry Pi service. Separating configuration, acquisition and reporting makes the device/server protocol explicit."
     ],
@@ -452,7 +440,6 @@
       "Implemented the embedded game described in the project record, building experience with event-driven C and hardware interfaces."
     ],
     "note": "No measured latency or performance benchmark is claimed.",
-    "visual": "circuit",
     "technical": [
       "Timers and hardware interrupts supply events to the game state machines. Peripheral access and application state need clear boundaries so a hardware event produces one consistent state transition."
     ],
