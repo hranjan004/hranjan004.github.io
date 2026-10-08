@@ -1,0 +1,356 @@
+[
+  {
+    "id": "microgrid-manager",
+    "title": "Microgrid Manager",
+    "category": "Edge AI · Energy systems",
+    "status": "Completed",
+    "headline": "Making a home’s energy data useful.",
+    "summary": "Local appliance inference and a dashboard that turns household telemetry into decisions.",
+    "metric": "3 panels",
+    "label": "local appliance inference",
+    "tools": [
+      "Python",
+      "PyTorch",
+      "ONNX",
+      "Kafka",
+      "MQTT",
+      "EdgeLake / AnyLog",
+      "PostgreSQL",
+      "Docker",
+      "FastAPI",
+      "React"
+    ],
+    "problem": "A home with solar and batteries produces plenty of readings, but a homeowner needs to know which loads are running and what to do next. Our UCSC capstone focused on turning that telemetry into appliance estimates and understandable recommendations while keeping inference local.",
+    "approach": [
+      "As capstone lead engineer, I owned model development, physics-informed labeling and the dashboard, working with Dr. Pat Mantey and the AnyLog team on infrastructure. I replaced unreliable LLM labels after all 3,433 sampled heat-pump windows had been labeled OFF.",
+      "Kafka carries eGauge readings and MQTT brings in Solar Assistant telemetry. EdgeLake / AnyLog and PostgreSQL make the streams queryable. I trained per-panel BiLSTMs in PyTorch, exported them to ONNX and connected the outputs to FastAPI, React and Node.js dashboards.",
+      "I separated kitchen signals into sustained loads, compressor cycles, discrete events and paired pulses. Four-fold chronological evaluation and model-output contract checks helped expose weak labels and prevent silent appliance-name mismatches."
+    ],
+    "result": [
+      "Delivered local inference across three panels and a usable residential monitoring dashboard. The capstone is recorded as completed in October 2026.",
+      "Restored a five-minute dashboard snapshot from zero to more than 1,800 readings by correcting a stale data-source reference. All 11 solar-path tests passed locally and inside the deployed inference container.",
+      "The project led to a co-authored LF Edge article on residential edge intelligence.",
+      "Our published LF Edge report describes single-digit milliseconds of CPU inference per panel, with appliance predictions written every 30 seconds."
+    ],
+    "note": "Rule-derived evaluation is not independent appliance accuracy. Rare loads still need broader ground-truth coverage; fully automated appliance control was outside the completed capstone scope.",
+    "visual": "solar"
+  },
+  {
+    "id": "gpt2-performance",
+    "title": "GPT-2 on the CPU",
+    "category": "Systems · Performance",
+    "status": "Completed",
+    "headline": "Less time waiting on memory.",
+    "summary": "Profile first, then improve the kernels that actually dominate the workload.",
+    "metric": "9.17% → 2–3%",
+    "label": "reported L1 cache-miss rate",
+    "tools": [
+      "C",
+      "Linux perf",
+      "AVX2",
+      "Cache tiling",
+      "OpenMP"
+    ],
+    "problem": "A C GPT-2 training loop spent much of its CPU time in matrix multiplication. Parallelism was constrained by the course build environment, so I started by improving the serial kernels.",
+    "approach": [
+      "Linux perf identified backward matrix multiplication at 33.09% of sampled cycles and forward multiplication at 23.88%. That evidence set the optimization order.",
+      "I tiled the computation to improve data reuse and used AVX2 fused multiply-add instructions to process eight floats at a time. I worked within the existing test-driver and library constraints.",
+      "Related experiments examined thread scaling, page-size effects and NUMA locality to connect software changes with processor behavior."
+    ],
+    "result": [
+      "Follow-up profiling reported a reduction in the hot kernel’s L1 data-cache miss rate from 9.17% to approximately 2–3%.",
+      "The project produced a concrete link between memory access patterns, vectorized computation and hardware-counter measurements."
+    ],
+    "note": "This is a kernel cache-behavior result. The archived material does not establish a reproducible end-to-end training speedup.",
+    "visual": "compute"
+  },
+  {
+    "id": "osmosis",
+    "title": "Osmosis",
+    "category": "FPGA · Digital design",
+    "status": "Completed",
+    "headline": "A game built from clock cycles.",
+    "summary": "Eight molecules, one membrane, and a complete game in structural Verilog.",
+    "metric": "640 × 480",
+    "label": "VGA display pipeline",
+    "tools": [
+      "Verilog",
+      "Basys3 / Artix-7",
+      "Vivado",
+      "Icarus Verilog",
+      "FDRE",
+      "FSM",
+      "LFSR"
+    ],
+    "problem": "The challenge was to build a playable VGA game under strict structural-RTL constraints: continuous assignments and flip-flop primitives, with no procedural blocks in the hardware design.",
+    "approach": [
+      "I separated pixel timing from frame-based movement and composed collision handling, membrane controls, randomized motion, a timer and win/lose state logic.",
+      "When every molecule appeared at the origin, I traced the failure to reset ending before the derived clock began. FDRE initialization parameters established the intended positions at configuration time.",
+      "I used behavioral simulation stubs, focused timing and game-logic tests, and bitmap rendering to check both the logic and the actual visible output."
+    ],
+    "result": [
+      "The provided display testbench completed two frames with zero sync errors and zero RGB-blanking errors.",
+      "Implemented eight moving molecules, color-selective membrane control and randomized positions, speeds and directions."
+    ],
+    "note": "The animated card is a visual interpretation of the game, not a recording of the FPGA output.",
+    "visual": "osmosis"
+  },
+  {
+    "id": "caching-proxy",
+    "title": "HTTP / HTTPS proxy",
+    "category": "C · Concurrent systems",
+    "status": "Completed",
+    "headline": "Making repeat requests work less.",
+    "summary": "Concurrent request handling, bounded caching and encrypted traffic forwarding.",
+    "metric": "FIFO + LRU",
+    "label": "explicit cache-eviction policies",
+    "tools": [
+      "C",
+      "POSIX threads",
+      "TCP sockets",
+      "Mutexes",
+      "HTTP CONNECT",
+      "Clang",
+      "Sanitizers"
+    ],
+    "problem": "Repeated HTTP requests can duplicate origin work, while concurrent clients introduce shared-state hazards. I built a proxy to explore both response reuse and the correctness of network handling.",
+    "approach": [
+      "I implemented FIFO and LRU eviction with a shared cache, keyed by the requested resource. Cache updates are synchronized, and incomplete or oversized responses are excluded.",
+      "The documented detached-thread variant uses POSIX threads for clients and CONNECT tunneling for HTTPS, relaying encrypted bytes without terminating the client’s TLS session.",
+      "A separate thread-pool variant explored bounded work queues and clean shutdown. I keep those designs distinct when discussing their concurrency behavior."
+    ],
+    "result": [
+      "Built HTTP response caching with a 1 MB per-response bound and HTTPS CONNECT forwarding.",
+      "The archived test record reports argument validation, cache-policy sequences, response-body checks, sanitizer runs and concurrent-request exercises."
+    ],
+    "note": "Archived latency figures come from different variants and workloads. They are not presented here as one universal speedup.",
+    "visual": "network"
+  },
+  {
+    "id": "gemma-anomaly",
+    "title": "Gemma anomaly review",
+    "category": "Applied AI · Hackathon",
+    "status": "Completed",
+    "headline": "From panel alerts to one incident.",
+    "summary": "A separate language-model layer that makes energy anomalies easier to review.",
+    "metric": "3 panel agents",
+    "label": "one shared anomaly adapter",
+    "tools": [
+      "Gemma",
+      "QLoRA",
+      "PEFT",
+      "TRL",
+      "vLLM",
+      "Lambda GPUs",
+      "Respan",
+      "Nango"
+    ],
+    "problem": "Individual electrical panels can produce related anomaly signals. The aim was to turn those signals into one reviewable incident without changing the existing appliance-inference service.",
+    "approach": [
+      "I built three logical panel agents around one Gemma adapter conditioned on panel identity. Their outputs are coordinated into a shared incident for review.",
+      "QLoRA with Hugging Face PEFT and TRL supported fine-tuning on Lambda GPUs; vLLM served the model. Respan captured traces and Nango connected a Google Sheets review workflow.",
+      "With only two verification rows in the anomaly table, I bootstrapped training labels by replaying the rule engine over archived readings."
+    ],
+    "result": [
+      "Completed a hackathon prototype with model serving, traceability and a human review path.",
+      "Kept the anomaly layer separate from the BiLSTM / ONNX production inference path."
+    ],
+    "note": "Completed refers to the prototype. Independent anomaly-detection accuracy and production alert outcomes are not established.",
+    "visual": "agents"
+  },
+  {
+    "id": "tesphase",
+    "title": "Tesphase",
+    "category": "Product · Mobile engineering",
+    "status": "Completed",
+    "headline": "Customer needs, translated into software.",
+    "summary": "A mobile product exploring better use of household solar without additional customer hardware.",
+    "metric": "30+",
+    "label": "customer-discovery interviews",
+    "tools": [
+      "React Native",
+      "Node.js",
+      "Supabase",
+      "NSF I-Corps"
+    ],
+    "problem": "Solar homeowners needed an approachable way to coordinate their energy use. At Tesphase, my role as CTO was to connect customer needs with a practical product roadmap and working application.",
+    "approach": [
+      "I used more than 30 customer interviews to understand the workflows worth building first, then translated those findings into engineering priorities.",
+      "React Native provided the mobile interface, Supabase supported authentication and real-time data, and Node.js supported backend workflows. I owned the roadmap and architecture."
+    ],
+    "result": [
+      "Shipped authentication, real-time database synchronization and push notifications.",
+      "Tesphase won SC Launchpad 2025. My CTO role ran from April through September 2025."
+    ],
+    "note": "Proposed bill savings in the early lean canvas were product hypotheses, not measured customer outcomes.",
+    "visual": "solar"
+  },
+  {
+    "id": "slug-board",
+    "title": "Slug Board",
+    "category": "Full stack · Team project",
+    "status": "Completed",
+    "headline": "A clearer path into campus life.",
+    "summary": "Event creation and participation workflows for UCSC students.",
+    "metric": "CRUD + SQL",
+    "label": "events, RSVPs and comments",
+    "tools": [
+      "React",
+      "JavaScript",
+      "Supabase",
+      "PostgreSQL",
+      "Google SSO",
+      "Scrum"
+    ],
+    "problem": "Campus activities are easy to miss when information stays inside separate college communities. Our team built Slug Board to bring event discovery and participation together.",
+    "approach": [
+      "I owned event CRUD, the SQL schema and backend interaction logic for RSVPs, upvotes and comments.",
+      "I consolidated authentication, event and profile lookups in application code around a shared Profiles model during the move to React and Supabase.",
+      "As Sprint 2 Scrum Master, I helped coordinate the stack migration alongside feature delivery."
+    ],
+    "result": [
+      "Delivered my event-management and database contributions to the team project.",
+      "Simplified competing user-data paths in the application code."
+    ],
+    "note": "The archived consolidation report still lists a database migration step; the code changes do not establish that every hosted migration was completed.",
+    "visual": "network"
+  },
+  {
+    "id": "fpga-http",
+    "title": "HTTP server on FPGA",
+    "category": "FPGA · Networking",
+    "status": "Ongoing",
+    "headline": "Taking a server into hardware.",
+    "summary": "Exploring request handling and buffering beyond the software implementation.",
+    "metric": "C → RTL",
+    "label": "software as a behavioral reference",
+    "tools": [
+      "C",
+      "Verilog",
+      "HTTP",
+      "FPGA"
+    ],
+    "problem": "This project connects two areas of my work: network programming in C and synchronous digital design.",
+    "approach": [
+      "I use the software server as a reference while exploring how request handling, buffering and board bring-up translate into FPGA hardware.",
+      "The work considers the Spartan-3E, Basys3 and Alchitry hardware mentioned in my project record."
+    ],
+    "result": [
+      "The current outcome is a porting and bring-up effort.",
+      "The next milestone is an end-to-end HTTP request served on hardware."
+    ],
+    "note": "A working hardware server and hardware performance figures are not yet established.",
+    "visual": "circuit"
+  },
+  {
+    "id": "quick-add",
+    "title": "Two-player Quick Add",
+    "category": "FPGA · State machines",
+    "status": "Completed",
+    "headline": "Fair rounds. Correct scores.",
+    "summary": "A two-player arithmetic game with synchronized inputs and explicit round control.",
+    "metric": "9-state FSM",
+    "label": "round and score controller",
+    "tools": [
+      "Verilog",
+      "FDRE",
+      "Basys3",
+      "Icarus Verilog",
+      "LFSR"
+    ],
+    "problem": "Expanding a single-player game requires a shared response window, independent player state and correct handling of simultaneous inputs.",
+    "approach": [
+      "I used synchronized and latched button inputs so both players could answer in the same round.",
+      "I traced a one-cycle mismatch between score updates and game-over detection, then added the missing transitions that prevented an extra round at zero points."
+    ],
+    "result": [
+      "Both recorded testbenches passed after the fix, including ties, simultaneous wrong answers, no-response rounds and game-over lockout."
+    ],
+    "note": "The project demonstrates structural control logic and focused verification.",
+    "visual": "osmosis"
+  },
+  {
+    "id": "spiking-networks",
+    "title": "Spiking neural networks",
+    "category": "ML research · Temporal learning",
+    "status": "Ongoing",
+    "headline": "Understanding why neurons stop learning.",
+    "summary": "Experiments in spike encoding, normalization and trainable neuron dynamics.",
+    "metric": "LIF dynamics",
+    "label": "encoding and training stability",
+    "tools": [
+      "Python",
+      "PyTorch",
+      "snnTorch",
+      "Colab",
+      "CIFAR-10",
+      "MNIST"
+    ],
+    "problem": "Spiking networks must preserve useful activity across time while still supporting gradient-based learning. Several experiments stalled even when their architectures appeared plausible.",
+    "approach": [
+      "I compared rate, Poisson and latency encodings, investigated threshold-dependent batch normalization and tuned membrane decay, firing thresholds and timesteps.",
+      "Layer activity, membrane behavior and loss traces helped separate dead neurons from optimizer and normalization failures.",
+      "A separate UCF101 prototype combined frozen ResNet18 features with a small spiking classifier. It remains a demonstration with a split-validation concern."
+    ],
+    "result": [
+      "Built training pipelines and documented failure modes across multiple network configurations.",
+      "Moving experiments to Colab Pro reduced reported epoch time from about seven minutes to under two."
+    ],
+    "note": "No validated accuracy or energy-efficiency advantage over a conventional CNN is claimed.",
+    "visual": "agents"
+  },
+  {
+    "id": "weather-station",
+    "title": "Connected weather station",
+    "category": "Embedded · Rust",
+    "status": "Ongoing",
+    "headline": "From a sensor to a server.",
+    "summary": "An ESP32-C3 client and Raspberry Pi service for collecting local and outdoor readings.",
+    "metric": "ESP32 + Pi",
+    "label": "device-to-server workflow",
+    "tools": [
+      "Rust",
+      "ESP-IDF",
+      "ESP32-C3",
+      "Raspberry Pi 4",
+      "HTTP",
+      "Ubuntu Server"
+    ],
+    "problem": "A small connected device needs to obtain configuration, gather sensor data and report readings to a service reliably.",
+    "approach": [
+      "The ESP32-C3 fetches the server’s location, queries an outdoor-weather service and reads its onboard sensor.",
+      "The Raspberry Pi serves location data and accepts posted readings, separating device acquisition from server-side logging."
+    ],
+    "result": [
+      "Implemented the coursework device/server workflow described in the October record; embedded coursework is ongoing."
+    ],
+    "note": "The onboard sensor reading should not be presented as a calibrated ambient-temperature measurement.",
+    "visual": "circuit"
+  },
+  {
+    "id": "battle-boats",
+    "title": "Battle Boats",
+    "category": "Embedded · C",
+    "status": "Completed",
+    "headline": "A game driven by interrupts.",
+    "summary": "Battleship-style logic on a PIC32MX microcontroller.",
+    "metric": "PIC32MX",
+    "label": "event-driven embedded control",
+    "tools": [
+      "C",
+      "PIC32MX",
+      "Timers",
+      "Interrupts",
+      "Peripheral drivers"
+    ],
+    "problem": "A microcontroller game needs to respond to hardware events while keeping game state consistent.",
+    "approach": [
+      "I organized Battleship-style gameplay as state machines and used timers, hardware interrupts and low-level peripheral drivers to connect software behavior to the board."
+    ],
+    "result": [
+      "Implemented the embedded game described in the project record, building experience with event-driven C and hardware interfaces."
+    ],
+    "note": "No measured latency or performance benchmark is claimed.",
+    "visual": "circuit"
+  }
+]
