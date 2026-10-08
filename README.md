@@ -20,3 +20,7 @@ The October 2026 redesign consolidates the supplied Complete Record with Essays 
 Microgrid completion and the CTO title follow the October record. Incompatible proxy variants and unreconciled benchmark figures are not combined into a single performance claim. Model results distinguish rule-derived evaluation from independent measurement.
 
 Original art images come from the supplied archive. Contextual photographs and their licenses are listed on `credits.html`. Animated graphics are conceptual illustrations, not captured project output.
+
+The blue editorial update incorporates the Collected Essays PDF: 19 distinct writing entries, with overlapping texts reconciled and summaries beneath their headings. The Intelligent Energy Management Systems essay and application statements are excluded. Existing engineering case studies remain separate from that exclusion. Slug Board is labeled completed coursework with an incomplete MVP, as documented in the retrospective.
+
+`art-content.json` maps every one of the earlier archive's 28 embedded image occurrences to six artwork galleries, including alternate views and presentation sheets. It also contains the artist statements and reflections. `editorial.py` handles rich text, reading layouts, and topic-specific animated SVG motifs. Source PDFs and private chat URLs remain outside the published site.
