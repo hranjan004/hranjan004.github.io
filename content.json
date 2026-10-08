@@ -18,13 +18,17 @@
       "PostgreSQL",
       "Docker",
       "FastAPI",
-      "React"
+      "React",
+      "Ollama",
+      "MCP",
+      "Home Assistant"
     ],
     "problem": "A home with solar and batteries produces plenty of readings, but a homeowner needs to know which loads are running and what to do next. Our UCSC capstone focused on turning that telemetry into appliance estimates and understandable recommendations while keeping inference local.",
     "approach": [
       "As capstone lead engineer, I owned model development, physics-informed labeling and the dashboard, working with Dr. Pat Mantey and the AnyLog team on infrastructure. I replaced unreliable LLM labels after all 3,433 sampled heat-pump windows had been labeled OFF.",
-      "Kafka carries eGauge readings and MQTT brings in Solar Assistant telemetry. EdgeLake / AnyLog and PostgreSQL make the streams queryable. I trained per-panel BiLSTMs in PyTorch, exported them to ONNX and connected the outputs to FastAPI, React and Node.js dashboards.",
-      "I separated kitchen signals into sustained loads, compressor cycles, discrete events and paired pulses. Four-fold chronological evaluation and model-output contract checks helped expose weak labels and prevent silent appliance-name mismatches."
+      "I organized the system around Load, Generation, Storage and Decision Support, following Ali Adabi’s 2016 framework. eGauge readings flow through Kafka, AnyLog / EdgeLake and PostgreSQL into ONNX inference, a FastAPI backend and React dashboards. MQTT connects the solar telemetry.",
+      "I compared MATNilm with the BiLSTM and found that MATNilm had collapsed to nearly constant per-appliance guesses. I retained the BiLSTM based on its response to the data, rather than the appeal of a newer architecture.",
+      "Only 2 of 22 appliance outputs had independent measurement. I developed physics-informed labels and excluded ambiguous windows. For Panel 3, separating sustained loads, compressor cycling, discrete high-power events and paired pulse patterns addressed persistent false positives."
     ],
     "result": [
       "Delivered local inference across three panels and a usable residential monitoring dashboard. The capstone is recorded as completed in October 2026.",
@@ -37,7 +41,9 @@
     "technical": [
       "Model outputs are independent appliance probabilities, allowing multiple loads to be ON at once. Physics-informed rules add temporal and power constraints; ambiguous windows are excluded instead of forced into training labels.",
       "A model deployment couples the ONNX graph with feature normalization, appliance names and thresholds. Checking those contracts prevents a numerically valid output vector from being interpreted against the wrong labels.",
-      "Kafka / MQTT → EdgeLake / AnyLog → PostgreSQL → ONNX + rules → FastAPI → dashboard. I kept the interface and inference layers separate so a GUI change did not create a second model runtime."
+      "Kafka / MQTT → EdgeLake / AnyLog → PostgreSQL → ONNX + rules → FastAPI → dashboard. I kept the interface and inference layers separate so a GUI change did not create a second model runtime.",
+      "The deployment runs as roughly 11 Docker containers, brought up with a single docker compose command. Keeping ingestion, inference, storage and presentation services separate makes the operational boundaries explicit.",
+      "The Ask feature connects a local model through Ollama to an MCP client exposing 18 tools. It gives the dashboard a natural-language interface while keeping the local inference path separate from language-model responses."
     ],
     "related": [
       "capstone-reflection"
@@ -120,8 +126,8 @@
     "status": "Completed",
     "headline": "Making repeat requests work less.",
     "summary": "Concurrent request handling, bounded caching and encrypted traffic forwarding.",
-    "metric": "FIFO + LRU",
-    "label": "explicit cache-eviction policies",
+    "metric": "50%",
+    "label": "lower cached response time",
     "tools": [
       "C",
       "POSIX threads",
@@ -138,10 +144,11 @@
       "A separate thread-pool variant explored bounded work queues and clean shutdown. I keep those designs distinct when discussing their concurrency behavior."
     ],
     "result": [
+      "Reduced cached response time by 50% in the benchmark reported on my resume.",
       "Built HTTP response caching with a 1 MB per-response bound and HTTPS CONNECT forwarding.",
       "The archived test record reports argument validation, cache-policy sequences, response-body checks, sanitizer runs and concurrent-request exercises."
     ],
-    "note": "Archived latency figures come from different variants and workloads. They are not presented here as one universal speedup.",
+    "note": "The 50% result applies to the cached-response benchmark reported on my resume; it is not a universal speedup across uncached requests or HTTPS tunnels.",
     "visual": "network",
     "technical": [
       "A cache entry is reusable only when the full HTTP response is available and within the size bound. A mutex protects shared cache mutation; the linked-list order implements FIFO insertion order or LRU recency.",
@@ -152,7 +159,7 @@
   {
     "id": "gemma-anomaly",
     "title": "Gemma anomaly review",
-    "category": "Applied AI · Hackathon",
+    "category": "Applied AI · Open Model Hack",
     "status": "Completed",
     "headline": "From panel alerts to one incident.",
     "summary": "A separate language-model layer that makes energy anomalies easier to review.",
@@ -323,6 +330,38 @@
     "related": []
   },
   {
+    "id": "quick-decode",
+    "title": "Quick Decode & counter lab",
+    "category": "FPGA · Logic design",
+    "status": "Completed",
+    "headline": "From counters to reaction games.",
+    "summary": "A progression from a 16-bit counter to a structurally designed reaction game.",
+    "metric": "16-bit",
+    "label": "loadable up/down counter",
+    "tools": [
+      "Verilog",
+      "Vivado",
+      "Basys3",
+      "FDRE",
+      "LFSR",
+      "One-hot FSM"
+    ],
+    "problem": "Digital logic coursework moved from a stateful counter and display to reaction games with explicit sequencing.",
+    "approach": [
+      "I built a 16-bit loadable up/down counter with seven-segment display output.",
+      "Quick Decode and Quick Add extended that foundation with one-hot state machines and LFSR-based logic under structural design constraints."
+    ],
+    "result": [
+      "Completed the counter and reaction-game labs, building the synchronous design foundation used later in the Osmosis VGA game."
+    ],
+    "note": "Coursework progression; no hardware performance benchmark is claimed.",
+    "visual": "compute",
+    "technical": [
+      "The counter lab exercises registered state, direction and load control. The reaction games add state sequencing and pseudo-random behavior; Osmosis extends the progression into display timing and moving objects."
+    ],
+    "related": []
+  },
+  {
     "id": "spiking-networks",
     "title": "Spiking neural networks",
     "category": "ML research · Temporal learning",
@@ -339,9 +378,9 @@
       "CIFAR-10",
       "MNIST"
     ],
-    "problem": "Spiking networks must preserve useful activity across time while still supporting gradient-based learning. Several experiments stalled even when their architectures appeared plausible.",
+    "problem": "In Professor Eshraghian’s Neuromorphic Computing Group at UCSC, I explore how spiking networks preserve useful activity across time while supporting gradient-based learning. Several experiments stalled even when their architectures appeared plausible.",
     "approach": [
-      "I compared rate, Poisson and latency encodings, investigated threshold-dependent batch normalization and tuned membrane decay, firing thresholds and timesteps.",
+      "On MNIST and CIFAR-10, I compared rate, Poisson and latency encodings, investigated threshold-dependent batch normalization and tuned membrane decay, firing thresholds and timesteps.",
       "Layer activity, membrane behavior and loss traces helped separate dead neurons from optimizer and normalization failures.",
       "A separate UCF101 prototype combined frozen ResNet18 features with a small spiking classifier. It remains a demonstration with a split-validation concern."
     ],
@@ -359,7 +398,7 @@
   },
   {
     "id": "weather-station",
-    "title": "Connected weather station",
+    "title": "ESP32 Weather Station in Rust",
     "category": "Embedded · Rust",
     "status": "Ongoing",
     "headline": "From a sensor to a server.",

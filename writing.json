@@ -633,5 +633,41 @@
     "question": "Why can individually working components still fail as a system?",
     "note": "Collected Essays · pages 55–57. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
     "source": "Collected Essays, pp. 55–57"
+  },
+  {
+    "id": "nilm-labels",
+    "title": "When the labels were the problem",
+    "kind": "Engineering notes",
+    "date": "October 2026",
+    "summary": "Why I replaced LLM-generated NILM labels with physical rules—and why that still does not make every label ground truth.",
+    "motif": "feedback",
+    "question": "Is the model learning the signal, or repeating the labeler?",
+    "note": "Adapted from my Microgrid project records. These are observations from this deployment, not a general comparison of NILM methods.",
+    "source": "Complete Record with Essays · Microgrid modeling record",
+    "body": [
+      "A model can look convincing while learning almost nothing about the underlying system. In our residential NILM work, all 3,433 sampled heat-pump windows had been labeled OFF by the LLM labeling pipeline. Before trying another architecture, I had to fix the supervision.",
+      "Only 2 of 22 appliance outputs had independent measurement. I replaced unreliable labels with physics-informed rules based on sustained behavior, cycling, event shape and temporal constraints. Ambiguous windows were excluded instead of forced into a class.",
+      "Panel 3 needed more than a single power threshold. I separated sustained loads, compressor cycles, discrete high-power events and paired pulses. That decomposition helped address repeated false positives by considering how a signal behaves over time.",
+      "Architecture comparisons needed the same skepticism. MATNilm produced nearly constant per-appliance guesses, so I retained the BiLSTM on the evidence. A newer model did not solve a supervision problem.",
+      "The limitation matters: agreement with a rule-based labeler is not independent appliance accuracy. More independently metered examples remain necessary, especially for rare loads. The lesson I carry forward is to audit labels, inspect model sensitivity and document what an evaluation can actually establish."
+    ]
+  },
+  {
+    "id": "anylog-field-notes",
+    "title": "Debugging a pipeline that looked empty",
+    "kind": "Engineering notes",
+    "date": "October 2026",
+    "summary": "Field notes on partition discovery, REST request context and timestamp handling in our AnyLog deployment.",
+    "motif": "network",
+    "question": "Is the data missing, or is the query looking in the wrong place?",
+    "note": "Deployment-specific observations from my archived project records. Request behavior varies with runtime and routing context; these notes are not universal AnyLog configuration instructions.",
+    "source": "Complete Record with Essays and Project and Writing Archive · AnyLog operational lessons",
+    "body": [
+      "An empty query result did not always mean that ingestion had stopped. In our deployment, readings lived in discovered partition tables while a parent-table query could return nothing. Checking the actual tables and time window was more useful than immediately restarting the pipeline.",
+      "REST behavior also depended on request context. Missing the expected AnyLog user-agent header and mixing client-command syntax with REST headers caused failures. Host-side and container-side routing differed, so I learned to test a minimal query in the same runtime as the failing service.",
+      "Timestamp handling was another boundary to check explicitly. Event time and database ingestion time were different fields. A serialization change could turn a valid reading into a quarantined row; accepted formats had to be verified against the deployed ingestion path.",
+      "I also encountered channel-name predicates that failed where fetching a bounded time window and filtering in the client worked. That workaround needed a clear bound so a query fix did not become an unbounded data transfer.",
+      "My debugging order became: confirm recent data in the right partition, reduce the REST request to a minimal query, verify routing context, then check timestamps at each boundary. These steps separated missing data from a query or serialization failure without exposing household deployment details."
+    ]
   }
 ]
