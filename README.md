@@ -18,7 +18,7 @@ The homepage introduces Harsh, then presents selected work, writing and notes, e
 - `art-content.json`: artwork images, statements and reflections.
 - `build.py`: shared layout, homepage, experience and page generation.
 - `editorial.py`: essay formatting, summaries and reader navigation.
-- `visuals.py`: 34 distinct topic-specific SVG compositions and continuous motion sequences. Index previews of essays are static. The same subject retains its identity on its card and detail page; unrelated subjects never share illustrations.
+- `visuals.py`: 34 distinct topic-specific SVG compositions and continuous motion sequences. Writing previews and readers both animate, using their own palettes. The same subject retains its identity on its card and detail page; unrelated subjects never share illustrations.
 - `styles.css`: one consolidated blue design system and responsive layouts.
 - `site.js`: writing search.
 

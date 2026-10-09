@@ -5,7 +5,7 @@ E=html.escape
 from visuals import illustration
 
 def motif(identity,question='',compact=False):
- return f'<div class="essay-motif {"compact" if compact else ""}">{illustration(identity,static=compact)}</div>'+('' if not question else f'<p class="essay-question"><span>THE QUESTION</span><em>{E(question)}</em></p>')
+ return f'<div class="essay-motif {"compact" if compact else ""}">{illustration(identity)}</div>'+('' if not question else f'<p class="essay-question"><span>THE QUESTION</span><em>{E(question)}</em></p>')
 
 def rich(text):
  s=E(text)

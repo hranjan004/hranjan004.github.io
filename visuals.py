@@ -112,10 +112,87 @@ SCENES['anylog-field-notes']=( ''.join(rect(150+i*100,45,80,130)+line(f'M{160+i*
     circle(410,168,22,animate('cx','175;410;175',11))+line('M426 184 L445 205',animate('transform','translate(-235 0);translate(0 0);translate(-235 0)',11)))
 
 
+# Each subject has its own palette: background, depth, and three accents.
+PALETTES={
+ 'microgrid-manager':('#0b2825','#16443c','#6ee7a6','#f4ce62','#6edbe8'),
+ 'gpt2-performance':('#17172f','#30264c','#c4a5ff','#ffb77c','#6ee5ed'),
+ 'osmosis':('#092a3b','#174653','#55dff0','#ff87aa','#ffe38a'),
+ 'caching-proxy':('#12263b','#253c55','#79caff','#7de7c4','#ffd07a'),
+ 'gemma-anomaly':('#251633','#42264b','#d9a0ff','#ffadcf','#8bdcec'),
+ 'tesphase':('#282010','#463c20','#ffd76b','#9ce5c0','#ff9e7c'),
+ 'slug-board':('#182339','#34415b','#87c7ff','#ffb887','#a5e0c5'),
+ 'fpga-http':('#202528','#3c4448','#7ee8cf','#f3c16c','#9bc6ff'),
+ 'quick-add':('#271c2b','#4b3148','#ff9cb9','#8cdfed','#ffdc8e'),
+ 'quick-decode':('#152c2a','#2c4740','#7bd7b2','#d3b0ff','#ffe09c'),
+ 'spiking-networks':('#23152a','#442641','#ff9db1','#bfa7ff','#7ee8d5'),
+ 'weather-station':('#102938','#27444f','#78d6ed','#ffd379','#bcebab'),
+ 'battle-boats':('#101f36','#263b54','#82bfff','#fba59a','#7fe2d9'),
+ 'fire-and-fission':('#2f171b','#542626','#ff9960','#ffd978','#c5a6ff'),
+ 'famine-as-foundation':('#1b2a1c','#354d2c','#b7df8b','#f3cd72','#f39e84'),
+ 'participation-and-power':('#251c36','#443357','#b9a4ff','#ffb6a0','#79e1d1'),
+ 'what-is-art-for':('#162d32','#2b4b4e','#76e0d1','#f8c793','#c5b1f6'),
+ 'reconstructing-memory':('#252039','#453957','#d4b5ff','#ffa993','#8bd6e5'),
+ 'capstone-reflection':('#172b26','#2d4a40','#87e0bb','#efcc7e','#a4c9ff'),
+ 'electoral-systems':('#1b2440','#354365','#9cbbff','#ffc29a','#9de6d5'),
+ 'ovid-aftermath':('#302329','#59424b','#f5b1c8','#b7c5ff','#f7db99'),
+ 'sources-of-law':('#282618','#494932','#e7d490','#9edbc1','#afbdff'),
+ 'royce':('#18293b','#2e465b','#86d0ff','#eac480','#ffaab5'),
+ 'piece-by-piece':('#302126','#554039','#ffbd88','#a6ddc6','#c6b1ff'),
+ 'liberty':('#162f32','#305253','#96e4d0','#f8d489','#ffb4ad'),
+ 'unfinished-revolution':('#311e34','#563a55','#f7b0df','#d3bbff','#ffc18b'),
+ 'johnson-reagan':('#242438','#43445d','#b7c9ff','#ffbd9b','#a9dec2'),
+ 'under-the-thumb':('#2e241a','#514432','#efd08d','#c3b4f5','#8eddd1'),
+ 'flood-myths':('#102e3c','#235061','#7bdbf4','#a2baff','#ffe2a3'),
+ 'fire-fission-reflection':('#251b38','#443057','#c6a3ff','#ffb167','#91e2e6'),
+ 'connection-installation':('#1d2c31','#35494d','#a5dcd9','#f2b895','#d2b5ff'),
+ 'slug-board-reflection':('#2b2025','#4d373f','#f4a8b8','#89d4e9','#f8d599'),
+ 'nilm-labels':('#182d28','#314e3e','#a9e3a0','#ffc27d','#87d3eb'),
+ 'anylog-field-notes':('#212338','#3c4156','#b1c2fa','#7be0c6','#f2cb87'),
+}
+
+
 def illustration(identity, static=False):
-    """Stable identity is shared by the preview and detail, never by unrelated work."""
-    import re
-    shapes=SCENES[identity]
+    """Color, lighting and eased motion reinforce each subject's composition."""
+    import re, hashlib, xml.etree.ElementTree as ET
+    bg,depth,a,b,c=PALETTES[identity]
+    token='visual-'+identity
+    root=ET.fromstring('<g>'+SCENES[identity]+'</g>')
+    accents=[a,b,c]
+    n=0
+    for element in root.iter():
+        tag=element.tag
+        if tag in ['path','rect','circle','ellipse']:
+            color=accents[n%3];n+=1
+            element.set('stroke',color)
+            if element.get('fill')=='var(--visual-bg)':
+                element.set('fill',f'url(#{token}-surface)')
+            elif element.get('fill')=='currentColor':
+                element.set('fill',color)
+                if tag=='circle':element.set('filter',f'url(#{token}-glow)')
+            elif tag=='path' and element.get('d','').rstrip().endswith('Z'):
+                element.set('fill',color);element.set('fill-opacity','.14')
+            element.set('stroke-width','2.1' if tag!='circle' else '1.8')
+        elif tag=='text':
+            element.set('fill','#f2f4f5');element.set('letter-spacing','.8')
+        elif tag in ['animate','animateTransform'] and element.get('values') and element.get('calcMode')!='discrete':
+            values=element.get('values').split(';');count=len(values)
+            element.set('calcMode','spline')
+            element.set('keyTimes',';'.join(str(round(i/(count-1),5)) for i in range(count)))
+            element.set('keySplines',';'.join(['.42 0 .58 1']*(count-1)))
+    seed=int(hashlib.sha256(identity.encode()).hexdigest()[:8],16)
+    x1=80+seed%120;x2=410+seed%90;y1=35+seed%60;y2=115+seed%70
+    defs=f'''<defs>
+      <linearGradient id="{token}-backdrop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
+      <linearGradient id="{token}-surface" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
+      <filter id="{token}-ambient" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="28"/></filter>
+      <filter id="{token}-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>'''
+    ambience=f'''<g filter="url(#{token}-ambient)" stroke="none" opacity=".13"><circle cx="{x1}" cy="{y1}" r="75" fill="{a}">{animate('cx',f'{x1};{x1+28};{x1}',17+seed%9)}</circle><circle cx="{x2}" cy="{y2}" r="84" fill="{b}">{animate('cy',f'{y2};{y2-22};{y2}',21+seed%13)}</circle></g>'''
+    # Fine framing brings depth without obscuring the actual diagram.
+    frame=f'<path d="M22 50 V22 H62 M538 22 H578 V50 M578 190 V218 H538 M62 218 H22 V190" fill="none" stroke="{c}" stroke-opacity=".16" stroke-width="1"/>'
+    content=ET.tostring(root,encoding='unicode')
+    backdrop='' if identity in list(PALETTES)[:13] else f'<rect width="600" height="240" fill="url(#{token}-backdrop)" stroke="none"/>'
+    shapes=defs+backdrop+ambience+frame+content
     if static:
         shapes=re.sub(r'<animate(?:Motion|Transform)?\b[^>]*/>','',shapes)
     return f'<svg class="topic-visual" data-visual="{identity}" viewBox="0 0 600 240" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{shapes}</svg>'

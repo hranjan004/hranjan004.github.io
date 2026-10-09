@@ -7,7 +7,7 @@ from urllib.parse import urlsplit, unquote, urljoin
 from urllib.request import urlopen
 from concurrent.futures import ThreadPoolExecutor
 import argparse, hashlib, json, re, xml.etree.ElementTree as ET
-from visuals import SCENES, illustration
+from visuals import SCENES, PALETTES, illustration
 
 ROOT=Path(__file__).resolve().parent
 
@@ -53,11 +53,16 @@ def verify(base_url=None):
     assert seen==set(pages), f'Unreachable pages: {set(pages)-seen}'
     projects=json.loads((ROOT/'content.json').read_text());essays=json.loads((ROOT/'writing.json').read_text());arts=json.loads((ROOT/'art-content.json').read_text())
     identities=[p['id'] for p in projects+essays]
-    assert set(identities)==set(SCENES)
+    assert set(identities)==set(SCENES)==set(PALETTES)
+    assert len(set(PALETTES.values()))==len(identities), 'Reused palette'
     assert len(set(SCENES.values()))==len(identities), 'Reused composition'
     motion_signatures=[]
     for identity in identities:
         svg=ET.fromstring(illustration(identity))
+        ids={e.get('id') for e in svg.iter() if e.get('id')}
+        for e in svg.iter():
+            for value in e.attrib.values():
+                for ref in re.findall(r'url\(#([^)]*)\)',value):assert ref in ids, f'{identity}: missing SVG definition {ref}'
         animations=[e for e in svg.iter() if e.tag.startswith('animate')]
         assert animations, f'{identity}: no motion'
         assert all(e.get('repeatCount')=='indefinite' for e in animations)

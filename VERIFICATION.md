@@ -1,4 +1,4 @@
-# Portfolio verification — October 8, 2026
+# Portfolio verification — October 9, 2026
 
 ## Coverage
 
@@ -20,8 +20,8 @@
 ## Visuals and content
 
 - Original requested heading restored, including italic “real world.”
-- 34 different SVG compositions and animation sequences, one for each project and writing entry. All motion loops continuously. Writing-index illustrations are static previews.
-- Every SVG parsed successfully; static previews contain no animation elements.
+- 34 different SVG compositions and animation sequences, one for each project and writing entry. All motion loops continuously. Writing-index illustrations animate with the same subject-specific palettes as their readers.
+- Every SVG parsed successfully. All 34 palettes are distinct, and gradient/filter references resolve. Native SVG motion uses eased transitions, glows and gentle ambient lighting.
 - Original 28 archive image files retained with distinct hashes; source images decoded and checked for exact duplicate pixels. Similar process views remain distinct source photographs.
 - The same work intentionally retains its identity between its preview and detail page. No stock photograph or generic animation is shared between unrelated projects.
 - All images have alternative text. Decorative SVGs are hidden from assistive technology.
