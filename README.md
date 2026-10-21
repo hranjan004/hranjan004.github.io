@@ -6,7 +6,7 @@ Static GitHub Pages portfolio at https://hranjan004.github.io/.
 
 The homepage introduces Harsh, then presents selected work, writing and notes, experience, About, and original art. All projects are available in a searchable collection with status and scope filters. Detail pages retain technical depth without making the homepage dense.
 
-- 33 project entries, each labeled Completed or Ongoing.
+- 32 project entries, each labeled Completed or Ongoing.
 - 21 essays and engineering notes, with searchable summaries and full readers.
 - Six artwork galleries preserving all 28 archive images, with statements and reflections.
 - Shared navigation, contact links and the latest supplied downloadable CV.
@@ -18,7 +18,7 @@ The homepage introduces Harsh, then presents selected work, writing and notes, e
 - `art-content.json`: artwork images, statements and reflections.
 - `build.py`: shared layout, homepage, experience and page generation.
 - `editorial.py`: essay formatting, summaries and reader navigation.
-- `visuals.py`: 54 distinct topic-specific SVG compositions and continuous motion sequences. Writing previews and readers both animate, using their own palettes. The same subject retains its identity on its card and detail page; unrelated subjects never share illustrations.
+- `visuals.py`: 53 distinct topic-specific SVG compositions and continuous motion sequences. Writing previews and readers both animate, using their own palettes. The same subject retains its identity on its card and detail page; unrelated subjects never share illustrations.
 - `styles.css`: one consolidated blue design system and responsive layouts.
 - `site.js`: writing search and project search / status / scope filters.
 
@@ -26,7 +26,7 @@ Run `python3 build.py` and commit the generated HTML with the source edits. Prev
 
 ## Verification
 
-Run `python3 verify.py` for local links and anchors, reachable pages, page headings, image alt text, project status, essay exclusions, image coverage, SVG validity and composition/motion uniqueness. Add `--base-url http://127.0.0.1:4174/` to verify all linked resources over HTTP. The October 21 browser checks cover all 33 project pages at mobile width, desktop/mobile collection rendering, project filters, homepage navigation and writing-search regression.
+Run `python3 verify.py` for local links and anchors, reachable pages, page headings, image alt text, project status, essay exclusions, image coverage, SVG validity and composition/motion uniqueness. Add `--base-url http://127.0.0.1:4174/` to verify all linked resources over HTTP. The October 21 browser checks cover all 32 project pages at mobile width, desktop/mobile collection rendering, project filters, homepage navigation and writing-search regression.
 
 ## Content boundaries
 
@@ -37,3 +37,5 @@ Microgrid is completed October 2026; the Tesphase role is CTO. The proxy's 50% c
 Project graphics are conceptual illustrations, not measured traces or captured product output. Original artwork previews link to the same work in its gallery. Distinct process views from the archive are retained.
 
 The October 2026 conversation export added 20 project entries after reviewing 1,211 conversation records. Repeated debugging conversations are consolidated; implementation, coursework, maintenance, design studies and proposals are distinguished. Harsh confirmed ownership of the additionally named work in the export. Private transcripts, account details and secrets remain outside the repository. Historical assistant suggestions are not evidence of successful deployment or measured impact.
+
+Homepage writing now uses three animated essay previews. Every project exposes tools, concepts and a concise implementation summary on its card, plus three tool-to-purpose explanations in the detail page. Concept search and all 32 mobile case-study layouts were checked. Siya Cabs was removed at the user’s request.

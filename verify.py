@@ -78,6 +78,11 @@ def verify(base_url=None):
     assert len(archive)==28
     assert len(set(hashlib.sha256(f.read_bytes()).hexdigest() for f in archive))==28
     assert all(p['status'] in ['Completed','Ongoing'] for p in projects)
+    assert all(len(p['concepts']) >= 2 and len(p['implementation']) == 3 for p in projects)
+    assert not (ROOT/'projects/siya-booking.html').exists()
+    assert all('siya-booking' not in f.read_text() for f in pages)
+    assert (ROOT/'index.html').read_text().count('class="essay-card"') == 3
+    assert all('Tools → implementation' in (ROOT/'projects'/f"{p['id']}.html").read_text() for p in projects)
     assert not any('intelligent energy management' in p['title'].lower() or 'application' in p['title'].lower() for p in essays)
     assert 'I build systems that work in the <em>real world.</em><br>And write about the world they work in.' in (ROOT/'index.html').read_text()
     if base_url:

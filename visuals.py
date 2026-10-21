@@ -171,7 +171,6 @@ SCENES['spotify-analyzer']=( ''.join(rect(110+i*33,150-(i*19)%80,21,30+(i*19)%80
 SCENES['market-forecasting']=(line('M90 180 H515 M90 180 V40 M100 130 L140 148 L175 80 L215 110 L260 70 L300 122 L345 60 L380 105 L425 50 L470 90 L510 65',animate('stroke-dashoffset','580;0;580',12.7),stroke_dasharray='580')+line('M345 30 V190',stroke_dasharray='5 6')+text(220,218,'TRAIN',11)+text(430,218,'FUTURE',11))
 SCENES['circuit-labs']=(line('M90 120 H165 L175 100 L190 140 L205 100 L220 140 L230 120 H290 M290 85 V155 M305 85 V155 M305 120 H370')+line('M390 130 C410 38 450 215 470 120 S510 40 530 120',animate('stroke-dashoffset','210;0',4.4),stroke_dasharray='190 20')+text(185,192,'R',17)+text(298,192,'C',17)+text(460,204,'RESPONSE',10))
 SCENES['expression-art']=(text(300,42,'×',24)+text(190,112,'AVG',16)+text(410,112,'SIN',16)+line('M290 53 L195 90 M310 53 L405 90 M180 123 L135 174 M200 123 L245 174 M410 123 L440 174')+text(135,192,'x',20)+text(245,192,'y',20)+text(440,192,'x · y',18)+circle(300,35,25,animate('r','22;29;22',5.9))+text(300,231,'EXPRESSIONS BECOME STRUCTURE',10))
-SCENES['siya-booking']=(rect(85,35,210,155)+text(190,66,'YOUR TRIP',12)+rect(105,83,170,30)+rect(105,132,170,30)+line('M350 165 Q390 155 390 100 T485 55',stroke_dasharray='6 6')+circle(350,165,8)+circle(485,55,8)+travel('M350 165 Q390 155 390 100 T485 55',7.4)+text(300,225,'LESS FRICTION · CLEARER INTENT',10))
 SCENES['ml-foundations']=( ''.join(rect(80,44+i*42,75,28) for i in range(4))+line('M155 120 H235 M360 120 H440')+''.join(circle(x,y,9)+line(f'M{x+9} {y} L{330 if x==255 else 440} 120') for x in [255,330] for y in [55,120,185])+rect(440,83,85,74)+text(482,123,'LOSS',14)+travel('M155 120 H440',4.9)+text(300,231,'DATA SHAPES → MODEL → VALIDATION',10))
 NEW_COLORS={
  'concurrent-http':('#172333','#2b4960','#7ce5de','#ffc484','#d9b5ff'),
@@ -192,7 +191,6 @@ NEW_COLORS={
  'market-forecasting':('#182a31','#304958','#86d7e8','#ffc98e','#c6b9ff'),
  'circuit-labs':('#2c201d','#513c32','#ffc08c','#88e0d6','#c3b7ff'),
  'expression-art':('#261f36','#483754','#d9b2ff','#ffca9a','#99e4cc'),
- 'siya-booking':('#1d2933','#364b59','#a5d9ee','#ffca94','#c5dfac'),
  'ml-foundations':('#282039','#47345d','#c4b2ff','#8ee8cf','#ffb79b'),
 }
 PALETTES.update(NEW_COLORS)

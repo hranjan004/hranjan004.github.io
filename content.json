@@ -46,6 +46,25 @@
     ],
     "related": [
       "capstone-reflection"
+    ],
+    "concepts": [
+      "Edge inference",
+      "Time-series labeling",
+      "Service boundaries"
+    ],
+    "implementation": [
+      {
+        "tool": "PyTorch + ONNX",
+        "use": "Train appliance models and run local inference."
+      },
+      {
+        "tool": "Kafka + EdgeLake + PostgreSQL",
+        "use": "Move meter readings into queryable storage."
+      },
+      {
+        "tool": "FastAPI + React + Ollama",
+        "use": "Expose readings, predictions and a local question interface."
+      }
     ]
   },
   {
@@ -80,7 +99,26 @@
       "The benchmark account should retain compiler flags, matrix dimensions and thread settings. The published portfolio metric remains the measured cache-miss change rather than an inferred training-throughput figure.",
       "The archived optimization work focuses on matmul_forward and matmul_backward and their pthread helpers. Integration had to stay within an existing notebook build, without adding compiler flags or external libraries."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Cache locality",
+      "SIMD",
+      "Parallel kernels"
+    ],
+    "implementation": [
+      {
+        "tool": "Linux perf",
+        "use": "Find the CPU kernels and cache misses that dominate execution."
+      },
+      {
+        "tool": "C + AVX2",
+        "use": "Pack matrix tiles and vectorize multiply–accumulate work."
+      },
+      {
+        "tool": "POSIX threads",
+        "use": "Split matrix work across CPU threads within the existing build."
+      }
+    ]
   },
   {
     "id": "osmosis",
@@ -115,7 +153,26 @@
       "Pixel counters produce display coordinates and blanking signals; frame pulses advance object motion. Separating these time scales keeps collision and game-state updates independent of pixel traversal.",
       "Configuration-time FDRE INIT values solve a different problem from synchronous runtime reset. The start-position failure required checking the clock-start sequence and rendered pixels, not just the state-machine transitions."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Synchronous logic",
+      "VGA timing",
+      "Collision detection"
+    ],
+    "implementation": [
+      {
+        "tool": "Verilog + FDRE",
+        "use": "Compose game state and movement from structural logic."
+      },
+      {
+        "tool": "Basys3 + VGA",
+        "use": "Drive pixel coordinates, blanking and color output."
+      },
+      {
+        "tool": "Simulation + bitmap rendering",
+        "use": "Check display timing and visible object positions."
+      }
+    ]
   },
   {
     "id": "caching-proxy",
@@ -151,7 +208,26 @@
       "A cache entry is reusable only when the full HTTP response is available and within the size bound. A mutex protects shared cache mutation; the linked-list order implements FIFO insertion order or LRU recency.",
       "HTTPS CONNECT is a bidirectional byte tunnel in the documented variant. TLS remains between client and origin, so the proxy cannot treat the encrypted payload as an ordinary cacheable HTTP response."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Response caching",
+      "Thread safety",
+      "TLS tunneling"
+    ],
+    "implementation": [
+      {
+        "tool": "C + TCP sockets",
+        "use": "Parse HTTP requests and relay client/origin traffic."
+      },
+      {
+        "tool": "Mutexes + FIFO / LRU",
+        "use": "Protect shared entries and manage eviction order."
+      },
+      {
+        "tool": "HTTP CONNECT",
+        "use": "Forward encrypted traffic as a bidirectional byte tunnel."
+      }
+    ]
   },
   {
     "id": "gemma-anomaly",
@@ -189,6 +265,25 @@
     ],
     "related": [
       "fire-fission-reflection"
+    ],
+    "concepts": [
+      "Parameter-efficient tuning",
+      "Agent coordination",
+      "Human review"
+    ],
+    "implementation": [
+      {
+        "tool": "QLoRA + PEFT / TRL",
+        "use": "Fine-tune one shared adapter conditioned on panel identity."
+      },
+      {
+        "tool": "vLLM + Lambda GPUs",
+        "use": "Serve the model for the three panel agents."
+      },
+      {
+        "tool": "Respan + Nango",
+        "use": "Trace outputs and connect incidents to a Sheets review workflow."
+      }
     ]
   },
   {
@@ -221,6 +316,25 @@
     ],
     "related": [
       "royce"
+    ],
+    "concepts": [
+      "Customer discovery",
+      "Authentication",
+      "Real-time state"
+    ],
+    "implementation": [
+      {
+        "tool": "React Native",
+        "use": "Build the mobile interface around customer priorities."
+      },
+      {
+        "tool": "Supabase",
+        "use": "Support authentication and synchronized application data."
+      },
+      {
+        "tool": "Node.js + customer interviews",
+        "use": "Connect backend workflows to the product roadmap."
+      }
     ]
   },
   {
@@ -258,6 +372,25 @@
     "related": [
       "slug-board-reflection",
       "royce"
+    ],
+    "concepts": [
+      "Relational modeling",
+      "Event CRUD",
+      "Integration contracts"
+    ],
+    "implementation": [
+      {
+        "tool": "React",
+        "use": "Build event cards and participation interactions."
+      },
+      {
+        "tool": "Supabase + PostgreSQL",
+        "use": "Model profiles, events, RSVPs, votes and comments."
+      },
+      {
+        "tool": "Scrum",
+        "use": "Coordinate the stack migration and feature work across the team."
+      }
     ]
   },
   {
@@ -288,7 +421,26 @@
     "technical": [
       "The software server provides reference behavior for request parsing and responses. Buffering, state sequencing and the hardware network interface remain design constraints to resolve before an end-to-end board demonstration."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Protocol parsing",
+      "Hardware buffering",
+      "State sequencing"
+    ],
+    "implementation": [
+      {
+        "tool": "C + HTTP",
+        "use": "Use software request behavior as the porting reference."
+      },
+      {
+        "tool": "Verilog + FPGA",
+        "use": "Explore buffering and synchronous request-handling logic."
+      },
+      {
+        "tool": "Board bring-up",
+        "use": "Work toward an end-to-end hardware request; this milestone remains open."
+      }
+    ]
   },
   {
     "id": "quick-add",
@@ -319,7 +471,26 @@
       "Two-flop synchronizers bring button signals into the clock domain; round latches retain each player’s response. The one-hot FSM resolves the shared window into scoring and the next round.",
       "The score register and game controller observe values on clock boundaries. Explicit game-over transitions handle the updated score on the following cycle rather than assuming it is immediately visible."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "One-hot FSM",
+      "Input synchronization",
+      "Cycle timing"
+    ],
+    "implementation": [
+      {
+        "tool": "Verilog + FDRE",
+        "use": "Implement round control and registered score state."
+      },
+      {
+        "tool": "Synchronizers + latches",
+        "use": "Capture each player’s answer within a shared response window."
+      },
+      {
+        "tool": "Icarus Verilog",
+        "use": "Check ties, missed answers and game-over transitions."
+      }
+    ]
   },
   {
     "id": "quick-decode",
@@ -351,7 +522,26 @@
     "technical": [
       "The counter lab exercises registered state, direction and load control. The reaction games add state sequencing and pseudo-random behavior; Osmosis extends the progression into display timing and moving objects."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Counters",
+      "Combinational arithmetic",
+      "State machines"
+    ],
+    "implementation": [
+      {
+        "tool": "Verilog + FDRE",
+        "use": "Build loadable counters, arithmetic logic and registered state."
+      },
+      {
+        "tool": "Basys3 + seven-segment display",
+        "use": "Display counter values and game output."
+      },
+      {
+        "tool": "LFSR + one-hot FSM",
+        "use": "Add pseudo-random behavior and reaction-game sequencing."
+      }
+    ]
   },
   {
     "id": "spiking-networks",
@@ -385,7 +575,26 @@
       "Spike encoding maps image intensity into temporal events. LIF neurons integrate current with membrane decay and emit spikes at a threshold; surrogate gradients approximate the non-differentiable threshold during training.",
       "Spike-health traces, loss behavior and optimizer updates must be checked together. Active neurons alone did not guarantee learning, while normalization changes could leave initialized currents too weak to cross threshold."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Temporal encoding",
+      "LIF dynamics",
+      "Surrogate gradients"
+    ],
+    "implementation": [
+      {
+        "tool": "PyTorch + snnTorch",
+        "use": "Train spiking models and inspect membrane and firing behavior."
+      },
+      {
+        "tool": "MNIST + CIFAR-10",
+        "use": "Compare rate, Poisson and latency encoding experiments."
+      },
+      {
+        "tool": "Colab",
+        "use": "Run training and examine loss and spike-health traces."
+      }
+    ]
   },
   {
     "id": "weather-station",
@@ -416,7 +625,26 @@
     "technical": [
       "The device obtains location from GET /location and posts its readings to the Raspberry Pi service. Separating configuration, acquisition and reporting makes the device/server protocol explicit."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Embedded acquisition",
+      "Device/server protocol",
+      "Configuration"
+    ],
+    "implementation": [
+      {
+        "tool": "Rust + ESP-IDF",
+        "use": "Implement the ESP32-C3 acquisition and reporting client."
+      },
+      {
+        "tool": "HTTP",
+        "use": "Fetch location, query outdoor weather and post readings."
+      },
+      {
+        "tool": "Raspberry Pi + Ubuntu",
+        "use": "Provide location configuration and accept device data."
+      }
+    ]
   },
   {
     "id": "battle-boats",
@@ -450,7 +678,26 @@
       "Timers and hardware interrupts supply events to the game state machines. Peripheral access and application state need clear boundaries so a hardware event produces one consistent state transition.",
       "Separating negotiation, field updates and message events makes turn-taking explicit. The agent owns the transition between negotiation, attack, wait and end-game behavior while the display reflects that state."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Event-driven control",
+      "Protocol state",
+      "Hardware interfaces"
+    ],
+    "implementation": [
+      {
+        "tool": "C + PIC32MX",
+        "use": "Organize game behavior into an agent state machine."
+      },
+      {
+        "tool": "UART + circular buffers",
+        "use": "Carry messages between boards."
+      },
+      {
+        "tool": "Timers + OLED",
+        "use": "Connect hardware events to gameplay and display state."
+      }
+    ]
   },
   {
     "id": "concurrent-http",
@@ -485,7 +732,26 @@
       "A successful socket read can return only part of a request. The parser must preserve bytes already received after the header terminator and account for the remaining body before completing a PUT.",
       "File locking and audit ordering are separate correctness concerns. Protecting file contents does not automatically make the log reflect the same operation order."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Request framing",
+      "Resource locking",
+      "Audit ordering"
+    ],
+    "implementation": [
+      {
+        "tool": "C + POSIX sockets",
+        "use": "Handle partial requests, GET / PUT operations and responses."
+      },
+      {
+        "tool": "pthreads + reader–writer locks",
+        "use": "Dispatch clients and coordinate shared-file access."
+      },
+      {
+        "tool": "Clang + curl",
+        "use": "Work through build failures and protocol behavior."
+      }
+    ]
   },
   {
     "id": "concurrency-primitives",
@@ -519,7 +785,26 @@
       "Waiters recheck their predicates while holding the mutex after waking. A signal announces that state may have changed; it does not reserve an item or grant a lock.",
       "An N-way policy limits reader admission when a writer is waiting. Correctness depends on maintaining the counters and wake-up conditions together."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Producer–consumer",
+      "Condition predicates",
+      "Fairness policies"
+    ],
+    "implementation": [
+      {
+        "tool": "C + circular buffers",
+        "use": "Track head, tail and occupancy in a bounded queue."
+      },
+      {
+        "tool": "Mutexes + condition variables",
+        "use": "Protect state and coordinate waiting producers and consumers."
+      },
+      {
+        "tool": "Reader–writer locks",
+        "use": "Implement reader, writer and bounded-reader admission policies."
+      }
+    ]
   },
   {
     "id": "file-io",
@@ -551,7 +836,26 @@
     "technical": [
       "Text tokenization is appropriate for command fields, but payloads require byte-counted handling. The review exposed why treating the whole input as a null-terminated string is fragile."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Byte-counted I/O",
+      "Input boundaries",
+      "Resource cleanup"
+    ],
+    "implementation": [
+      {
+        "tool": "C + POSIX I/O",
+        "use": "Map get / set commands to file-descriptor operations."
+      },
+      {
+        "tool": "Command parsing",
+        "use": "Separate command fields from declared payload bytes."
+      },
+      {
+        "tool": "Linux + Clang",
+        "use": "Build and debug the command-line utility."
+      }
+    ]
   },
   {
     "id": "pacman-search",
@@ -583,7 +887,26 @@
     "technical": [
       "Minimax assumes an adversarial opponent; expectimax models chance. Alpha–beta pruning reduces unnecessary search while preserving the minimax decision for the same tree and evaluator."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Adversarial search",
+      "Heuristic evaluation",
+      "Search depth"
+    ],
+    "implementation": [
+      {
+        "tool": "Python + PacAI",
+        "use": "Generate successor states and run repeated games."
+      },
+      {
+        "tool": "Minimax + alpha–beta",
+        "use": "Choose moves under adversarial assumptions and prune search."
+      },
+      {
+        "tool": "Expectimax + state features",
+        "use": "Explore chance-based opponents and score food/ghost tradeoffs."
+      }
+    ]
   },
   {
     "id": "pacman-learning",
@@ -615,7 +938,26 @@
     "technical": [
       "The Q update moves the current estimate toward reward plus the discounted best next-state value. A terminal transition has no future action value; handling that case prevents invalid action lookups."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Bellman updates",
+      "Exploration / exploitation",
+      "Policy evaluation"
+    ],
+    "implementation": [
+      {
+        "tool": "Python + PacAI",
+        "use": "Run Gridworld and Pac-Man learning exercises."
+      },
+      {
+        "tool": "Q-learning",
+        "use": "Update action values from observed transitions and rewards."
+      },
+      {
+        "tool": "Epsilon-greedy + value iteration",
+        "use": "Compare exploration-based learning with model-based planning."
+      }
+    ]
   },
   {
     "id": "pacman-capture",
@@ -646,7 +988,26 @@
     "technical": [
       "Maze distance captures walls that Manhattan distance ignores. Feature weights still need care: rewarding distance from a teammate or opponent too strongly can overpower the goal of making progress."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Multi-agent coordination",
+      "Role switching",
+      "Spatial heuristics"
+    ],
+    "implementation": [
+      {
+        "tool": "Python + PacAI",
+        "use": "Implement a cooperative capture-the-flag policy."
+      },
+      {
+        "tool": "Maze-distance search",
+        "use": "Measure routes around walls to food, allies and threats."
+      },
+      {
+        "tool": "Weighted features",
+        "use": "Switch between attack and defense and penalize traps or reversal."
+      }
+    ]
   },
   {
     "id": "avl-wordrange",
@@ -678,7 +1039,26 @@
     "technical": [
       "For inclusive bounds, count(keys ≤ upper) − count(keys < lower) handles the boundary correctly. Heights and sizes must be recomputed after rotations in child-before-parent order."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Tree balancing",
+      "Order statistics",
+      "Metadata invariants"
+    ],
+    "implementation": [
+      {
+        "tool": "C++ + AVL trees",
+        "use": "Maintain a balanced index as words are inserted."
+      },
+      {
+        "tool": "Subtree sizes",
+        "use": "Compute inclusive range counts from two rank traversals."
+      },
+      {
+        "tool": "Rotation debugging",
+        "use": "Trace incorrect counts through height, size and comparison updates."
+      }
+    ]
   },
   {
     "id": "six-degrees",
@@ -710,7 +1090,26 @@
     "technical": [
       "BFS finds a shortest path by edge count in an unweighted graph. Keeping movie identity on the predecessor edge preserves an explanation of why each connection exists."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Shortest paths",
+      "Graph representation",
+      "Path reconstruction"
+    ],
+    "implementation": [
+      {
+        "tool": "C++ + hash maps",
+        "use": "Map actor and movie names to compact IDs."
+      },
+      {
+        "tool": "Adjacency lists + BFS",
+        "use": "Find the fewest actor-to-actor connections."
+      },
+      {
+        "tool": "Predecessor records",
+        "use": "Recover both the actors and films explaining the path."
+      }
+    ]
   },
   {
     "id": "algorithms-lab",
@@ -743,7 +1142,26 @@
     "technical": [
       "An explicit stack must retain enough state to resume a search after backtracking. A linked-list cursor must distinguish being off-list from pointing at a valid node; that invariant affects insertion and deletion alike."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Memory ownership",
+      "Traversal state",
+      "Backtracking"
+    ],
+    "implementation": [
+      {
+        "tool": "C / C++ + linked lists",
+        "use": "Build ADTs, word indexes and indirect sorting clients."
+      },
+      {
+        "tool": "Graphs + BFS / DFS",
+        "use": "Represent connections and explore reachable states."
+      },
+      {
+        "tool": "Explicit stacks",
+        "use": "Resume constraint search while preserving fixed N-Queens placements."
+      }
+    ]
   },
   {
     "id": "mininet-network",
@@ -774,7 +1192,26 @@
     "technical": [
       "Adding a link does not by itself solve addressing or routing. Host namespaces and switch connectivity need to be checked separately when diagnosing reachability."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Network emulation",
+      "Host namespaces",
+      "Connectivity"
+    ],
+    "implementation": [
+      {
+        "tool": "Python + Mininet",
+        "use": "Define virtual hosts, switches and links."
+      },
+      {
+        "tool": "TCLink",
+        "use": "Configure link behavior for the topology exercise."
+      },
+      {
+        "tool": "Linux networking tools",
+        "use": "Inspect interfaces and distinguish host commands from the outer shell."
+      }
+    ]
   },
   {
     "id": "saaf",
@@ -807,7 +1244,26 @@
     "technical": [
       "The archive’s failures occur before feature logic: obsolete CLI paths, missing Metro configuration and package setup. Resolving the toolchain is necessary before claiming an end-to-end product."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "App scaffolding",
+      "Authentication flow",
+      "Toolchain setup"
+    ],
+    "implementation": [
+      {
+        "tool": "React Native + Metro",
+        "use": "Explore the mobile welcome screen and simulator setup."
+      },
+      {
+        "tool": "Next.js + Supabase",
+        "use": "Prototype a separate web login path."
+      },
+      {
+        "tool": "Node.js",
+        "use": "Work through dependency and project-configuration failures."
+      }
+    ]
   },
   {
     "id": "stanchat",
@@ -840,7 +1296,26 @@
     "technical": [
       "A stream-driven interface updates the conversation when stored messages change. Database permissions and identity become essential before expanding a local demonstration into a shared public service."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Reactive UI",
+      "Real-time persistence",
+      "Vertical-slice delivery"
+    ],
+    "implementation": [
+      {
+        "tool": "Flutter + Dart",
+        "use": "Build the message composer and scrollable conversation."
+      },
+      {
+        "tool": "Cloud Firestore",
+        "use": "Write timestamped messages and listen for updates."
+      },
+      {
+        "tool": "FlutterFire + Android emulator",
+        "use": "Configure the integration and reach a working local chat demo."
+      }
+    ]
   },
   {
     "id": "voice-recorder",
@@ -873,7 +1348,26 @@
     "technical": [
       "Audio-session state, playback controls and persisted file metadata need to stay consistent. A UI migration is incomplete until recording, interruption, playback and deletion behavior are checked on a device."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Audio state",
+      "Persistence",
+      "Platform migration"
+    ],
+    "implementation": [
+      {
+        "tool": "Swift + UIKit",
+        "use": "Modernize legacy screens and delegate interactions."
+      },
+      {
+        "tool": "AVFoundation + Core Data",
+        "use": "Review recording/playback behavior and stored metadata."
+      },
+      {
+        "tool": "Native UI components",
+        "use": "Replace an incompatible rating dependency as part of iOS 18 work."
+      }
+    ]
   },
   {
     "id": "ttl-computer",
@@ -905,7 +1399,26 @@
     "technical": [
       "The proposed integration checks include bus contention, clock distribution and control timing. Each datapath module needs independent verification before the fetch–decode–execute sequence can be validated."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Datapath architecture",
+      "Control sequencing",
+      "Bus contention"
+    ],
+    "implementation": [
+      {
+        "tool": "TTL logic + breadboards",
+        "use": "Plan independently testable ALU and register modules."
+      },
+      {
+        "tool": "EEPROM + control logic",
+        "use": "Design the proposed instruction/control sequence."
+      },
+      {
+        "tool": "Schematics + build plan",
+        "use": "Define integration checks; physical completion remains a future milestone."
+      }
+    ]
   },
   {
     "id": "spotify-analyzer",
@@ -937,7 +1450,26 @@
     "technical": [
       "The analysis needs a clearly defined target and held-out evaluation. Descriptive playlist statistics and a predictive regression model answer different questions."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "API data modeling",
+      "Regression",
+      "Held-out evaluation"
+    ],
+    "implementation": [
+      {
+        "tool": "Python + Spotify API",
+        "use": "Plan playlist retrieval and structured data preparation."
+      },
+      {
+        "tool": "pandas + linear regression",
+        "use": "Scope descriptive analysis and a predictive experiment."
+      },
+      {
+        "tool": "GitHub",
+        "use": "Organize starter documentation; evaluated modeling is still proposed."
+      }
+    ]
   },
   {
     "id": "market-forecasting",
@@ -969,7 +1501,26 @@
     "technical": [
       "Chronological validation matters because random splits can mix future information into training. A complex sequence model needs to justify its cost against the baseline on the same evaluation period."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Temporal validation",
+      "Feature selection",
+      "Non-stationarity"
+    ],
+    "implementation": [
+      {
+        "tool": "XGBoost",
+        "use": "Plan a baseline for interactions in noisy tabular features."
+      },
+      {
+        "tool": "LSTM",
+        "use": "Propose a follow-up experiment for sequence effects."
+      },
+      {
+        "tool": "Time-series validation",
+        "use": "Define out-of-period evaluation before claiming predictive value."
+      }
+    ]
   },
   {
     "id": "circuit-labs",
@@ -1002,7 +1553,26 @@
     "technical": [
       "Magnitude is expressed as 20 log10(Vout/Vin). Phase follows from the time shift at the measurement frequency; both the sign convention and the distinction between peak and peak-to-peak values matter."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Transfer functions",
+      "Time constants",
+      "Gain and phase"
+    ],
+    "implementation": [
+      {
+        "tool": "Breadboards + RC / RL + op-amps",
+        "use": "Study equivalent circuits, transients and filters."
+      },
+      {
+        "tool": "Oscilloscope + function generator",
+        "use": "Relate observed amplitude and delay to circuit behavior."
+      },
+      {
+        "tool": "Bode plots",
+        "use": "Compare frequency-dependent gain and phase with the model."
+      }
+    ]
   },
   {
     "id": "expression-art",
@@ -1033,38 +1603,26 @@
     "technical": [
       "Algebraic data types make each operation explicit. A structural recursion handles leaves directly and derives a parent’s depth from the deepest child."
     ],
-    "related": []
-  },
-  {
-    "id": "siya-booking",
-    "title": "Siya Cabs booking flow",
-    "category": "Product · Interface design",
-    "status": "Completed",
-    "stage": "Design study",
-    "headline": "Helping a customer book with fewer decisions.",
-    "summary": "A desktop booking-flow study for tourist and temple travel in India.",
-    "metric": "Quick booking",
-    "label": "form scope and landing-page design",
-    "tools": [
-      "Figma",
-      "UI prototyping",
-      "Form design",
-      "Information architecture"
+    "related": [],
+    "concepts": [
+      "Algebraic data types",
+      "Structural recursion",
+      "Expression trees"
     ],
-    "problem": "Customers who already know their trip should be able to start a booking without navigating a crowded landing page.",
-    "approach": [
-      "I scoped the information needed for a quick cab booking and explored desktop layouts around that primary task.",
-      "I iterated on visual density, separating essential booking fields from destination inspiration and supporting information."
-    ],
-    "result": [
-      "Developed a booking-form direction and landing-page design concepts.",
-      "The study clarified the shortest useful path from trip intent to a booking request."
-    ],
-    "note": "This is a design study. A deployed booking backend, completed bookings and conversion uplift are not established.",
-    "technical": [
-      "The core interface question is which fields are required to price or schedule a trip and which can wait. Progressive disclosure reduces the initial decision load without losing necessary details."
-    ],
-    "related": []
+    "implementation": [
+      {
+        "tool": "Haskell",
+        "use": "Represent coordinates and operations as typed constructors."
+      },
+      {
+        "tool": "Recursion",
+        "use": "Calculate expression depth from the deepest child."
+      },
+      {
+        "tool": "GHCi",
+        "use": "Work through construction and inspection of compound expressions."
+      }
+    ]
   },
   {
     "id": "ml-foundations",
@@ -1097,6 +1655,25 @@
     "technical": [
       "Class-index labels and floating-point features have different type requirements. Validation should avoid gradient tracking and use the same fitted preprocessing as training."
     ],
-    "related": []
+    "related": [],
+    "concepts": [
+      "Preprocessing",
+      "Tensor contracts",
+      "Training / validation"
+    ],
+    "implementation": [
+      {
+        "tool": "pandas + Colab",
+        "use": "Prepare tabular data and debug notebook input paths."
+      },
+      {
+        "tool": "PyTorch + Adam",
+        "use": "Connect model outputs, loss computation and parameter updates."
+      },
+      {
+        "tool": "Validation loops",
+        "use": "Check predictions without tracking gradients."
+      }
+    ]
   }
 ]
