@@ -201,7 +201,8 @@
       "FADE TO BLACK."
     ],
     "question": "What do inventors owe the world they change?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "I bring Prometheus and Oppenheimer into conversation to ask what a maker owes the world after releasing something powerful. The screenplay uses disagreement, rather than a tidy moral, to explore the distance between intention and consequence."
   },
   {
     "id": "famine-as-foundation",
@@ -229,7 +230,8 @@
       "www.uh.edu/~cldue/texts/demeter.html."
     ],
     "question": "How does dependence become institutional order?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "I read Demeter’s famine as more than a disruption of nature. It becomes a way of negotiating obligation between gods and humans, turning catastrophe into the foundation of ritual and institutional power."
   },
   {
     "id": "participation-and-power",
@@ -247,7 +249,8 @@
       "Debord is unambiguous in insisting that the spectacle is inseparable from commodity relations and the division of labor, meaning that any meaningful intervention must confront the totality of that system rather than merely decorating its surfaces with alternative content. Bishop takes a more historically grounded and genuinely ambivalent approach, tracing how artists since the avant-garde have attempted to make art politically effective while resisting commodification, but she also pushes back against the idea that social usefulness should serve as the primary criterion for evaluating participatory work. Her argument for restoring attention to \"conceptual and affective complexity\" suggests that the best social practice art holds political effectiveness and critical reflection together without collapsing one into the other. Art that aims only at measurable social outcomes risks becoming instrumental in ways that flatten its capacity to generate unexpected meaning, while art that retreats entirely into self-referential critique can become a comfortable spectacle of its own cleverness. Bishop's framework is valuable precisely because it refuses to resolve this tension, insisting instead that the projects worth caring about are \"rich, dense and inexhaustible\" because they resist easy categorization. Debord would likely remain skeptical of any art that does not ultimately challenge the commodity form, but Bishop reminds us that the path from aesthetic disruption to political transformation has never been straightforward and that pretending otherwise is its own form of illusion."
     ],
     "question": "Does participation redistribute power or merely display it?",
-    "source": "Collected Essays, pp. 29–30"
+    "source": "Collected Essays, pp. 29–30",
+    "introduction": "I am interested in the difference between being invited to participate and having the power to shape the outcome. Through Debord and Bishop, I examine who sets the rules, who controls representation, and what participation actually changes."
   },
   {
     "id": "what-is-art-for",
@@ -263,7 +266,8 @@
       "Bruguera's preference for witnessing over participation initially seems counterintuitive because we tend to assume that active doing is always more meaningful than attentive watching, but her distinction actually reveals something quite profound about how power operates in artistic encounters. When she critiques participation, she is pointing to the way participatory frameworks can become scripted performances where audiences enact predetermined roles rather than exercising genuine agency, and I think that critique lands with real force even if it does not entirely settle the matter. Her notion of witnessing suggests that carrying the memory of an event forward and being able to attest to what happened is itself a form of political action, which is compelling because it draws on deep traditions of testimony and accountability. I am positively skeptical here because while witnessing sounds beautiful in theory, I wonder whether it risks becoming a convenient justification for spectatorship that never translates into material change. Still, her example of the Cuba microphone piece where nobody dared speak for long stretches reveals something powerful about how the witness absorbs the emotional and political weight of collective fear, transforming silence itself into a kind of monument that no participant could have scripted or performed on command."
     ],
     "question": "Can art be useful without being reduced to an instrument?",
-    "source": "Collected Essays, pp. 31–32"
+    "source": "Collected Essays, pp. 31–32",
+    "introduction": "This essay asks how political art can be useful without reducing itself to a single message. Bruguera’s work gives me a way to think through the tension between witnessing, acting and leaving space for interpretation."
   },
   {
     "id": "reconstructing-memory",
@@ -281,7 +285,8 @@
       "I think what I appreciate most is that none of this work presents itself as having resolved anything. It accumulates questions with great care and leaves them, deliberately, open."
     ],
     "question": "Who controls what a reconstruction remembers?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "Morehshin Allahyari’s reconstructions made me think about what it means to rebuild an object when its history is fractured. I explore digital reconstruction as an act of memory that must make room for uncertainty, rather than pretending to restore a complete past."
   },
   {
     "id": "capstone-reflection",
@@ -301,7 +306,8 @@
       "The lesson I am taking away is to keep teammates engaged in the technical work for longer so the load distributes better and so I can direct them into specific parts of the development earlier. This was the most fun I have had in any UCSC class because it had a real sponsor, a real home, and a real system running every day. The change I would suggest is more frequent in person meetings with the professor to stay on track, and more in person meets with the entire team."
     ],
     "question": "What changes when the user is a real household?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "Building for a real home changed my understanding of what it means to finish a technical project. I reflect on the relationship between sponsor expectations, uncertain labels, changing scope and a deployment someone can actually use."
   },
   {
     "id": "electoral-systems",
@@ -325,7 +331,8 @@
       "Works Cited Daly, Tom, and David Landau Jones. \"Parties versus Democracy: Addressing the Threat of Political Parties to Democratic Consolidation.\" The Entrenchment of Democracy, edited by Tom Ginsburg, Aziz Z. Huq, and Tarunabh Khaitan, Cambridge UP, 2024, pp. 160-85. Gardbaum, Stephen. \"Democratic Design.\" The Entrenchment of Democracy, edited by Tom Ginsburg, Aziz Z. Huq, and Tarunabh Khaitan, Cambridge UP, 2024, pp. 186-210. \"Institutional Design & Electoral Politics.\" Week 6, Lecture 2. Course Lecture Slides. Khaitan, Tarunabh. \"Political Parties in Constitutional Theory.\" The Entrenchment of Democracy, edited by Tom Ginsburg, Aziz Z. Huq, and Tarunabh Khaitan, Cambridge UP, 2024, pp. 135-59."
     ],
     "question": "Who is accountable when democratic institutions fail?",
-    "source": "Collected Essays, pp. 10–12"
+    "source": "Collected Essays, pp. 10–12",
+    "introduction": "I compare the United States and Germany through a practical democratic question: can people identify who is responsible when institutions fail? The argument weighs party regulation, political speech and the visibility of power."
   },
   {
     "id": "ovid-aftermath",
@@ -341,7 +348,8 @@
       "Ovid generalizes this pattern beyond these two episodes. In the Theseus praise song, bodies denied proper burial are tossed by sea and earth \"until they hardened into cliffs,\" showing that violence routinely sediments into geography in this poem. What ties all three passages together is a vision of ecology that feels genuinely uncomfortable. Ovid distributes agency across nonhuman participants. Foam and soil and air and fear all do work in these transformations and the human body is only one material among many being processed into landscape. The world that results is not harmonious nature but a terrain saturated with loss and coded with danger. Apollodorus shows us what Heracles did. Ovid shows us what the world became because he did it, and that world is never as inert or as innocent as it first appears."
     ],
     "question": "What remains when the story is told?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "I look past the hero’s victory to the world left behind. In Ovid, poison, stone and altered landscapes keep the consequences of violence present long after the heroic action has ended."
   },
   {
     "id": "sources-of-law",
@@ -370,7 +378,8 @@
       "Notes 1. John Bell, \"Sources of Law,\" Cambridge Law Journal 77, no. 1 (2018): 40–71. 2. Mark Van Hoecke and Mark Warrington, \"Legal Cultures, Legal Paradigms and Legal Doctrine: Towards a New Model for Comparative Law,\" International and Comparative Law Quarterly 47, no. 3 (1998): 495–536. 3. Haiting Zhang, \"The Laws on the Ethnic Minority Autonomous Regions in China: Legal Norms and Practices,\" Loyola University Chicago International Law Review 9, no. 2 (2012): 249–64. 4. Human Rights Watch, \"China: Draft 'Ethnic Unity' Law Tightens Ideological Control,\" news release, September 28, 2023. 5. Tibet Action Institute, Separated from Their Families, Hidden from the World: China's Vast System of Colonial Boarding Schools Inside Tibet (2021). 6. Office of the United Nations High Commissioner for Human Rights (OHCHR), \"China: UN Experts Alarmed by Separation of 1 Million Tibetan Children from Families and Forced Assimilation at Residential Schools,\" press release, February 6, 2023. 7. OHCHR, Assessment of Human Rights Concerns in the Xinjiang Uyghur Autonomous Region, People's Republic of China (Geneva: United Nations, 2022). 8. N. Bruce Duthu, \"Federal Indian Law,\" Oxford Research Encyclopedia of American History (New York: Oxford University Press, 2014). 9. Equal Justice Initiative, \"'Cultural Genocide' and Native American Children,\" September 1, 2014. 10. Fabiola Cineas, \"Reckoning with the Theft of Native American Children,\" Vox, July 27, 2021. 11. Nick Estes, \"The U.S. Stole Generations of Indigenous Children to Open the West,\" High Country News, October 14, 2019. 12. U.S. Commission on Civil Rights, Broken Promises: Continuing Federal Funding Shortfall for Native Americans (Washington, DC: USCCR, 2018). 13. Amnesty International, Maze of Injustice: The Failure to Protect Indigenous Women from Sexual Violence in the USA (London: Amnesty International, 2007). 14. American Civil Liberties Union and Human Rights Watch, \"This Is Our Land\": How US Surveillance and Policing Threaten Indigenous Rights in Thacker Pass (New York: ACLU/HRW, 2025)."
     ],
     "question": "When does legal recognition become meaningful autonomy?",
-    "source": "Collected Essays, pp. 5–9"
+    "source": "Collected Essays, pp. 5–9",
+    "introduction": "Formal recognition does not necessarily create meaningful autonomy. Comparing China and the United States, I examine how constitutional language, interpretation and institutional control shape Indigenous rights in practice."
   },
   {
     "id": "royce",
@@ -394,7 +403,8 @@
       "His true contribution wasn't creating Waterfall—it was recognizing that software complexity requires disciplined frameworks that can bend without breaking. The misunderstood engineer who charted paths through software's treacherous waters, revealing that survival depends on structured adaptability rather than rigid adherence to any single approach."
     ],
     "question": "How can structure make engineering more adaptable?",
-    "source": "Collected Essays, pp. 46–47"
+    "source": "Collected Essays, pp. 46–47",
+    "introduction": "I return to Royce’s argument to look beyond the familiar waterfall diagram. What interests me is the emphasis on feedback, documentation and early risk reduction—and how easily a simplified process model can obscure those ideas."
   },
   {
     "id": "piece-by-piece",
@@ -412,7 +422,8 @@
       "What Piece by Piece hopes to create is not a solution to the complex history of this land but a visible and ongoing conversation about what it means to live here together. Documentation would include photography of each phase, short audio recordings of participants describing what they painted and why, and a published catalog of every liquid that went into the pigments, preserving the communal fingerprint of a project that was never meant to belong to any single person."
     ],
     "question": "Who gets to leave a mark on a shared place?",
-    "source": "Project and Writing Archive · preserved writing"
+    "source": "Project and Writing Archive · preserved writing",
+    "introduction": "I propose a participatory mural connected to UCSC’s Barn Theater and shared campus memory. The piece explores how reused materials and collective contributions could create a public artwork; consultation and implementation remain future stages."
   },
   {
     "id": "liberty",
@@ -431,7 +442,8 @@
     ],
     "question": "Whose freedom does a definition of liberty protect?",
     "note": "Collected Essays · pages 14–15. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 14–15"
+    "source": "Collected Essays, pp. 14–15",
+    "introduction": "The same word can describe incompatible political demands. Reading Lincoln alongside South Carolina’s claims, I examine how arguments about liberty depend on whose freedom is recognized and whose subordination is made invisible."
   },
   {
     "id": "unfinished-revolution",
@@ -449,7 +461,8 @@
     ],
     "question": "What remains unfinished after rights are recognized?",
     "note": "Collected Essays · pages 16–16. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 16–16"
+    "source": "Collected Essays, pp. 16–16",
+    "introduction": "I examine the distance between formal equality and the conditions that make equality usable. Friedan and NOW bring work, childcare and education into a discussion of freedom that cannot stop at legal recognition."
   },
   {
     "id": "johnson-reagan",
@@ -466,7 +479,8 @@
     ],
     "question": "Is equal treatment enough to create equal opportunity?",
     "note": "Collected Essays · pages 17–17. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 17–17"
+    "source": "Collected Essays, pp. 17–17",
+    "introduction": "Johnson and Reagan offer different accounts of what government owes its citizens. I compare their views of opportunity and responsibility, asking how each frames the relationship between public action and individual freedom."
   },
   {
     "id": "under-the-thumb",
@@ -492,7 +506,8 @@
     ],
     "question": "How does catastrophe become an institution?",
     "note": "Collected Essays · pages 19–22. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context. The collection notes that its Ovid quotations use the More translation; they have not been silently relabeled as McCarter.",
-    "source": "Collected Essays, pp. 19–22"
+    "source": "Collected Essays, pp. 19–22",
+    "introduction": "Across Gilgamesh, creation stories, Ovid and Demeter, disaster does more than threaten life: it helps establish duties and authority. I trace how catastrophe becomes an argument about who must obey whom."
   },
   {
     "id": "flood-myths",
@@ -512,7 +527,8 @@
     ],
     "question": "What makes a warning possible to hear—and easy to ignore?",
     "note": "Collected Essays · pages 23–24. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 23–24"
+    "source": "Collected Essays, pp. 23–24",
+    "introduction": "I read flood narratives as accounts of vulnerability, warning and survival. Gilgamesh raises questions about how people respond when the forces sustaining their world also threaten to destroy it."
   },
   {
     "id": "fire-fission-reflection",
@@ -532,7 +548,8 @@
     ],
     "question": "What responsibility survives after an invention leaves its maker?",
     "note": "Collected Essays · pages 25–27. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 25–27"
+    "source": "Collected Essays, pp. 25–27",
+    "introduction": "This reflection explains the choices behind Fire and Fission. I wanted the conversation to remain unresolved because the consequences of invention cannot always be reduced to the maker’s intentions or settled by a final speech."
   },
   {
     "id": "connection-installation",
@@ -572,7 +589,8 @@
     ],
     "question": "What happens when the viewer becomes part of the structure?",
     "note": "Collected Essays · pages 33–36. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 33–36"
+    "source": "Collected Essays, pp. 33–36",
+    "introduction": "I compare how Sze, Hamilton and Parker make space part of an artwork’s meaning. Suspense, bodily attention and the viewer’s movement change what it means to encounter the work."
   },
   {
     "id": "slug-board-reflection",
@@ -613,7 +631,8 @@
     ],
     "question": "Why can individually working components still fail as a system?",
     "note": "Collected Essays · pages 55–57. Original essay text; formatting adapted for the web. Historical claims and interpretations reflect the writing’s original context.",
-    "source": "Collected Essays, pp. 55–57"
+    "source": "Collected Essays, pp. 55–57",
+    "introduction": "Our incomplete MVP forced me to distinguish individual progress from team delivery. I examine how remote collaboration, separate branches and unclear integration contracts contributed to the outcome—and what I would change in the next project."
   },
   {
     "id": "nilm-labels",
@@ -630,7 +649,8 @@
       "Panel 3 needed more than a single power threshold. I separated sustained loads, compressor cycles, discrete high-power events and paired pulses. That decomposition helped address repeated false positives by considering how a signal behaves over time.",
       "Architecture comparisons needed the same skepticism. MATNilm produced nearly constant per-appliance guesses, so I retained the BiLSTM on the evidence. A newer model did not solve a supervision problem.",
       "The limitation matters: agreement with a rule-based labeler is not independent appliance accuracy. More independently metered examples remain necessary, especially for rare loads. The lesson I carry forward is to audit labels, inspect model sensitivity and document what an evaluation can actually establish."
-    ]
+    ],
+    "introduction": "When a model’s labels are unreliable, improving the architecture can solve the wrong problem. I explain why generated appliance labels were insufficient for our NILM work, how physical and temporal rules helped, and why independent measurements still matter."
   },
   {
     "id": "anylog-field-notes",
@@ -647,6 +667,7 @@
       "Timestamp handling was another boundary to check explicitly. Event time and database ingestion time were different fields. A serialization change could turn a valid reading into a quarantined row; accepted formats had to be verified against the deployed ingestion path.",
       "I also encountered channel-name predicates that failed where fetching a bounded time window and filtering in the client worked. That workaround needed a clear bound so a query fix did not become an unbounded data transfer.",
       "My debugging order became: confirm recent data in the right partition, reduce the REST request to a minimal query, verify routing context, then check timestamps at each boundary. These steps separated missing data from a query or serialization failure without exposing household deployment details."
-    ]
+    ],
+    "introduction": "These notes follow the small deployment details that can make valid data appear to be missing. I work through partition queries, REST headers and timestamp formats as a practical method for tracing a request from the client to the readings it should return."
   }
 ]

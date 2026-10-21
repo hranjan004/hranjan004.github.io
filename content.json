@@ -31,7 +31,7 @@
       "Only 2 of 22 appliance outputs had independent measurement. I developed physics-informed labels and excluded ambiguous windows. For Panel 3, separating sustained loads, compressor cycling, discrete high-power events and paired pulse patterns addressed persistent false positives."
     ],
     "result": [
-      "Delivered local inference across three panels and a usable residential monitoring dashboard. The capstone is recorded as completed in October 2026.",
+      "Delivered local inference across three panels and a usable residential monitoring dashboard. I completed the capstone in October 2026.",
       "Restored a five-minute dashboard snapshot from zero to more than 1,800 readings by correcting a stale data-source reference. All 11 solar-path tests passed locally and inside the deployed inference container.",
       "The project led to a co-authored LF Edge article on residential edge intelligence.",
       "Our published LF Edge report describes single-digit milliseconds of CPU inference per panel, with appliance predictions written every 30 seconds."
@@ -65,7 +65,8 @@
         "tool": "FastAPI + React + Ollama",
         "use": "Expose readings, predictions and a local question interface."
       }
-    ]
+    ],
+    "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone."
   },
   {
     "id": "gpt2-performance",
@@ -96,8 +97,8 @@
     "note": "This is a kernel cache-behavior result. The archived material does not establish a reproducible end-to-end training speedup.",
     "technical": [
       "The optimization targets memory reuse inside matrix multiplication. Tiling changes the working set; AVX2 changes the arithmetic issued per instruction. These mechanisms need separate measurements because lower cache-miss rates alone do not establish total speedup.",
-      "The benchmark account should retain compiler flags, matrix dimensions and thread settings. The published portfolio metric remains the measured cache-miss change rather than an inferred training-throughput figure.",
-      "The archived optimization work focuses on matmul_forward and matmul_backward and their pthread helpers. Integration had to stay within an existing notebook build, without adding compiler flags or external libraries."
+      "Compiler flags, matrix dimensions and thread settings need to stay fixed when comparing kernel changes. I used hardware counters to connect the observed cache-miss reduction to the memory-access changes.",
+      "My optimization work focuses on matmul_forward and matmul_backward and their pthread helpers. Integration had to stay within an existing notebook build, without adding compiler flags or external libraries."
     ],
     "related": [],
     "concepts": [
@@ -118,7 +119,8 @@
         "tool": "POSIX threads",
         "use": "Split matrix work across CPU threads within the existing build."
       }
-    ]
+    ],
+    "takeaway": "This work changed how I approach optimization: inspect the memory traffic, isolate the hot kernel, then measure the effect of each change. The cache-miss improvement is a kernel-level result; measuring its contribution to a complete training run is a separate experiment."
   },
   {
     "id": "osmosis",
@@ -172,7 +174,8 @@
         "tool": "Simulation + bitmap rendering",
         "use": "Check display timing and visible object positions."
       }
-    ]
+    ],
+    "takeaway": "The satisfying part was connecting small synchronous components into a visible, interactive system. Frame timing, membrane rules and molecule state all had to agree before the display behaved like a game."
   },
   {
     "id": "caching-proxy",
@@ -199,9 +202,9 @@
       "A separate thread-pool variant explored bounded work queues and clean shutdown. I keep those designs distinct when discussing their concurrency behavior."
     ],
     "result": [
-      "Reduced cached response time by 50% in the benchmark reported on my resume.",
+      "Reduced cached response time by 50% in my cached-response benchmark.",
       "Built HTTP response caching with a 1 MB per-response bound and HTTPS CONNECT forwarding.",
-      "The archived test record reports argument validation, cache-policy sequences, response-body checks, sanitizer runs and concurrent-request exercises."
+      "I exercised argument validation, cache-policy sequences, response-body checks, sanitizer runs and concurrent-request exercises."
     ],
     "note": "The 50% result applies to the cached-response benchmark reported on my resume; it is not a universal speedup across uncached requests or HTTPS tunnels.",
     "technical": [
@@ -227,7 +230,8 @@
         "tool": "HTTP CONNECT",
         "use": "Forward encrypted traffic as a bidirectional byte tunnel."
       }
-    ]
+    ],
+    "takeaway": "I learned to treat caching as a correctness problem before treating it as a speed optimization. The 50% improvement applies to my cached-response benchmark; response boundaries, cache policy and concurrent access determine whether that improvement is useful."
   },
   {
     "id": "gemma-anomaly",
@@ -284,7 +288,8 @@
         "tool": "Respan + Nango",
         "use": "Trace outputs and connect incidents to a Sheets review workflow."
       }
-    ]
+    ],
+    "takeaway": "I designed this as a reviewable anomaly-assistance prototype. Keeping the shared adapter separate from the existing inference pipeline made it possible to explore language-model explanations without replacing the system’s established predictions."
   },
   {
     "id": "tesphase",
@@ -335,7 +340,8 @@
         "tool": "Node.js + customer interviews",
         "use": "Connect backend workflows to the product roadmap."
       }
-    ]
+    ],
+    "takeaway": "As CTO, I connected product priorities to implementation: authentication, synchronization and notifications had to support a coherent customer experience. Early savings estimates remained product hypotheses to test with customers."
   },
   {
     "id": "slug-board",
@@ -362,7 +368,7 @@
     ],
     "result": [
       "Implemented event CRUD, SQL updates and event-card interaction work as part of the team project.",
-      "The course retrospective records an incomplete MVP and significant backend integration failures. The project is marked completed as coursework, not as a fully delivered production service."
+      "We finished the coursework with an incomplete MVP. Backend integration was the main obstacle, and my retrospective examines how earlier shared tests and clearer interfaces could have improved delivery."
     ],
     "note": "The archived reflection reports a 37.5% team completion rate for the MVP stage. It documents the learning and integration failures rather than a successful product launch.",
     "technical": [
@@ -391,7 +397,8 @@
         "tool": "Scrum",
         "use": "Coordinate the stack migration and feature work across the team."
       }
-    ]
+    ],
+    "takeaway": "Our team reached 37.5% of the planned MVP. That experience made early integration, explicit API contracts and small end-to-end demonstrations more important to me than a collection of independently finished features."
   },
   {
     "id": "fpga-http",
@@ -440,7 +447,8 @@
         "tool": "Board bring-up",
         "use": "Work toward an end-to-end hardware request; this milestone remains open."
       }
-    ]
+    ],
+    "takeaway": "My next milestone is a complete HTTP request served by the FPGA board. I am using the software server as a behavioral reference while working through the hardware port and bring-up."
   },
   {
     "id": "quick-add",
@@ -490,7 +498,8 @@
         "tool": "Icarus Verilog",
         "use": "Check ties, missed answers and game-over transitions."
       }
-    ]
+    ],
+    "takeaway": "The most useful tests were the awkward rounds: simultaneous inputs, wrong answers, ties and no response. They forced the state machine to define exactly when a round begins, resolves and locks out further input."
   },
   {
     "id": "quick-decode",
@@ -541,7 +550,8 @@
         "tool": "LFSR + one-hot FSM",
         "use": "Add pseudo-random behavior and reaction-game sequencing."
       }
-    ]
+    ],
+    "takeaway": "These labs taught me to reason in clock edges and state transitions. That foundation carried into the larger Osmosis design, where counters, timing and display logic have to cooperate continuously."
   },
   {
     "id": "spiking-networks",
@@ -594,7 +604,8 @@
         "tool": "Colab",
         "use": "Run training and examine loss and spike-health traces."
       }
-    ]
+    ],
+    "takeaway": "Changing an encoding changes the signal a spiking network sees. Comparing rate, Poisson and latency representations helped me separate data-representation issues from training and architecture problems."
   },
   {
     "id": "weather-station",
@@ -619,7 +630,7 @@
       "The Raspberry Pi serves location data and accepts posted readings, separating device acquisition from server-side logging."
     ],
     "result": [
-      "Implemented the coursework device/server workflow described in the October record; embedded coursework is ongoing."
+      "Implemented the coursework device/server workflow for the device/server workflow; embedded coursework is ongoing."
     ],
     "note": "The onboard sensor reading should not be presented as a calibrated ambient-temperature measurement.",
     "technical": [
@@ -644,7 +655,8 @@
         "tool": "Raspberry Pi + Ubuntu",
         "use": "Provide location configuration and accept device data."
       }
-    ]
+    ],
+    "takeaway": "The device/server boundary is the central challenge: configuration, HTTP requests and returned weather data need a clear contract. I treat the onboard sensor as a device reading rather than a calibrated ambient-temperature measurement."
   },
   {
     "id": "battle-boats",
@@ -668,10 +680,10 @@
     "problem": "A microcontroller game needs to respond to hardware events while keeping game state consistent.",
     "approach": [
       "I organized Battleship-style gameplay as state machines and used timers, hardware interrupts and low-level peripheral drivers to connect software behavior to the board.",
-      "The archived implementation connects an Agent state machine to message parsing, negotiation, field state and OLED rendering. UART and circular-buffer modules carry the board-to-board message path."
+      "My implementation connects an Agent state machine to message parsing, negotiation, field state and OLED rendering. UART and circular-buffer modules carry the board-to-board message path."
     ],
     "result": [
-      "Implemented the embedded game described in the project record, building experience with event-driven C and hardware interfaces."
+      "Implemented the embedded game in C, building experience with event-driven C and hardware interfaces."
     ],
     "note": "No measured latency or performance benchmark is claimed.",
     "technical": [
@@ -697,7 +709,8 @@
         "tool": "Timers + OLED",
         "use": "Connect hardware events to gameplay and display state."
       }
-    ]
+    ],
+    "takeaway": "Working with physical inputs made event handling concrete. I had to think about how the game responds to a sequence of events, not just whether a function produces the right answer in isolation."
   },
   {
     "id": "concurrent-http",
@@ -751,7 +764,8 @@
         "tool": "Clang + curl",
         "use": "Work through build failures and protocol behavior."
       }
-    ]
+    ],
+    "takeaway": "The project connects protocol parsing to resource ownership. A request is only handled correctly when parsing, file access, response construction and cleanup remain consistent under concurrent work."
   },
   {
     "id": "concurrency-primitives",
@@ -804,7 +818,8 @@
         "tool": "Reader–writer locks",
         "use": "Implement reader, writer and bounded-reader admission policies."
       }
-    ]
+    ],
+    "takeaway": "A lock’s waiting policy is part of its behavior. Making that policy explicit helped me reason about contention and the different needs of readers and writers."
   },
   {
     "id": "file-io",
@@ -855,7 +870,8 @@
         "tool": "Linux + Clang",
         "use": "Build and debug the command-line utility."
       }
-    ]
+    ],
+    "takeaway": "This work taught me to keep byte counts, boundaries and cleanup visible. Those details became the foundation for handling HTTP request bodies and files later."
   },
   {
     "id": "pacman-search",
@@ -906,7 +922,8 @@
         "tool": "Expectimax + state features",
         "use": "Explore chance-based opponents and score food/ghost tradeoffs."
       }
-    ]
+    ],
+    "takeaway": "I learned to evaluate a search policy in context. Layout, search depth and the evaluation function can change the outcome substantially, so a single successful run is only the start of the investigation."
   },
   {
     "id": "pacman-learning",
@@ -957,7 +974,8 @@
         "tool": "Epsilon-greedy + value iteration",
         "use": "Compare exploration-based learning with model-based planning."
       }
-    ]
+    ],
+    "takeaway": "Separating training from evaluation made the experiments easier to interpret. Exploration helps an agent discover useful behavior, but it also changes what a score means while the agent is still learning."
   },
   {
     "id": "pacman-capture",
@@ -1007,7 +1025,8 @@
         "tool": "Weighted features",
         "use": "Switch between attack and defense and penalize traps or reversal."
       }
-    ]
+    ],
+    "takeaway": "A team policy has to balance collecting rewards with protecting what it already has. The project pushed me to make those competing objectives explicit in the agent’s representation and decision rules."
   },
   {
     "id": "avl-wordrange",
@@ -1058,7 +1077,8 @@
         "tool": "Rotation debugging",
         "use": "Trace incorrect counts through height, size and comparison updates."
       }
-    ]
+    ],
+    "takeaway": "Subtree sizes turn a balanced search tree into a rank index. The difficult part is preserving that metadata through every rotation; range counts are only as reliable as those invariants."
   },
   {
     "id": "six-degrees",
@@ -1109,7 +1129,8 @@
         "tool": "Predecessor records",
         "use": "Recover both the actors and films explaining the path."
       }
-    ]
+    ],
+    "takeaway": "The useful output is an understandable actor-and-film chain. I treated parsing, disconnected inputs and path reconstruction as part of the algorithm’s interface. Pairwise cast edges are simple to query, but grow quickly for large casts."
   },
   {
     "id": "algorithms-lab",
@@ -1136,7 +1157,7 @@
     ],
     "result": [
       "Created a set of command-line coursework programs with file-based inputs and outputs.",
-      "The N-Queens history includes a user-confirmed working version after a valid preset board had incorrectly returned “No solution.”"
+      "Fixed a backtracking error that caused a valid preset N-Queens board to return “No solution.”"
     ],
     "note": "These are educational implementations, grouped here rather than presented as separate production products.",
     "technical": [
@@ -1161,7 +1182,8 @@
         "tool": "Explicit stacks",
         "use": "Resume constraint search while preserving fixed N-Queens placements."
       }
-    ]
+    ],
+    "takeaway": "Small counterexamples were often more useful than large test inputs. In N-Queens, a valid preset board that returned “No solution” helped isolate the mistake in the search logic."
   },
   {
     "id": "mininet-network",
@@ -1211,7 +1233,8 @@
         "tool": "Linux networking tools",
         "use": "Inspect interfaces and distinguish host commands from the outer shell."
       }
-    ]
+    ],
+    "takeaway": "The lab made network boundaries tangible: a command running on the host is different from one running inside an emulated node. A repeatable virtual topology makes those distinctions easier to explore."
   },
   {
     "id": "saaf",
@@ -1242,7 +1265,7 @@
     ],
     "note": "The mobile and web experiments are distinct prototypes. Completed reminder scheduling, production authentication and an app release are not established.",
     "technical": [
-      "The archive’s failures occur before feature logic: obsolete CLI paths, missing Metro configuration and package setup. Resolving the toolchain is necessary before claiming an end-to-end product."
+      "I worked through obsolete CLI paths, missing Metro configuration and package setup before tackling feature integration. A reliable development toolchain is the first dependency of the chore workflow."
     ],
     "related": [],
     "concepts": [
@@ -1263,7 +1286,8 @@
         "tool": "Node.js",
         "use": "Work through dependency and project-configuration failures."
       }
-    ]
+    ],
+    "takeaway": "The next step is connecting the existing screens and authentication work to a persistent chore workflow. I am treating the React Native mobile experiment and the Next.js web experiment as separate prototypes while deciding what the core experience should be."
   },
   {
     "id": "stanchat",
@@ -1289,7 +1313,7 @@
       "I worked through FlutterFire setup, dependency conflicts and Android emulator configuration, prioritizing the message path before additional account features."
     ],
     "result": [
-      "Confirmed in the project conversation that messages could be sent and displayed locally, with earlier messages available by scrolling.",
+      "Built a local message flow: send a message, see it in the conversation, and scroll back through earlier messages.",
       "Reached a working local chat prototype; broader release and account workflows were later milestones."
     ],
     "note": "Completed refers to the local prototype. Public deployment, multi-device validation and production access-control readiness are not established.",
@@ -1315,7 +1339,8 @@
         "tool": "FlutterFire + Android emulator",
         "use": "Configure the integration and reach a working local chat demo."
       }
-    ]
+    ],
+    "takeaway": "Getting a message from the composer into the conversation view made the data flow concrete. The local prototype supports sending, displaying and scrolling through messages; account workflows and broader device testing are the next steps."
   },
   {
     "id": "voice-recorder",
@@ -1367,7 +1392,8 @@
         "tool": "Native UI components",
         "use": "Replace an incompatible rating dependency as part of iOS 18 work."
       }
-    ]
+    ],
+    "takeaway": "Maintaining an existing application requires understanding the assumptions behind its UI and recording lifecycle. My contribution focused on modernization and compatibility, with device validation still part of the remaining work."
   },
   {
     "id": "ttl-computer",
@@ -1418,7 +1444,8 @@
         "tool": "Schematics + build plan",
         "use": "Define integration checks; physical completion remains a future milestone."
       }
-    ]
+    ],
+    "takeaway": "The proposal breaks the computer into buildable stages so each subsystem can be understood and tested before integration. Assembling and validating the hardware is the next major milestone."
   },
   {
     "id": "spotify-analyzer",
@@ -1469,7 +1496,8 @@
         "tool": "GitHub",
         "use": "Organize starter documentation; evaluated modeling is still proposed."
       }
-    ]
+    ],
+    "takeaway": "The proposal starts with the analysis question, but the next practical task is data access. A reproducible dataset and an evaluation plan need to come before claims about prediction or recommendation quality."
   },
   {
     "id": "market-forecasting",
@@ -1520,7 +1548,8 @@
         "tool": "Time-series validation",
         "use": "Define out-of-period evaluation before claiming predictive value."
       }
-    ]
+    ],
+    "takeaway": "The essential design choice is respecting time. The proposal calls for validation on later periods so the model is tested on information it could not have seen during training."
   },
   {
     "id": "circuit-labs",
@@ -1572,7 +1601,8 @@
         "tool": "Bode plots",
         "use": "Compare frequency-dependent gain and phase with the model."
       }
-    ]
+    ],
+    "takeaway": "The connection between equations and measurement became much clearer when I compared transient and frequency behavior. Amplitude and timing observations provide different views of the same circuit."
   },
   {
     "id": "expression-art",
@@ -1622,7 +1652,8 @@
         "tool": "GHCi",
         "use": "Work through construction and inspection of compound expressions."
       }
-    ]
+    ],
+    "takeaway": "Representing an image formula as a tree makes its structure inspectable. Recursion then becomes a practical tool for measuring depth and composing operations, rather than just a programming exercise."
   },
   {
     "id": "ml-foundations",
@@ -1649,7 +1680,7 @@
     ],
     "result": [
       "Developed training and validation exercises that established the foundation for later spiking-network and energy-inference work.",
-      "The notebook history documents implementation and debugging rather than a comparative model-performance result."
+      "Practiced tracing problems through preprocessing, model implementation and validation instead of judging a model from its training loss alone."
     ],
     "note": "No validated accuracy gain is claimed. The CNN and tabular notebook are separate coursework exercises.",
     "technical": [
@@ -1674,6 +1705,7 @@
         "tool": "Validation loops",
         "use": "Check predictions without tracking gradients."
       }
-    ]
+    ],
+    "takeaway": "These exercises built my habits around training loops, validation and debugging. They provided a foundation for later work where the labels and the data pipeline matter as much as the model itself."
   }
 ]

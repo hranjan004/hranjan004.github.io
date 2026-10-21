@@ -197,45 +197,57 @@ PALETTES.update(NEW_COLORS)
 PROJECT_IDS.update(NEW_COLORS)
 
 
+from motion_refinements import refine
+SCENES = refine(SCENES)
+
 def illustration(identity, static=False):
     """Color, lighting and eased motion reinforce each subject's composition."""
     import re, hashlib, xml.etree.ElementTree as ET
     bg,depth,a,b,c=PALETTES[identity]
     token='visual-'+identity
     root=ET.fromstring('<g>'+SCENES[identity]+'</g>')
-    accents=[a,b,c]
-    n=0
+    # Color communicates roles: structures, connectors, moving events.
     for element in root.iter():
         tag=element.tag
         if tag in ['path','rect','circle','ellipse']:
-            color=accents[n%3];n+=1
+            role=element.attrib.pop('data-role', '')
+            fill=element.get('fill')
+            structural=tag=='rect' or fill=='var(--visual-bg)'
+            event=tag=='circle' and fill=='currentColor'
+            color=(b if role=='particle-1' else a) if role else (a if structural else c if event else b)
             element.set('stroke',color)
-            if element.get('fill')=='var(--visual-bg)':
+            element.set('stroke-width',element.get('stroke-width','1.5' if structural else '1.7'))
+            if structural:
                 element.set('fill',f'url(#{token}-surface)')
-            elif element.get('fill')=='currentColor':
+                element.set('rx',element.get('rx','7'))
+                element.set('stroke-opacity',element.get('stroke-opacity','.65'))
+            elif fill=='currentColor':
                 element.set('fill',color)
-                if tag=='circle':element.set('filter',f'url(#{token}-glow)')
+                if event:element.set('filter',f'url(#{token}-glow)')
             elif tag=='path' and element.get('d','').rstrip().endswith('Z'):
-                element.set('fill',color);element.set('fill-opacity','.14')
-            element.set('stroke-width','2.1' if tag!='circle' else '1.8')
+                element.set('fill',a);element.set('fill-opacity','.12')
+            if element.get('marker-end')=='url(#ARROW)':element.set('marker-end',f'url(#{token}-arrow)')
         elif tag=='text':
-            element.set('fill','#f2f4f5');element.set('letter-spacing','.8')
-        elif tag in ['animate','animateTransform'] and element.get('values') and element.get('calcMode')!='discrete':
+            element.set('fill','#edf3f7');element.set('letter-spacing','.5')
+            element.set('font-family','ui-monospace, SFMono-Regular, Consolas, monospace')
+            element.set('font-weight','500')
+        elif tag in ['animate','animateTransform'] and element.get('values') and not element.get('calcMode'):
             values=element.get('values').split(';');count=len(values)
             element.set('calcMode','spline')
             element.set('keyTimes',';'.join(str(round(i/(count-1),5)) for i in range(count)))
-            element.set('keySplines',';'.join(['.42 0 .58 1']*(count-1)))
+            element.set('keySplines',';'.join(['.4 0 .2 1']*(count-1)))
     seed=int(hashlib.sha256(identity.encode()).hexdigest()[:8],16)
     x1=80+seed%120;x2=410+seed%90;y1=35+seed%60;y2=115+seed%70
     defs=f'''<defs>
+      <marker id="{token}-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L5 3 L0 6" fill="none" stroke="{b}" stroke-width="1"/></marker>
       <linearGradient id="{token}-backdrop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
       <linearGradient id="{token}-surface" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
       <filter id="{token}-ambient" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="28"/></filter>
-      <filter id="{token}-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur in="SourceGraphic" stdDeviation="2.4" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+      <filter id="{token}-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>'''
-    ambience=f'''<g filter="url(#{token}-ambient)" stroke="none" opacity=".13"><circle cx="{x1}" cy="{y1}" r="75" fill="{a}">{animate('cx',f'{x1};{x1+28};{x1}',17+seed%9)}</circle><circle cx="{x2}" cy="{y2}" r="84" fill="{b}">{animate('cy',f'{y2};{y2-22};{y2}',21+seed%13)}</circle></g>'''
-    # Fine framing brings depth without obscuring the actual diagram.
-    frame=f'<path d="M22 50 V22 H62 M538 22 H578 V50 M578 190 V218 H538 M62 218 H22 V190" fill="none" stroke="{c}" stroke-opacity=".16" stroke-width="1"/>'
+    # Quiet, static atmosphere keeps attention on the subject's motion.
+    ambience=f'<g filter="url(#{token}-ambient)" stroke="none" opacity=".08"><ellipse cx="130" cy="65" rx="130" ry="75" fill="{a}"/><ellipse cx="470" cy="170" rx="120" ry="65" fill="{b}"/></g>'
+    frame=f'<path d="M30 45 V25 H50 M550 25 H570 V45 M570 195 V215 H550 M50 215 H30 V195" fill="none" stroke="{a}" stroke-opacity=".1" stroke-width="1"/>'
     content=ET.tostring(root,encoding='unicode')
     backdrop='' if identity in PROJECT_IDS else f'<rect width="600" height="240" fill="url(#{token}-backdrop)" stroke="none"/>'
     shapes=defs+backdrop+ambience+frame+content
