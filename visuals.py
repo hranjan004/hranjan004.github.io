@@ -151,6 +151,54 @@ PALETTES={
 }
 
 
+# Archive additions: each diagram represents its own project, not measured output.
+PROJECT_IDS=set(list(PALETTES)[:13])
+SCENES['concurrent-http']=(rect(75,80,85,70)+text(117,119,'HTTP')+rect(220,35,65,160)+text(252,58,'QUEUE',9)+line('M160 115 H220')+''.join(rect(375,35+i*60,130,40)+text(440,60+i*60,'WORKER '+str(i+1),10)+line(f'M285 115 H325 V{55+i*60} H375') for i in range(3))+travel('M160 115 H325 V55 H375',4.1))
+SCENES['concurrency-primitives']=(rect(130,85,300,65)+''.join(rect(142+i*47,97,33,40,animate('opacity','.15;1;.15',3.2+i*.37)) for i in range(6))+line('M80 118 H130 M430 118 H515 M270 70 V45 H345')+circle(345,45,12,animate('r','8;14;8',4.8))+text(300,201,'WAIT · LOCK · SIGNAL',12))
+SCENES['file-io']=(rect(100,40,155,145)+text(177,72,'STDIN',13)+line('M123 97 H220 M123 119 H195 M123 142 H210')+line('M255 112 H350')+travel('M260 112 H347',3.7)+line('M350 55 H453 L490 92 V183 H350 Z M453 55 V92 H490')+text(420,140,'FILE',17))
+SCENES['pacman-search']=(line('M300 38 L185 100 M300 38 L415 100 M185 100 L125 174 M185 100 L245 174 M415 100 L355 174 M415 100 L475 174')+''.join(circle(x,y,15,animate('opacity','.3;1;.3',4+i*.31)) for i,(x,y) in enumerate([(300,38),(185,100),(415,100),(125,174),(245,174),(355,174),(475,174)]))+text(300,220,'EXPAND · EVALUATE · CHOOSE',11))
+SCENES['pacman-learning']=( ''.join(rect(165+c*50,25+r*46,42,38,animate('fill-opacity','.05;.5;.05',4+r*.51+c*.23),fill='currentColor') for r in range(4) for c in range(5))+travel('M185 182 V90 H285 V44 H385',8.3)+text(300,228,'REWARD → VALUE → POLICY',11))
+SCENES['pacman-capture']=(rect(105,28,390,170)+line('M300 28 V198',stroke_dasharray='5 8')+line('M160 60 V112 M160 62 H196 L185 78 H160 M440 120 V173 M440 122 H406 L417 138 H440')+circle(210,155,10,animate('cx','210;345;210',6.7),fill='currentColor')+circle(390,73,10,animate('cy','73;163;73',5.3),fill='currentColor')+text(300,225,'COORDINATE · COLLECT · DEFEND',11))
+SCENES['avl-wordrange']=(line('M300 45 L205 105 M300 45 L395 105 M205 105 L150 167 M205 105 L255 167 M395 105 L350 167 M395 105 L450 167')+''.join(circle(x,y,20)+text(x,y+4,label,11) for x,y,label in [(300,45,'7'),(205,105,'3'),(395,105,'3'),(150,167,'1'),(255,167,'1'),(350,167,'1'),(450,167,'1')])+line('M125 198 H475',animate('stroke-dashoffset','0;-350',7.1),stroke_dasharray='30 15')+text(300,230,'BALANCE + SUBTREE SIZE',11))
+SCENES['six-degrees']=(line('M95 125 L225 60 L370 160 L505 80 M225 60 L315 30 M370 160 L260 200')+''.join(circle(x,y,18)+text(x,y+4,l,10) for x,y,l in [(95,125,'A'),(225,60,'B'),(370,160,'C'),(505,80,'D')])+travel('M95 125 L225 60 L370 160 L505 80',6.2)+text(300,229,'EVERY EDGE HAS A FILM',11))
+SCENES['algorithms-lab']=( ''.join(rect(95+i*75,42,55,42)+text(122+i*75,68,str(i+1),12) for i in range(5))+line('M150 63 H170 M225 63 H245 M300 63 H320 M375 63 H395')+''.join(rect(230,110+i*26,140,19,animate('opacity','.2;1;.2',2.5+i*.43)) for i in range(4))+text(300,231,'LINK · TRAVERSE · BACKTRACK',11))
+SCENES['mininet-network']=(rect(205,82,75,60)+rect(340,82,75,60)+line('M280 112 H340 M140 48 L205 97 M140 181 L205 128 M415 97 L480 48 M415 128 L480 181')+''.join(rect(x-28,y-18,56,36) for x,y in [(120,42),(120,187),(500,42),(500,187)])+travel('M140 48 L240 112 H380 L480 181',5.6)+text(300,224,'VIRTUAL LINKS · REAL COMMANDS',10))
+SCENES['saaf']=(rect(125,28,135,178)+text(192,59,'CHORE',12)+''.join(rect(142,79+i*36,15,15)+line(f'M170 {87+i*36} H240') for i in range(3))+circle(394,106,49)+line('M394 106 V72 M394 106 L421 120')+circle(394,106,5,animate('r','3;8;3',3.9),fill='currentColor')+text(394,185,'REMIND',11))
+SCENES['stanchat']=(rect(110,22,145,190)+rect(345,22,145,190)+rect(125,52,95,35,animate('y','52;65;52',5.4))+rect(145,114,95,35)+rect(360,90,95,35,animate('y','90;104;90',4.6))+line('M255 106 H345')+travel('M260 106 H340',2.9)+text(300,233,'WRITE · SYNC · READ',10))
+SCENES['voice-recorder']=(rect(90,25,420,178)+''.join(line(f'M{120+i*18} 112 v{(-1 if i%2 else 1)*(15+(i*17)%55)}',animate('transform','translate(0 -8);translate(0 8);translate(0 -8)',1.1+i*.07)) for i in range(21))+circle(300,178,12,animate('fill-opacity','.2;1;.2',3.1),fill='currentColor')+text(300,227,'AUDIO · PLAYBACK · PERSISTENCE',10))
+SCENES['ttl-computer']=(rect(105,44,90,55)+text(150,77,'ALU')+rect(255,44,90,55)+text(300,77,'REG')+rect(405,44,90,55)+text(450,77,'RAM')+line('M150 99 V140 H450 V99 M300 99 V140 M300 140 V175')+rect(225,175,150,32)+text(300,196,'CONTROL',10)+travel('M150 140 H450',6.4)+text(300,233,'A DATAPATH YOU CAN SEE',10))
+SCENES['spotify-analyzer']=( ''.join(rect(110+i*33,150-(i*19)%80,21,30+(i*19)%80,animate('height',f'{30+(i*19)%80};20;{30+(i*19)%80}',3+i*.29),fill='currentColor',fill_opacity='.2') for i in range(6))+line('M350 180 V40 M350 180 H510 M370 155 L490 65')+''.join(circle(x,y,4,fill='currentColor') for x,y in [(375,143),(405,130),(420,93),(450,110),(475,69)])+text(300,225,'PLAYLIST → FEATURES → QUESTION',10))
+SCENES['market-forecasting']=(line('M90 180 H515 M90 180 V40 M100 130 L140 148 L175 80 L215 110 L260 70 L300 122 L345 60 L380 105 L425 50 L470 90 L510 65',animate('stroke-dashoffset','580;0;580',12.7),stroke_dasharray='580')+line('M345 30 V190',stroke_dasharray='5 6')+text(220,218,'TRAIN',11)+text(430,218,'FUTURE',11))
+SCENES['circuit-labs']=(line('M90 120 H165 L175 100 L190 140 L205 100 L220 140 L230 120 H290 M290 85 V155 M305 85 V155 M305 120 H370')+line('M390 130 C410 38 450 215 470 120 S510 40 530 120',animate('stroke-dashoffset','210;0',4.4),stroke_dasharray='190 20')+text(185,192,'R',17)+text(298,192,'C',17)+text(460,204,'RESPONSE',10))
+SCENES['expression-art']=(text(300,42,'×',24)+text(190,112,'AVG',16)+text(410,112,'SIN',16)+line('M290 53 L195 90 M310 53 L405 90 M180 123 L135 174 M200 123 L245 174 M410 123 L440 174')+text(135,192,'x',20)+text(245,192,'y',20)+text(440,192,'x · y',18)+circle(300,35,25,animate('r','22;29;22',5.9))+text(300,231,'EXPRESSIONS BECOME STRUCTURE',10))
+SCENES['siya-booking']=(rect(85,35,210,155)+text(190,66,'YOUR TRIP',12)+rect(105,83,170,30)+rect(105,132,170,30)+line('M350 165 Q390 155 390 100 T485 55',stroke_dasharray='6 6')+circle(350,165,8)+circle(485,55,8)+travel('M350 165 Q390 155 390 100 T485 55',7.4)+text(300,225,'LESS FRICTION · CLEARER INTENT',10))
+SCENES['ml-foundations']=( ''.join(rect(80,44+i*42,75,28) for i in range(4))+line('M155 120 H235 M360 120 H440')+''.join(circle(x,y,9)+line(f'M{x+9} {y} L{330 if x==255 else 440} 120') for x in [255,330] for y in [55,120,185])+rect(440,83,85,74)+text(482,123,'LOSS',14)+travel('M155 120 H440',4.9)+text(300,231,'DATA SHAPES → MODEL → VALIDATION',10))
+NEW_COLORS={
+ 'concurrent-http':('#172333','#2b4960','#7ce5de','#ffc484','#d9b5ff'),
+ 'concurrency-primitives':('#271d35','#493052','#d4a3ff','#9ce7be','#ffd58d'),
+ 'file-io':('#222d28','#3a5043','#c8e691','#89d7ec','#ffc2aa'),
+ 'pacman-search':('#2a2318','#4c402b','#ffe18a','#d0b0ff','#85dfe4'),
+ 'pacman-learning':('#142d34','#29505b','#8ce7d9','#edb4ff','#ffcc88'),
+ 'pacman-capture':('#292036','#4d355b','#d5adff','#7ddfe6','#ffb79a'),
+ 'avl-wordrange':('#182d22','#30513d','#a3e9a7','#ffd39e','#9ecaff'),
+ 'six-degrees':('#302226','#51333c','#ffb7ad','#91dae7','#e1bcff'),
+ 'algorithms-lab':('#20243a','#3c4364','#a9c4ff','#f5bb94','#9bdfcb'),
+ 'mininet-network':('#142c2c','#2b494d','#7de2cf','#e4c4ff','#f1d18e'),
+ 'saaf':('#2e2131','#53384d','#ecb5dc','#9edfd1','#ffd59e'),
+ 'stanchat':('#172938','#2e4c65','#9bdcff','#ffa7ca','#c4e99a'),
+ 'voice-recorder':('#2c1929','#503047','#ff9cc8','#c5b5ff','#7fe0d7'),
+ 'ttl-computer':('#2a281a','#4c492e','#ebd894','#a5e5ba','#a4c6ff'),
+ 'spotify-analyzer':('#152d25','#2d4d3d','#a0efae','#dcb4ff','#ffc397'),
+ 'market-forecasting':('#182a31','#304958','#86d7e8','#ffc98e','#c6b9ff'),
+ 'circuit-labs':('#2c201d','#513c32','#ffc08c','#88e0d6','#c3b7ff'),
+ 'expression-art':('#261f36','#483754','#d9b2ff','#ffca9a','#99e4cc'),
+ 'siya-booking':('#1d2933','#364b59','#a5d9ee','#ffca94','#c5dfac'),
+ 'ml-foundations':('#282039','#47345d','#c4b2ff','#8ee8cf','#ffb79b'),
+}
+PALETTES.update(NEW_COLORS)
+PROJECT_IDS.update(NEW_COLORS)
+
+
 def illustration(identity, static=False):
     """Color, lighting and eased motion reinforce each subject's composition."""
     import re, hashlib, xml.etree.ElementTree as ET
@@ -191,7 +239,7 @@ def illustration(identity, static=False):
     # Fine framing brings depth without obscuring the actual diagram.
     frame=f'<path d="M22 50 V22 H62 M538 22 H578 V50 M578 190 V218 H538 M62 218 H22 V190" fill="none" stroke="{c}" stroke-opacity=".16" stroke-width="1"/>'
     content=ET.tostring(root,encoding='unicode')
-    backdrop='' if identity in list(PALETTES)[:13] else f'<rect width="600" height="240" fill="url(#{token}-backdrop)" stroke="none"/>'
+    backdrop='' if identity in PROJECT_IDS else f'<rect width="600" height="240" fill="url(#{token}-backdrop)" stroke="none"/>'
     shapes=defs+backdrop+ambience+frame+content
     if static:
         shapes=re.sub(r'<animate(?:Motion|Transform)?\b[^>]*/>','',shapes)

@@ -77,7 +77,8 @@
     "note": "This is a kernel cache-behavior result. The archived material does not establish a reproducible end-to-end training speedup.",
     "technical": [
       "The optimization targets memory reuse inside matrix multiplication. Tiling changes the working set; AVX2 changes the arithmetic issued per instruction. These mechanisms need separate measurements because lower cache-miss rates alone do not establish total speedup.",
-      "The benchmark account should retain compiler flags, matrix dimensions and thread settings. The published portfolio metric remains the measured cache-miss change rather than an inferred training-throughput figure."
+      "The benchmark account should retain compiler flags, matrix dimensions and thread settings. The published portfolio metric remains the measured cache-miss change rather than an inferred training-throughput figure.",
+      "The archived optimization work focuses on matmul_forward and matmul_backward and their pthread helpers. Integration had to stay within an existing notebook build, without adding compiler flags or external libraries."
     ],
     "related": []
   },
@@ -340,7 +341,8 @@
     "problem": "Digital logic coursework moved from a stateful counter and display to reaction games with explicit sequencing.",
     "approach": [
       "I built a 16-bit loadable up/down counter with seven-segment display output.",
-      "Quick Decode and Quick Add extended that foundation with one-hot state machines and LFSR-based logic under structural design constraints."
+      "Quick Decode and Quick Add extended that foundation with one-hot state machines and LFSR-based logic under structural design constraints.",
+      "Earlier labs built an 8-bit ripple-carry adder/subtractor, two’s-complement sign changer, multiplexers and hexadecimal seven-segment decoding. Those components supplied the arithmetic and display foundation for the counter and games."
     ],
     "result": [
       "Completed the counter and reaction-game labs, building the synchronous design foundation used later in the Osmosis VGA game."
@@ -430,18 +432,670 @@
       "PIC32MX",
       "Timers",
       "Interrupts",
-      "Peripheral drivers"
+      "Peripheral drivers",
+      "UART",
+      "Circular buffers",
+      "OLED"
     ],
     "problem": "A microcontroller game needs to respond to hardware events while keeping game state consistent.",
     "approach": [
-      "I organized Battleship-style gameplay as state machines and used timers, hardware interrupts and low-level peripheral drivers to connect software behavior to the board."
+      "I organized Battleship-style gameplay as state machines and used timers, hardware interrupts and low-level peripheral drivers to connect software behavior to the board.",
+      "The archived implementation connects an Agent state machine to message parsing, negotiation, field state and OLED rendering. UART and circular-buffer modules carry the board-to-board message path."
     ],
     "result": [
       "Implemented the embedded game described in the project record, building experience with event-driven C and hardware interfaces."
     ],
     "note": "No measured latency or performance benchmark is claimed.",
     "technical": [
-      "Timers and hardware interrupts supply events to the game state machines. Peripheral access and application state need clear boundaries so a hardware event produces one consistent state transition."
+      "Timers and hardware interrupts supply events to the game state machines. Peripheral access and application state need clear boundaries so a hardware event produces one consistent state transition.",
+      "Separating negotiation, field updates and message events makes turn-taking explicit. The agent owns the transition between negotiation, attack, wait and end-game behavior while the display reflects that state."
+    ],
+    "related": []
+  },
+  {
+    "id": "concurrent-http",
+    "title": "Concurrent HTTP file server",
+    "category": "Systems · Network programming",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Serving files without losing consistency.",
+    "summary": "A C server connecting HTTP parsing, file operations, worker threads and request logging.",
+    "metric": "GET / PUT",
+    "label": "parsing, files and concurrency",
+    "tools": [
+      "C",
+      "POSIX sockets",
+      "pthreads",
+      "Reader–writer locks",
+      "Clang",
+      "Make",
+      "curl"
+    ],
+    "problem": "Concurrent clients can read and overwrite the same file. A server needs to parse partial network input correctly and coordinate file access so its responses and audit log tell a consistent story.",
+    "approach": [
+      "I developed the server from a single-connection GET / PUT implementation into a concurrent design. The work covered request-line validation, header parsing, content lengths, response codes and cleanup of sockets and file descriptors.",
+      "I worked through worker dispatch, per-resource reader–writer locking and serialized audit logging. Debugging crossed several boundaries: listener APIs, partial reads, malformed requests and differences between local and submission builds."
+    ],
+    "result": [
+      "Implemented the HTTP file-server coursework and documented the progression from protocol parsing to concurrent request handling.",
+      "The software work also provides the behavioral starting point for my separate FPGA HTTP experiment."
+    ],
+    "note": "Completed describes the coursework implementation. The archive includes unresolved build and parsing iterations; it does not establish a production deployment or a throughput benchmark.",
+    "technical": [
+      "A successful socket read can return only part of a request. The parser must preserve bytes already received after the header terminator and account for the remaining body before completing a PUT.",
+      "File locking and audit ordering are separate correctness concerns. Protecting file contents does not automatically make the log reflect the same operation order."
+    ],
+    "related": []
+  },
+  {
+    "id": "concurrency-primitives",
+    "title": "Thread-safe queue & reader–writer locks",
+    "category": "Systems · Synchronization",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Making shared state predictable.",
+    "summary": "A bounded work queue and configurable reader–writer lock built with POSIX synchronization primitives.",
+    "metric": "3 policies",
+    "label": "reader, writer and bounded-reader modes",
+    "tools": [
+      "C",
+      "POSIX threads",
+      "Mutexes",
+      "Condition variables",
+      "Clang",
+      "Make"
+    ],
+    "problem": "Producers and consumers need to exchange work without racing, while shared resources need a clear rule for admitting readers and writers.",
+    "approach": [
+      "I implemented a circular queue with head, tail and occupancy state guarded by a mutex. Separate condition variables represent available items and available capacity.",
+      "I implemented reader-preference, writer-preference and bounded-reader lock modes, tracking active and waiting participants to make admission policy explicit."
+    ],
+    "result": [
+      "Built reusable queue and lock modules for the concurrent-systems coursework.",
+      "Made the tradeoff between throughput and waiting behavior a configurable part of the lock design."
+    ],
+    "note": "The archive contains implementation and debugging work; it does not provide a verified starvation-freedom or stress-test result.",
+    "technical": [
+      "Waiters recheck their predicates while holding the mutex after waking. A signal announces that state may have changed; it does not reserve an item or grant a lock.",
+      "An N-way policy limits reader admission when a writer is waiting. Correctness depends on maintaining the counters and wake-up conditions together."
+    ],
+    "related": []
+  },
+  {
+    "id": "file-io",
+    "title": "Command-driven file I/O",
+    "category": "Systems · Unix fundamentals",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Turning byte streams into file operations.",
+    "summary": "A command-line get / set utility built around Unix file descriptors and explicit input validation.",
+    "metric": "get / set",
+    "label": "command protocol over standard input",
+    "tools": [
+      "C",
+      "POSIX I/O",
+      "Linux",
+      "Clang",
+      "Make"
+    ],
+    "problem": "A small file utility still has to distinguish command metadata from payload bytes, handle failed system calls and avoid assuming that one read or write transfers everything.",
+    "approach": [
+      "I worked on a memory.c utility that reads get and set commands from standard input and maps them to file reads or replacements.",
+      "The implementation and review covered command parsing, declared payload length, file-opening flags, error messages and releasing allocated buffers and descriptors."
+    ],
+    "result": [
+      "Built the file-I/O coursework foundation used later in HTTP request handling.",
+      "The project made byte counts, input boundaries and cleanup explicit parts of the interface."
+    ],
+    "note": "Coursework implementation; the archived iterations do not establish a complete binary-data or large-file correctness suite.",
+    "technical": [
+      "Text tokenization is appropriate for command fields, but payloads require byte-counted handling. The review exposed why treating the whole input as a null-terminated string is fragile."
+    ],
+    "related": []
+  },
+  {
+    "id": "pacman-search",
+    "title": "Pac-Man search agents",
+    "category": "AI · Adversarial search",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Choosing a move by looking ahead.",
+    "summary": "Reflex and adversarial agents that balance food collection, ghost avoidance and search depth.",
+    "metric": "Game-tree search",
+    "label": "state evaluation and action selection",
+    "tools": [
+      "Python",
+      "PacAI",
+      "Minimax",
+      "Alpha–beta pruning",
+      "Expectimax"
+    ],
+    "problem": "Greedy movement can trap an agent near food or a ghost. Planning requires a consistent model of turns, terminal states and the consequences of an action.",
+    "approach": [
+      "I worked on reflex evaluation and adversarial search agents, using food distance, ghost proximity and scared timers to score successor states.",
+      "I debugged state-versus-position mistakes, repeated movement and depth handling, then ran repeated games without graphics to inspect outcomes across layouts."
+    ],
+    "result": [
+      "Produced runnable agents and recorded wins, losses and scores during coursework experiments.",
+      "The experiments exposed how strongly performance depends on the layout, evaluator and depth setting."
+    ],
+    "note": "The recorded runs use different configurations. I do not present a single selected win rate as a general benchmark.",
+    "technical": [
+      "Minimax assumes an adversarial opponent; expectimax models chance. Alpha–beta pruning reduces unnecessary search while preserving the minimax decision for the same tree and evaluator."
+    ],
+    "related": []
+  },
+  {
+    "id": "pacman-learning",
+    "title": "Gridworld & Pac-Man reinforcement learning",
+    "category": "AI · Reinforcement learning",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Learning a policy from experience.",
+    "summary": "Value iteration and Q-learning experiments on the exploration–exploitation tradeoff.",
+    "metric": "Q(s, a)",
+    "label": "learning action values from rewards",
+    "tools": [
+      "Python",
+      "PacAI",
+      "Q-learning",
+      "Value iteration",
+      "Feature-based approximation"
+    ],
+    "problem": "A useful action may require exploring a risky route before its reward is known. The challenge is to learn from experience while keeping training behavior separate from evaluation.",
+    "approach": [
+      "I implemented action-value updates and epsilon-greedy selection, working through unseen state-action values, terminal states and ties between legal actions.",
+      "I used Gridworld and Pac-Man exercises to examine how learning rate, discounting and exploration affect the policy, including the BridgeGrid scenario and feature-based value approximation."
+    ],
+    "result": [
+      "Built and debugged the learning-agent coursework and compared sampled learning with model-based value iteration.",
+      "The work made exploration settings and training versus test episodes explicit experimental choices."
+    ],
+    "note": "No transferable win-rate or sample-efficiency improvement is claimed from the archived coursework.",
+    "technical": [
+      "The Q update moves the current estimate toward reward plus the discounted best next-state value. A terminal transition has no future action value; handling that case prevents invalid action lookups."
+    ],
+    "related": []
+  },
+  {
+    "id": "pacman-capture",
+    "title": "Capture-the-flag agents",
+    "category": "AI · Multi-agent behavior",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Knowing when to attack and when to defend.",
+    "summary": "Cooperative Pac-Man agents with role switching, spatial features and trap-avoidance heuristics.",
+    "metric": "Attack ↔ defend",
+    "label": "context-dependent agent behavior",
+    "tools": [
+      "Python",
+      "PacAI",
+      "Maze-distance search",
+      "Heuristic evaluation"
+    ],
+    "problem": "Two agents must collect food, protect home territory and avoid interfering with each other. A fixed offensive or defensive role cannot respond to every board state.",
+    "approach": [
+      "I developed weighted features for food, capsules, visible opponents, teammate distance and return behavior. The policy switches between attack and defense as threats change.",
+      "I investigated stop/reverse penalties, narrow corridors and corner traps, and adjusted distance-based behavior when excessive avoidance caused agents to oscillate."
+    ],
+    "result": [
+      "Implemented a team-agent policy and wrote a technical retrospective explaining its representation, decision rules and limitations.",
+      "The result is a concrete study of coordination under competing objectives."
+    ],
+    "note": "The archive supports implementation and report work, but does not establish a tournament placement or a controlled improvement over a baseline.",
+    "technical": [
+      "Maze distance captures walls that Manhattan distance ignores. Feature weights still need care: rewarding distance from a teammate or opponent too strongly can overpower the goal of making progress."
+    ],
+    "related": []
+  },
+  {
+    "id": "avl-wordrange",
+    "title": "AVL word-range index",
+    "category": "Algorithms · Data structures",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Counting a range without scanning every word.",
+    "summary": "An augmented AVL tree for insertions and lexicographic range-count queries.",
+    "metric": "Rank queries",
+    "label": "subtree sizes alongside balance metadata",
+    "tools": [
+      "C++",
+      "AVL trees",
+      "Tree rotations",
+      "File I/O",
+      "Make"
+    ],
+    "problem": "A word index needs to accept insertions while answering how many entries lie between two keys. An unbalanced tree or a full traversal makes those queries unnecessarily expensive.",
+    "approach": [
+      "I worked on an AVL tree that stores both height and subtree size, with rotations maintaining balance and the metadata needed for rank queries.",
+      "I traced zero and negative range counts through size updates, rotation order and comparisons, distinguishing numeric-looking strings from the assignment’s lexicographic keys."
+    ],
+    "result": [
+      "Implemented the indexed-query coursework and investigated failures with explicit insertion sequences and expected range counts.",
+      "The intended design answers a range count using two rank traversals rather than enumerating every matching node."
+    ],
+    "note": "Logarithmic query complexity is a property of the correctly maintained AVL design, not a measured speedup. The archive includes debugging cases without a final comprehensive pass report.",
+    "technical": [
+      "For inclusive bounds, count(keys ≤ upper) − count(keys < lower) handles the boundary correctly. Heights and sizes must be recomputed after rotations in child-before-parent order."
+    ],
+    "related": []
+  },
+  {
+    "id": "six-degrees",
+    "title": "Six Degrees: actor connection finder",
+    "category": "Algorithms · Graph search",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Finding the shortest story between two actors.",
+    "summary": "An actor–movie graph that returns a shortest connection with the films that explain every step.",
+    "metric": "BFS",
+    "label": "shortest paths with movie provenance",
+    "tools": [
+      "C++",
+      "Breadth-first search",
+      "Hash maps",
+      "Adjacency lists",
+      "Queues"
+    ],
+    "problem": "A connection finder needs to return more than a distance: the user should see which shared films connect the actors.",
+    "approach": [
+      "I parsed cast lists, mapped actor and movie names to integer IDs and stored movie IDs with actor-to-actor edges.",
+      "Breadth-first search tracks visited actors and records both the previous actor and the film used to reach each node. I reconstruct the path from that parent map."
+    ],
+    "result": [
+      "Built a file-driven graph query program that expresses the connection as an actor-and-film chain.",
+      "Worked through parsing, disconnected inputs and path reconstruction rather than treating traversal alone as the finished feature."
+    ],
+    "note": "The archived implementation uses pairwise cast connections; a movie with a large cast can create many edges. No large-dataset performance claim is made.",
+    "technical": [
+      "BFS finds a shortest path by edge count in an unweighted graph. Keeping movie identity on the predecessor edge preserves an explanation of why each connection exists."
+    ],
+    "related": []
+  },
+  {
+    "id": "algorithms-lab",
+    "title": "Data structures & constraint-solving lab",
+    "category": "Algorithms · C / C++",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Making the algorithm visible in the data structure.",
+    "summary": "A collection of linked-list, graph, word-analysis and backtracking implementations.",
+    "metric": "Lists → graphs",
+    "label": "from memory ownership to search",
+    "tools": [
+      "C",
+      "C++",
+      "Linked lists",
+      "BFS / DFS",
+      "Explicit stacks",
+      "Make"
+    ],
+    "problem": "High-level containers hide the state changes that make an algorithm work. These exercises made memory ownership, traversal state and constraints explicit.",
+    "approach": [
+      "I built linked-list and graph ADTs, indirect lexicographic sorting, a deck-shuffle client and a Shakespeare word-frequency index grouped by word length.",
+      "I worked on N-Queens with preset placements and an explicit search stack, alongside stack-based anagram generation and smaller simulation exercises. Debugging focused on preserving fixed constraints while undoing only speculative choices."
+    ],
+    "result": [
+      "Created a set of command-line coursework programs with file-based inputs and outputs.",
+      "The N-Queens history includes a user-confirmed working version after a valid preset board had incorrectly returned “No solution.”"
+    ],
+    "note": "These are educational implementations, grouped here rather than presented as separate production products.",
+    "technical": [
+      "An explicit stack must retain enough state to resume a search after backtracking. A linked-list cursor must distinguish being off-list from pointing at a valid node; that invariant affects insertion and deletion alike."
+    ],
+    "related": []
+  },
+  {
+    "id": "mininet-network",
+    "title": "Virtual network topology lab",
+    "category": "Networking · Emulation",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Debugging a network before buying hardware.",
+    "summary": "A Mininet topology exercise connecting hosts, switches and traffic-controlled links.",
+    "metric": "Hosts + switches",
+    "label": "repeatable network setup",
+    "tools": [
+      "Python",
+      "Mininet",
+      "Linux",
+      "TCLink"
+    ],
+    "problem": "A network diagram does not show whether host interfaces, links and addressing behave as intended. Emulation makes those relationships inspectable.",
+    "approach": [
+      "I worked through a Python topology representing user devices and home equipment connected through two switches.",
+      "I configured host/link definitions and used the Mininet environment to inspect interface state and distinguish host commands from the surrounding Linux shell."
+    ],
+    "result": [
+      "Developed the virtual-network lab setup and an operational understanding of where network commands execute.",
+      "The topology provides a repeatable environment for exploring connectivity without a physical switch bench."
+    ],
+    "note": "This is a topology and configuration exercise; the export does not establish a verified routing policy or measured throughput.",
+    "technical": [
+      "Adding a link does not by itself solve addressing or routing. Host namespaces and switch connectivity need to be checked separately when diagnosing reachability."
+    ],
+    "related": []
+  },
+  {
+    "id": "saaf",
+    "title": "Saaf / Saaf Safai",
+    "category": "Mobile & web · Chore coordination",
+    "status": "Ongoing",
+    "stage": "Prototype",
+    "headline": "A simpler starting point for shared chores.",
+    "summary": "Early interface and authentication work for a chore-and-reminder application.",
+    "metric": "Welcome → login",
+    "label": "mobile and web explorations",
+    "tools": [
+      "React Native",
+      "JavaScript",
+      "Next.js",
+      "Supabase",
+      "Node.js",
+      "Metro"
+    ],
+    "problem": "Chore coordination starts with a low-friction entry into the application. Before building reminder logic, the interface and development environment need a reliable foundation.",
+    "approach": [
+      "I explored a React Native welcome screen with a centered identity and message, then worked through simulator startup and Metro configuration.",
+      "A separate web exploration used Next.js and Supabase for the login path. The history includes dependency installation and project-structure debugging across the two approaches."
+    ],
+    "result": [
+      "Established the app concept, welcome-screen work and authentication scaffold.",
+      "The next meaningful milestone is an integrated chore workflow with persistence and reminders."
+    ],
+    "note": "The mobile and web experiments are distinct prototypes. Completed reminder scheduling, production authentication and an app release are not established.",
+    "technical": [
+      "The archive’s failures occur before feature logic: obsolete CLI paths, missing Metro configuration and package setup. Resolving the toolchain is necessary before claiming an end-to-end product."
+    ],
+    "related": []
+  },
+  {
+    "id": "stanchat",
+    "title": "StanChat",
+    "category": "Mobile · Real-time messaging",
+    "status": "Completed",
+    "stage": "Prototype",
+    "headline": "From an empty screen to a working conversation.",
+    "summary": "A Flutter and Firebase chat prototype with live messages and a scrollable conversation history.",
+    "metric": "Live chat",
+    "label": "locally confirmed message flow",
+    "tools": [
+      "Flutter",
+      "Dart",
+      "Firebase",
+      "Cloud Firestore",
+      "FlutterFire",
+      "Android emulator"
+    ],
+    "problem": "A short MVP timeline calls for one useful vertical slice: write a message, see it appear and keep conversation history available.",
+    "approach": [
+      "I moved toward Flutter for a shared cross-platform interface and Firebase for managed storage. The chat screen listens to Firestore message updates and writes text with timestamps.",
+      "I worked through FlutterFire setup, dependency conflicts and Android emulator configuration, prioritizing the message path before additional account features."
+    ],
+    "result": [
+      "Confirmed in the project conversation that messages could be sent and displayed locally, with earlier messages available by scrolling.",
+      "Reached a working local chat prototype; broader release and account workflows were later milestones."
+    ],
+    "note": "Completed refers to the local prototype. Public deployment, multi-device validation and production access-control readiness are not established.",
+    "technical": [
+      "A stream-driven interface updates the conversation when stored messages change. Database permissions and identity become essential before expanding a local demonstration into a shared public service."
+    ],
+    "related": []
+  },
+  {
+    "id": "voice-recorder",
+    "title": "iOS voice-recorder modernization",
+    "category": "Mobile · Application maintenance",
+    "status": "Ongoing",
+    "stage": "Maintenance",
+    "headline": "Keeping an existing recording app maintainable.",
+    "summary": "Swift and UIKit compatibility work on a legacy voice-recorder application targeting iOS 18.",
+    "metric": "Record / replay",
+    "label": "legacy UI and audio workflows",
+    "tools": [
+      "Swift",
+      "UIKit",
+      "AVFoundation",
+      "Core Data",
+      "Xcode",
+      "iOS 18"
+    ],
+    "problem": "An existing recording app combined audio, persistence, advertising and third-party UI components. Platform changes exposed compatibility and maintenance issues across those boundaries.",
+    "approach": [
+      "I worked through AppDelegate, recording and table-cell code, tracing record/playback controls, delegate callbacks and stored recording metadata.",
+      "I requested a native replacement for a rating component that was failing on iOS 18 and reviewed supporting API and integration errors."
+    ],
+    "result": [
+      "Produced modernization work across the legacy application’s UI and recording paths.",
+      "The focus was compatibility and maintainability of an existing codebase, with device validation still needed."
+    ],
+    "note": "This is maintenance of an existing application, not a claim of creating the original app. The archive does not confirm an App Store release or complete iOS 18 validation.",
+    "technical": [
+      "Audio-session state, playback controls and persisted file metadata need to stay consistent. A UI migration is incomplete until recording, interruption, playback and deletion behavior are checked on a device."
+    ],
+    "related": []
+  },
+  {
+    "id": "ttl-computer",
+    "title": "8-bit TTL computer",
+    "category": "Hardware · Architecture study",
+    "status": "Ongoing",
+    "stage": "Proposal",
+    "headline": "Making fetch, decode and execute tangible.",
+    "summary": "A staged build proposal for an educational computer assembled from TTL logic and breadboards.",
+    "metric": "8-bit",
+    "label": "architecture and build plan",
+    "tools": [
+      "TTL logic",
+      "Breadboards",
+      "ALU / registers",
+      "EEPROM",
+      "Circuit schematics"
+    ],
+    "problem": "Computer architecture can remain abstract when the datapath and control signals are hidden inside a processor. A discrete build makes those boundaries visible.",
+    "approach": [
+      "I developed a proposal covering the ALU, register bank, program counter, instruction storage, shared bus and control sequence.",
+      "I organized the work into module-level checks, integration, simple instruction programs and documentation, with a component budget and a staged build schedule."
+    ],
+    "result": [
+      "Produced the architecture, build sequence and funding proposal.",
+      "A functioning assembled computer remains a future hardware milestone."
+    ],
+    "note": "The archive documents a proposal and research, not completed hardware, awarded funding or measured processor performance.",
+    "technical": [
+      "The proposed integration checks include bus contention, clock distribution and control timing. Each datapath module needs independent verification before the fetch–decode–execute sequence can be validated."
+    ],
+    "related": []
+  },
+  {
+    "id": "spotify-analyzer",
+    "title": "Spotify playlist analyzer",
+    "category": "Data · Exploratory project",
+    "status": "Ongoing",
+    "stage": "Proposal",
+    "headline": "Turning a playlist into a data question.",
+    "summary": "An early Python project exploring playlist characteristics and regression-based analysis.",
+    "metric": "API → analysis",
+    "label": "project design and starter workflow",
+    "tools": [
+      "Python",
+      "Spotify API",
+      "pandas",
+      "Linear regression",
+      "GitHub"
+    ],
+    "problem": "A playlist is a useful starting point for learning how an API response becomes a structured dataset and an interpretable analysis.",
+    "approach": [
+      "I scoped a playlist-analysis project and explored how to organize API retrieval, data preparation and a linear-regression experiment.",
+      "I worked on repository structure and documentation before committing to a finished interface or predictive claim."
+    ],
+    "result": [
+      "Defined the analysis direction and starter project structure.",
+      "Data access, a reproducible dataset and evaluation remain prerequisites for a finished result."
+    ],
+    "note": "This is an exploratory proposal. The archive does not establish current API access, a trained predictor or recommendation quality.",
+    "technical": [
+      "The analysis needs a clearly defined target and held-out evaluation. Descriptive playlist statistics and a predictive regression model answer different questions."
+    ],
+    "related": []
+  },
+  {
+    "id": "market-forecasting",
+    "title": "Market-data forecasting study",
+    "category": "ML · Research planning",
+    "status": "Ongoing",
+    "stage": "Proposal",
+    "headline": "Testing for signal in noisy market data.",
+    "summary": "A team project plan using the Jane Street forecasting problem to study tabular and temporal models.",
+    "metric": "Boosting + sequences",
+    "label": "baseline and follow-up model plan",
+    "tools": [
+      "Python",
+      "XGBoost",
+      "LSTM",
+      "Kaggle",
+      "Time-series validation"
+    ],
+    "problem": "Financial observations can shift over time and contain heavy noise. A forecasting project must define a credible evaluation before treating a fitted pattern as useful signal.",
+    "approach": [
+      "I contributed to the project framing and presentation around a boosting baseline, feature selection and a possible LSTM follow-up.",
+      "The planned comparison separates tabular feature interactions from sequence effects and calls for evaluation on data outside the fitting period."
+    ],
+    "result": [
+      "Developed the technical approach, project schedule and presentation materials.",
+      "The next evidence needed is a reproducible training run and out-of-period validation."
+    ],
+    "note": "The export documents planning and presentation work. It does not substantiate a leaderboard score, successful backtest or trading return.",
+    "technical": [
+      "Chronological validation matters because random splits can mix future information into training. A complex sequence model needs to justify its cost against the baseline on the same evaluation period."
+    ],
+    "related": []
+  },
+  {
+    "id": "circuit-labs",
+    "title": "Analog circuits & filter characterization",
+    "category": "Electronics · Laboratory work",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Connecting a circuit equation to a measured waveform.",
+    "summary": "Bench-lab analysis of circuit equivalents, transient responses and frequency-dependent filtering.",
+    "metric": "Time + frequency",
+    "label": "transient and steady-state analysis",
+    "tools": [
+      "Breadboards",
+      "Oscilloscope",
+      "Function generator",
+      "RC / RL circuits",
+      "Op-amps",
+      "Bode plots"
+    ],
+    "problem": "A transfer function predicts behavior, but a bench circuit adds loading, component tolerance and measurement choices. The task was to connect observed voltage and phase to the model.",
+    "approach": [
+      "I worked through KCL/KVL, superposition and Thévenin/Norton equivalents, then analyzed capacitor and inductor transients using the single-time-constant model.",
+      "For sinusoidal filters, I used the supplied measurement data to build gain and phase tables and Bode plots, relating time delay to phase and comparing low-pass and high-pass behavior."
+    ],
+    "result": [
+      "Produced lab analyses and reports spanning DC equivalents, transient behavior and frequency response.",
+      "The work connected amplitude and timing observations to the equations used to design filters."
+    ],
+    "note": "These are coursework measurements and analyses. No component-accuracy or instrumentation-performance improvement is claimed.",
+    "technical": [
+      "Magnitude is expressed as 20 log10(Vout/Vin). Phase follows from the time shift at the measurement frequency; both the sign convention and the distinction between peak and peak-to-peak values matter."
+    ],
+    "related": []
+  },
+  {
+    "id": "expression-art",
+    "title": "Expression trees for generative art",
+    "category": "Languages · Functional programming",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Describing an image as an expression.",
+    "summary": "A Haskell expression-tree exercise exploring recursive composition and structural depth.",
+    "metric": "Recursive AST",
+    "label": "composition, traversal and depth",
+    "tools": [
+      "Haskell",
+      "Algebraic data types",
+      "Recursion",
+      "GHCi"
+    ],
+    "problem": "A procedural image can be represented as an expression evaluated at coordinates. The representation needs to support composition while remaining easy to inspect and traverse.",
+    "approach": [
+      "I worked with an Expr type containing coordinate variables, sine, cosine, averaging, multiplication and threshold branches.",
+      "I implemented recursive depth calculation and constructed a compound expression combining the two coordinates with trigonometric functions."
+    ],
+    "result": [
+      "Built the expression representation and depth-traversal exercise.",
+      "The result makes a visual formula inspectable as a tree of typed operations."
+    ],
+    "note": "Completed refers to the expression-tree exercise. The archive does not establish a finished generative-art application or gallery.",
+    "technical": [
+      "Algebraic data types make each operation explicit. A structural recursion handles leaves directly and derives a parent’s depth from the deepest child."
+    ],
+    "related": []
+  },
+  {
+    "id": "siya-booking",
+    "title": "Siya Cabs booking flow",
+    "category": "Product · Interface design",
+    "status": "Completed",
+    "stage": "Design study",
+    "headline": "Helping a customer book with fewer decisions.",
+    "summary": "A desktop booking-flow study for tourist and temple travel in India.",
+    "metric": "Quick booking",
+    "label": "form scope and landing-page design",
+    "tools": [
+      "Figma",
+      "UI prototyping",
+      "Form design",
+      "Information architecture"
+    ],
+    "problem": "Customers who already know their trip should be able to start a booking without navigating a crowded landing page.",
+    "approach": [
+      "I scoped the information needed for a quick cab booking and explored desktop layouts around that primary task.",
+      "I iterated on visual density, separating essential booking fields from destination inspiration and supporting information."
+    ],
+    "result": [
+      "Developed a booking-form direction and landing-page design concepts.",
+      "The study clarified the shortest useful path from trip intent to a booking request."
+    ],
+    "note": "This is a design study. A deployed booking backend, completed bookings and conversion uplift are not established.",
+    "technical": [
+      "The core interface question is which fields are required to price or schedule a trip and which can wait. Progressive disclosure reduces the initial decision load without losing necessary details."
+    ],
+    "related": []
+  },
+  {
+    "id": "ml-foundations",
+    "title": "Neural-network training notebooks",
+    "category": "ML · Training fundamentals",
+    "status": "Completed",
+    "stage": "Coursework",
+    "headline": "Getting the data and training loop to agree.",
+    "summary": "PyTorch and data-mining exercises focused on preprocessing, tensor shapes and validation.",
+    "metric": "Data → loss",
+    "label": "training and evaluation workflow",
+    "tools": [
+      "Python",
+      "PyTorch",
+      "pandas",
+      "Colab",
+      "Jupyter",
+      "Adam"
+    ],
+    "problem": "A model cannot learn reliably when labels, tensor dimensions or preprocessing disagree. These exercises focused on constructing the complete training path rather than choosing a larger architecture.",
+    "approach": [
+      "I worked on a simple convolutional network and a separate tabular classification notebook, connecting model outputs to loss calculation and optimizer updates.",
+      "I debugged dataset paths, numeric types, categorical preprocessing and validation predictions, checking how tensors move through the model."
+    ],
+    "result": [
+      "Developed training and validation exercises that established the foundation for later spiking-network and energy-inference work.",
+      "The notebook history documents implementation and debugging rather than a comparative model-performance result."
+    ],
+    "note": "No validated accuracy gain is claimed. The CNN and tabular notebook are separate coursework exercises.",
+    "technical": [
+      "Class-index labels and floating-point features have different type requirements. Validation should avoid gradient tracking and use the same fitted preprocessing as training."
     ],
     "related": []
   }
