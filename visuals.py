@@ -199,6 +199,8 @@ PROJECT_IDS.update(NEW_COLORS)
 
 from motion_refinements import refine
 SCENES = refine(SCENES)
+PALETTES["tpm-integrity-monitor"]=("#102b31","#183a42","#71d8d0","#a9b8ff","#ffd58a")
+PROJECT_IDS.add("tpm-integrity-monitor")
 
 def illustration(identity, static=False):
     """Color, lighting and eased motion reinforce each subject's composition."""

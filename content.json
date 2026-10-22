@@ -69,6 +69,72 @@
     "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone."
   },
   {
+    "id": "tpm-integrity-monitor",
+    "title": "Linux TPM Attestation & Device Integrity Monitor",
+    "category": "Platform security · Linux",
+    "status": "Completed",
+    "stage": "Security lab",
+    "headline": "Trust the evidence. Catch the drift.",
+    "summary": "A Linux agent and remote verifier that check signed TPM measurements, reject replayed evidence and turn integrity drift into visible monitoring events.",
+    "metric": "22 tests",
+    "label": "passed with swtpm integration",
+    "tools": [
+      "Python",
+      "TPM 2.0 / swtpm",
+      "tpm2-tools",
+      "FastAPI",
+      "cryptography",
+      "SQLite",
+      "Prometheus",
+      "Grafana",
+      "Docker Compose",
+      "pytest",
+      "GitHub Actions"
+    ],
+    "concepts": [
+      "Remote attestation",
+      "Nonce freshness",
+      "PCR baselines",
+      "Configuration drift"
+    ],
+    "github": "https://github.com/hranjan004/tpm-integrity-monitor",
+    "problem": "A device saying it is healthy is not enough. I wanted a verifier to demand fresh, signed evidence, compare it with an approved baseline and explain why a report passed or failed. The challenge was connecting cryptographic checks to a repeatable operational workflow: enrollment, evidence collection, rejection, recovery and monitoring.",
+    "approach": [
+      "I built a Python Linux agent around tpm2-tools and swtpm. An administrator approves an attestation key and a baseline; the agent then requests a fresh verifier challenge and collects PCR measurements and configuration-file hashes.",
+      "The TPM quote binds its measurements to the challenge and report. My FastAPI verifier checks freshness, the enrolled signing key, RSA signature, PCR selection and approved baseline before storing a verdict in SQLite. Single-use challenges make a previously valid quote unusable as a new report.",
+      "I added Prometheus metrics and a Grafana dashboard so integrity failures are visible beyond an API response. Docker Compose runs the verifier and monitoring services, while isolated test state keeps the attack scenarios reproducible.",
+      "I tested the negative paths deliberately: reused challenges, modified signatures, changed configuration, PCR16 extension, expired nonces, wrong keys and device revocation. The demo also restores configuration to show the difference between a persistent problem and a successful recovery."
+    ],
+    "result": [
+      "Passed all 22 automated tests with no skips in the swtpm-enabled Linux container; GitHub Actions also passed the container build and test suite.",
+      "Cross-checked a TPM-generated quote with both my Python verifier and tpm2_checkquote. Tests include eight-way concurrent replay and malformed, truncated and trailing evidence.",
+      "The live demo produced two verified events, one replay rejection, one signature rejection, one configuration rejection and four PCR-drift rejections. Prometheus scraped the verdicts, and Grafana exposed the provisioned three-panel dashboard."
+    ],
+    "takeaway": "The important distinction is between a signed statement and trustworthy enrollment. I made the operator’s approval of the key and baseline explicit, and kept report freshness separate from measurement correctness. The completed lab uses swtpm inside Linux containers; testing a physical TPM and the host’s measured-boot chain is the next step.",
+    "technical": [
+      "Replay handling needs to remain correct when requests arrive together, not just sequentially. Atomic challenge consumption and persistent verifier state are tested under concurrent reuse and restart scenarios.",
+      "Configuration hashes are agent-reported data, even when the quote binds them. I distinguish that binding from independently measured boot evidence: the lab does not validate EK certificates or replay measured-boot event logs.",
+      "The verifier checks selected PCRs against an approved baseline. A matching quote supports a specific integrity claim about those measurements; it does not prove that every part of a machine is safe.",
+      "The repository includes a protocol walkthrough, threat model, physical-hardware setup guide and reproducible attack-and-recovery demo. Services bind to localhost by default; remote operation requires TLS and controlled provisioning."
+    ],
+    "implementation": [
+      {
+        "tool": "TPM 2.0 + tpm2-tools",
+        "use": "Generate signed PCR quotes in swtpm and independently cross-check them with tpm2_checkquote."
+      },
+      {
+        "tool": "Python + FastAPI + SQLite",
+        "use": "Enroll approved keys, issue single-use challenges, verify evidence and persist device verdicts."
+      },
+      {
+        "tool": "Prometheus + Grafana + Docker",
+        "use": "Run a reproducible lab and expose integrity verdicts, rejection reasons and report freshness."
+      }
+    ],
+    "related": [],
+    "note": ""
+  },
+  {
     "id": "gpt2-performance",
     "title": "GPT-2 on the CPU",
     "category": "Systems · Performance",
