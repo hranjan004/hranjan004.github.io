@@ -201,6 +201,9 @@ from motion_refinements import refine
 SCENES = refine(SCENES)
 PALETTES["tpm-integrity-monitor"]=("#102b31","#183a42","#71d8d0","#a9b8ff","#ffd58a")
 PROJECT_IDS.add("tpm-integrity-monitor")
+PALETTES["silicon-performance-lab"]=("#1a2443","#273657","#b9a5ff","#7fdbe0","#ffbf89")
+PALETTES["gpupm-lab"]=("#283129","#354239","#a9e3a1","#e3bc7d","#a8caff")
+PROJECT_IDS.update(["silicon-performance-lab","gpupm-lab"])
 
 def illustration(identity, static=False):
     """Color, lighting and eased motion reinforce each subject's composition."""
