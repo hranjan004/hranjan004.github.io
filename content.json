@@ -73,11 +73,11 @@
     "title": "Silicon Performance Lab",
     "category": "Performance engineering · FPGA",
     "status": "Ongoing",
-    "stage": "Prototype",
+    "stage": "Hardware validated",
     "headline": "Measure the workload. Understand the silicon.",
-    "summary": "A local performance lab pairing measured Core ML inference on Apple silicon with a custom iCEBreaker graphics accelerator, raw-result exports and a JavaScript dashboard.",
-    "metric": "131,072",
-    "label": "inference output elements checked",
+    "summary": "A local performance lab combining measured Core ML inference with a hardware-tested iCEBreaker graphics accelerator, working DVI triangle output and raw USB benchmark evidence.",
+    "metric": "2,113",
+    "label": "FPGA hardware transactions passed",
     "tools": [
       "Swift / Core ML",
       "JavaScript / Node.js",
@@ -100,17 +100,19 @@
       "I wrote a Swift Core ML runner for a deterministic four-layer convolution workload and compared CPU-only, CPU + Neural Engine, CPU + GPU and all-compute-unit policies. Each policy uses five warmups and three trials of 50 synchronous predictions; compilation, loading and validation stay outside the timed interval.",
       "I built a dependency-free JavaScript dashboard and Node.js server for experiment controls, hardware inventory, latency charts and exports. The server allows one native experiment at a time and keeps saved results available without attached hardware.",
       "For the iCEBreaker UP5K, I implemented integer recurrence lanes, BRAM transfers and a triangle rasterizer in Verilog. A 64×64 framebuffer feeds independent 640×480 RGB444 DVI scanout through a 12-bit Pmod, while UART supports framebuffer readback and workload commands.",
-      "I validated every raster pixel against a software reference, checked a complete video frame and synthesized and routed the design. A separate Python tool integrates aligned external power traces with trapezoids and endpoint interpolation, ready for physical energy measurements."
+      "I checked every raster pixel against a software reference, simulated a complete video frame, then synthesized, routed and tested the design on the physical board. A repeated UART runner records timestamps, cycle counts and host latency for every validated transaction. External power-trace integration is implemented separately."
     ],
     "result": [
+      "On October 25, 2026, the physical iCEBreaker passed all 2,113 measured transactions: 938 compute, 938 memory and 237 raster runs. The external monitor displayed the rendered triangle.",
       "The saved M4 experiment measured median prediction latency of 0.154 ms for CPU-only and 0.139 ms for CPU + Neural Engine on this synthetic workload. All 131,072 output elements were checked for consistency against the CPU reference.",
       "Passed 13 dashboard/server and data-contract tests plus eight FPGA host-protocol and power-integration tests. Video simulation checked all 420,000 pixel periods for RGB, data enable and synchronization.",
-      "The UP5K image uses 1,503 of 5,280 logic cells and 10 of 30 RAM blocks. Placement and routing reported 29.138 MHz maximum internal frequency, passing the configured 25.125 MHz constraint."
+      "The UP5K image uses 1,503 of 5,280 logic cells and 10 of 30 RAM blocks. Placement and routing reported 29.138 MHz maximum internal frequency, passing the configured 25.125 MHz constraint.",
+      "Across three approximately five-second trials per workload, median host round trips were 15.744 ms for compute, 15.685 ms for BRAM and 63.679 ms for raster. End-to-end rates were 1.023 million integer updates/s, 0.512 MB/s and 64,025 pixel tests/s, including USB transfer and host validation."
     ],
-    "takeaway": "A benchmark becomes useful when someone else can tell exactly what was timed. I keep native measurements, simulated cycle counts and derived video timing separate in the dashboard. Physical FPGA, monitor and power validation remain the next milestones.",
+    "takeaway": "Hardware bring-up confirmed the triangle on the monitor and all 2,113 workload checks passed. Separating device cycles from complete USB transactions exposed the transport overhead instead of presenting it as compute performance. Energy efficiency remains an open measurement task: no external power meter was connected.",
     "technical": [
       "Core ML compute policies allow CPU fallback. Preferred-device information is scheduling evidence, so I do not treat it as a trace proving which accelerator executed every operation. The saved run was taken on battery power; repeated independent runs on AC power would support stronger comparisons.",
-      "Video scanout runs independently of the workload and UART response. The rasterizer performs 4,096 pixel tests in simulation, but serial readback adds transport time; those are different measurements.",
+      "Video scanout runs independently of the UART request path. Hardware returned the expected 4,096 raster cycles and framebuffer pixels; configured-clock throughput is distinct from host round-trip timing. The repeated serial test does not saturate the compute engine or measure maximum board power.",
       "The FPGA is fixed-function graphics hardware. It renders a fixed triangle and supports defined compute and memory exercises; it is not a general shader processor.",
       "Energy analysis requires measured power covering the same interval as completed work. The integration code is tested, while physical watts, joules and work-per-joule measurements remain future experiments."
     ],
@@ -129,7 +131,7 @@
       }
     ],
     "related": [],
-    "note": ""
+    "note": "Hardware results recorded October 25, 2026. Monitor output confirmed; no watts, joules or performance-per-watt measurements are claimed. The source repository is private; access is required to view its GitHub link."
   },
   {
     "id": "gpupm-lab",
