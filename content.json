@@ -138,7 +138,8 @@
       "nilm-labels",
       "capstone-reflection"
     ],
-    "note": ""
+    "note": "",
+    "screenshots": "https://github.com/hranjan004/iems-pi-edge/tree/main/docs/screenshots"
   },
   {
     "id": "silicon-performance-lab",
