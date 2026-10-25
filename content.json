@@ -69,6 +69,78 @@
     "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone."
   },
   {
+    "id": "gx10-microgrid",
+    "title": "GX10 Microgrid Intelligence — Hackathon",
+    "category": "Edge AI · Energy systems",
+    "status": "Completed",
+    "stage": "Hackathon prototype",
+    "headline": "Bring the models to the microgrid.",
+    "summary": "A GX10 deployment combining locally served Nemotron, physics-informed appliance labeling and GPU-trained forecasting—with explicit fallbacks, validation and controlled model promotion.",
+    "metric": "91.91%",
+    "label": "held-out agreement with the teacher",
+    "tools": [
+      "NVIDIA GB10 / ASUS GX10",
+      "PyTorch / CUDA",
+      "Nemotron 3.5 Lightning",
+      "LoRA",
+      "llama.cpp / Ollama",
+      "ONNX Runtime",
+      "XGBoost",
+      "Kafka / AnyLog",
+      "PostgreSQL",
+      "Docker Compose"
+    ],
+    "concepts": [
+      "Knowledge distillation",
+      "Physics-informed labeling",
+      "Walk-forward validation",
+      "Multi-horizon forecasting"
+    ],
+    "github": "https://github.com/hranjan004/microgrid-iems-gx10",
+    "github_private": true,
+    "problem": "I wanted to take the residential microgrid beyond a dashboard that explains what just happened. The hackathon goal was to run local reasoning, appliance-state inference and forward-looking power predictions on a GX10, while keeping the evidence behind each prediction understandable. That meant changing the labeling and training pipeline as well as the serving architecture.",
+    "approach": [
+      "I brought the stack onto the GX10’s Grace Blackwell platform: GPU training on GB10, ARM-compatible data services and local model serving. Recorded meter data supported a self-contained event demo; the forecasting system later gained authenticated, read-only collection from the meter and solar source, with replay kept separate.",
+      "I used physical_labeler_v2 to produce physics-derived labels and trust weights, then retrained panel-specific BiLSTMs through rolling walk-forward validation. The pipeline preserves an 18-feature normalization contract and exports calibrated models to ONNX. Runtime gates reject physically implausible appliance combinations and power assignments.",
+      "I distilled the gated BiLSTM decisions into Nemotron 3.5 Lightning using rank-16 LoRA. Each training round merges the adapter, scores held-out windows and mines training-split mistakes for a fixed-size replay buffer. The live appliance engine serves a Q8_0 GGUF through llama.cpp, retains per-head BiLSTM fallback and applies the downstream rules after model output.",
+      "I separated local question answering from appliance inference: Ollama serves the Nemotron reasoning interface, while the fine-tuned model handles structured appliance-state decisions. A local knowledge-graph view uses small-model extraction, ArangoDB and a Three.js/WebGPU viewer, with verified system topology distinguished from extracted relationships.",
+      "For measured-power forecasts, I built a separate pipeline using 24 hours of meter context, weather and missingness flags. It compares a TiDE-inspired PyTorch model, CUDA XGBoost, seasonal baselines and blends, then chooses a validation winner per channel. Versioned models and an atomic champion pointer allow retraining without interrupting serving."
+    ],
+    "result": [
+      "Round 2 reached 91.91% held-out agreement with the gated BiLSTM teacher, up from 82.14% in round 1, on the same 300 validation windows. This measures distillation fidelity, not independently metered appliance accuracy.",
+      "Deployed the fine-tuned local NILM engine with per-head fallback. The quantized Q8_0 model matched the merged BF16 model on 166 of 176 heads in the recorded comparison.",
+      "The forecasting dataset deduplicates more than 30.7 million meter records across 16 measured channels and incorporates roughly 977,000 solar records. Coverage filters preserve gaps instead of treating the seven-month span as continuous data.",
+      "Added prediction and system-map views, minute-level forecast refresh, 15-minute forecast origins and six-hour retraining checks. Candidate promotion requires at least a 1% normalized-MAE improvement on shared validation origins; a failed update leaves the serving model available."
+    ],
+    "takeaway": "The project pushed me to treat model quality, data provenance and deployment behavior as one system. A local LLM is useful only when its outputs have a defined contract, fallbacks are explicit and evaluation distinguishes agreement with a teacher from independent evidence. I kept appliance-state inference and measured-power forecasting separate because they answer different questions.",
+    "technical": [
+      "The NILM input contract uses 100 × 18 windows. The teacher target includes the same mutual-exclusion and power gates used in serving, rather than copying raw recall-biased network outputs. Hard-example mining draws from training data, never the held-out validation split.",
+      "Forecast selection, empirical interval calibration and final testing use three disjoint 14-day blocks. Training windows cannot cross split boundaries, and normalization is fitted only on training data. Historical weather inputs use previously issued forecasts rather than realized future observations.",
+      "Prediction intervals come from calibration residuals per channel and horizon. Reported test coverage can fall below the nominal 80%, so the dashboard exposes observed coverage rather than promising certainty.",
+      "Forecasts require sufficient recent source coverage. Replay timestamps do not count as new live data for retraining, missing measured PV can withhold the solar baseline, and later direct-source collection provides provenance without Docker-control permissions.",
+      "Local training, model serving and data services share the GX10 memory pool. I separated model evaluation, merge, quantization and serving stages, retained model backups and fixed export handling so external ONNX weight files were not silently omitted from deployment."
+    ],
+    "implementation": [
+      {
+        "tool": "PyTorch + physics labeler + ONNX",
+        "use": "Create weighted training labels, fit panel models with walk-forward validation and preserve the feature/head contract at deployment."
+      },
+      {
+        "tool": "Nemotron + LoRA + llama.cpp / Ollama",
+        "use": "Distill gated appliance decisions into a local model, retain BiLSTM fallback and serve a separate reasoning interface."
+      },
+      {
+        "tool": "CUDA XGBoost + forecast service",
+        "use": "Compare multi-horizon candidates, calibrate intervals and promote versioned models only after validation improves."
+      }
+    ],
+    "related": [
+      "nilm-labels",
+      "capstone-reflection"
+    ],
+    "note": ""
+  },
+  {
     "id": "silicon-performance-lab",
     "title": "Silicon Performance Lab",
     "category": "Performance engineering · FPGA",
