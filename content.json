@@ -148,11 +148,12 @@
     "status": "Ongoing",
     "stage": "Hardware validated",
     "headline": "Measure the workload. Understand the silicon.",
-    "summary": "A local performance lab combining measured Core ML inference with a hardware-tested iCEBreaker graphics accelerator, working DVI triangle output and raw USB benchmark evidence.",
-    "metric": "2,113",
-    "label": "FPGA hardware transactions passed",
+    "summary": "A performance lab combining measured Core ML inference, FPGA graphics, and an asynchronous C++ runtime validated on a physical iCEBreaker: 12,000 checked jobs and 702 jobs/s sustained throughput.",
+    "metric": "12,000",
+    "label": "SPL2 jobs validated on hardware",
     "tools": [
       "Swift / Core ML",
+      "C++17",
       "JavaScript / Node.js",
       "Verilog",
       "Python",
@@ -162,10 +163,12 @@
       "IceStorm"
     ],
     "concepts": [
+      "Asynchronous execution",
+      "Bounded queues",
+      "Hardware validation",
+      "Transport overhead",
       "Latency distributions",
-      "Compute policies",
-      "Rasterization",
-      "Video timing"
+      "Rasterization"
     ],
     "github": "https://github.com/hranjan004/silicon-performance-lab",
     "problem": "Comparing processors is easy to get wrong when compilation, transfer overhead, simulation and actual execution are mixed together. I built a local lab that makes those boundaries visible: run a defined workload, inspect the raw samples and check the output before interpreting the performance.",
@@ -173,17 +176,21 @@
       "I wrote a Swift Core ML runner for a deterministic four-layer convolution workload and compared CPU-only, CPU + Neural Engine, CPU + GPU and all-compute-unit policies. Each policy uses five warmups and three trials of 50 synchronous predictions; compilation, loading and validation stay outside the timed interval.",
       "I built a dependency-free JavaScript dashboard and Node.js server for experiment controls, hardware inventory, latency charts and exports. The server allows one native experiment at a time and keeps saved results available without attached hardware.",
       "For the iCEBreaker UP5K, I implemented integer recurrence lanes, BRAM transfers and a triangle rasterizer in Verilog. A 64×64 framebuffer feeds independent 640×480 RGB444 DVI scanout through a 12-bit Pmod, while UART supports framebuffer readback and workload commands.",
-      "I checked every raster pixel against a software reference, simulated a complete video frame, then synthesized, routed and tested the design on the physical board. A repeated UART runner records timestamps, cycle counts and host latency for every validated transaction. External power-trace integration is implemented separately."
+      "I checked every raster pixel against a software reference, simulated a complete video frame, then synthesized, routed and tested the design on the physical board. A repeated UART runner records timestamps, cycle counts and host latency for every validated transaction. External power-trace integration is implemented separately.",
+      "I built SPL2, a C++17 asynchronous runtime with futures and at most 16 outstanding jobs. CRC-protected UART frames carry request IDs and epochs; credit-based flow control, ordered uploads, and watchdog recovery keep host and device state consistent.",
+      "I implemented banked resident vectors and 1/2/4/8-lane dot-product and XOR-reduction kernels. Timing sweeps selected eight lanes at 30 MHz; the 36 MHz candidate failed timing and was not selected."
     ],
     "result": [
+      "On October 29, 2026, the physical iCEBreaker passed 12,000 SPL2 benchmark jobs with independently checked results. A 10,000-job run at depth 16 sustained 702.266 jobs/s; depth 1 measured 62.5021 jobs/s, an approximately 11.2× end-to-end throughput improvement.",
+      "Eight lanes complete a 256-pair dot product or XOR reduction in 35 device cycles, versus 259 cycles with one lane: 7.4× fewer cycles. At the selected 30 MHz clock, 35 cycles is 1.167 microseconds; this is distinct from USB/host latency.",
+      "The selected SPL2 image uses 3,835/5,280 logic cells, 30/30 RAM blocks and 8/8 DSP blocks. Routing reported 31.219 MHz against the 30 MHz constraint. Three deliberate invalid-vector requests were rejected, followed by three successful epoch recoveries.",
       "On October 25, 2026, the physical iCEBreaker passed all 2,113 measured transactions: 938 compute, 938 memory and 237 raster runs. The external monitor displayed the rendered triangle.",
       "The saved M4 experiment measured median prediction latency of 0.154 ms for CPU-only and 0.139 ms for CPU + Neural Engine on this synthetic workload. All 131,072 output elements were checked for consistency against the CPU reference.",
-      "Passed 13 dashboard/server and data-contract tests plus eight FPGA host-protocol and power-integration tests. Video simulation checked all 420,000 pixel periods for RGB, data enable and synchronization.",
-      "The UP5K image uses 1,503 of 5,280 logic cells and 10 of 30 RAM blocks. Placement and routing reported 29.138 MHz maximum internal frequency, passing the configured 25.125 MHz constraint.",
-      "Across three approximately five-second trials per workload, median host round trips were 15.744 ms for compute, 15.685 ms for BRAM and 63.679 ms for raster. End-to-end rates were 1.023 million integer updates/s, 0.512 MB/s and 64,025 pixel tests/s, including USB transfer and host validation."
+      "Passed 13 dashboard/server and data-contract tests plus eight FPGA host-protocol and power-integration tests. Video simulation checked all 420,000 pixel periods for RGB, data enable and synchronization."
     ],
-    "takeaway": "Hardware bring-up confirmed the triangle on the monitor and all 2,113 workload checks passed. Separating device cycles from complete USB transactions exposed the transport overhead instead of presenting it as compute performance. Energy efficiency remains an open measurement task: no external power meter was connected.",
+    "takeaway": "Keeping work in flight raised measured throughput by about 11.2×, while eight lanes reduced device cycles by 7.4×. The physical link still delivered only 22.5% of the ideal response ceiling, making transport and host overhead the next measurement target. The roughly 15-second sustained run is not long-duration qualification.",
     "technical": [
+      "SPL2 is a separate compute-only image; it does not include the earlier DVI rasterizer. The October 25 graphics results and October 29 SPL2 results describe different bitstreams. UART simulation reached about 2,965 jobs/s; physical hardware measured 702 jobs/s. The physical 80%-of-link-ceiling target remains unmet.",
       "Core ML compute policies allow CPU fallback. Preferred-device information is scheduling evidence, so I do not treat it as a trace proving which accelerator executed every operation. The saved run was taken on battery power; repeated independent runs on AC power would support stronger comparisons.",
       "Video scanout runs independently of the UART request path. Hardware returned the expected 4,096 raster cycles and framebuffer pixels; configured-clock throughput is distinct from host round-trip timing. The repeated serial test does not saturate the compute engine or measure maximum board power.",
       "The FPGA is fixed-function graphics hardware. It renders a fixed triangle and supports defined compute and memory exercises; it is not a general shader processor.",
@@ -196,15 +203,15 @@
       },
       {
         "tool": "Verilog + Yosys + nextpnr",
-        "use": "Build and verify framebuffer rasterization, UART access and independent DVI scanout on the UP5K target."
+        "use": "Build separate DVI graphics and SPL2 compute images; bank resident vectors across eight lanes and verify timing on the UP5K."
       },
       {
-        "tool": "JavaScript + Node.js + Python",
-        "use": "Expose experiments and raw results in a local dashboard, with aligned power-trace integration."
+        "tool": "C++17 + JavaScript + Python",
+        "use": "Queue asynchronous work, validate framed replies and recovery, expose experiments, and retain reproducible benchmark evidence."
       }
     ],
     "related": [],
-    "note": "Hardware results recorded October 25, 2026. Monitor output confirmed; no watts, joules or performance-per-watt measurements are claimed. The source repository is private; access is required to view its GitHub link."
+    "note": "SPL2 hardware results recorded October 29, 2026; earlier DVI results recorded October 25. Animation is schematic, not a recording or timing scale. No watts, joules or performance-per-watt measurements are claimed. Source repository is private; GitHub access is required."
   },
   {
     "id": "gpupm-lab",
