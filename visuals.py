@@ -261,3 +261,8 @@ def illustration(identity, static=False):
     if static:
         shapes=re.sub(r'<animate(?:Motion|Transform)?\b[^>]*/>','',shapes)
     return f'<svg class="topic-visual" data-visual="{identity}" viewBox="0 0 600 240" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{shapes}</svg>'
+
+# Acquisition benchmark; sensing and telemetry are planned.
+PALETTES['esp32-microgrid-meter'] = ('#17343b','#254750','#81d8c5','#b9c9ff','#efd49b')
+SCENES['esp32-microgrid-meter'] = (rect(60,70,130,80)+text(125,105,'ADC / DMA',13)+text(125,130,'2 CHANNELS',10)+line('M190 110 H240')+rect(240,70,130,80)+text(305,105,'FIXED POINT',12)+text(305,130,'17.5x',12)+line('M370 110 H420',stroke_dasharray='5 7')+rect(420,70,120,80)+text(480,105,'PI / MQTT',12)+text(480,130,'PLANNED',10)+circle(210,110,5,animate('cx','195;235;195',3.83),fill='currentColor')+text(300,205,'BENCHMARKED FIRMWARE · SENSING NEXT',11))
+PROJECT_IDS.add('esp32-microgrid-meter')

@@ -4,8 +4,8 @@
     "title": "Microgrid Manager",
     "category": "Edge AI · Energy systems",
     "status": "Completed",
-    "headline": "Making a home’s energy data useful.",
-    "summary": "Local appliance inference and a dashboard that turns household telemetry into decisions.",
+    "headline": "Three panels. One clearer picture.",
+    "summary": "Distributed telemetry across 3 panels and 3 EdgeLake / AnyLog nodes, with roughly 960 messages/min and single-digit-ms ONNX inference per panel.",
     "metric": "3 panels",
     "label": "local appliance inference",
     "tools": [
@@ -66,7 +66,8 @@
         "use": "Expose readings, predictions and a local question interface."
       }
     ],
-    "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone."
+    "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone.",
+    "github": "https://github.com/hranjan004/iems-pi-edge"
   },
   {
     "id": "gx10-microgrid",
@@ -74,8 +75,8 @@
     "category": "Edge AI · Energy systems",
     "status": "Completed",
     "stage": "Hackathon prototype",
-    "headline": "Bring the models to the microgrid.",
-    "summary": "A GX10 deployment combining locally served Nemotron, physics-informed appliance labeling and GPU-trained forecasting—with explicit fallbacks, validation and controlled model promotion.",
+    "headline": "From microgrid to hackathon.",
+    "summary": "Built on Microgrid Manager for the hack.dev-hosted UCSC AI hackathon: local Nemotron inference, GPU-trained forecasts and 91.91% held-out teacher agreement.",
     "metric": "91.91%",
     "label": "held-out agreement with the teacher",
     "tools": [
@@ -96,9 +97,9 @@
       "Walk-forward validation",
       "Multi-horizon forecasting"
     ],
-    "github": "https://github.com/hranjan004/microgrid-iems-gx10",
-    "github_private": true,
-    "problem": "I wanted to take the residential microgrid beyond a dashboard that explains what just happened. The hackathon goal was to run local reasoning, appliance-state inference and forward-looking power predictions on a GX10, while keeping the evidence behind each prediction understandable. That meant changing the labeling and training pipeline as well as the serving architecture.",
+    "github": "https://github.com/hranjan004/iems-pi-edge",
+    "github_private": false,
+    "problem": "At the hack.dev-hosted UCSC AI hackathon, I extended Microgrid Manager into a local GX10 intelligence demo. I wanted to take the residential microgrid beyond a dashboard that explains what just happened. The hackathon goal was to run local reasoning, appliance-state inference and forward-looking power predictions on a GX10, while keeping the evidence behind each prediction understandable. That meant changing the labeling and training pipeline as well as the serving architecture.",
     "approach": [
       "I brought the stack onto the GX10’s Grace Blackwell platform: GPU training on GB10, ARM-compatible data services and local model serving. Recorded meter data supported a self-contained event demo; the forecasting system later gained authenticated, read-only collection from the meter and solar source, with replay kept separate.",
       "I used physical_labeler_v2 to produce physics-derived labels and trust weights, then retrained panel-specific BiLSTMs through rolling walk-forward validation. The pipeline preserves an 18-feature normalization contract and exports calibrated models to ONNX. Runtime gates reject physically implausible appliance combinations and power assignments.",
@@ -147,7 +148,7 @@
     "category": "Performance engineering · FPGA",
     "status": "Ongoing",
     "stage": "Hardware validated",
-    "headline": "Measure the workload. Understand the silicon.",
+    "headline": "12,000 jobs. Checked on hardware.",
     "summary": "A performance lab combining measured Core ML inference, FPGA graphics, and an asynchronous C++ runtime validated on a physical iCEBreaker: 12,000 checked jobs and 702 jobs/s sustained throughput.",
     "metric": "12,000",
     "label": "SPL2 jobs validated on hardware",
@@ -211,7 +212,8 @@
       }
     ],
     "related": [],
-    "note": "SPL2 hardware results recorded October 29, 2026; earlier DVI results recorded October 25. Animation is schematic, not a recording or timing scale. No watts, joules or performance-per-watt measurements are claimed. Source repository is private; GitHub access is required."
+    "note": "SPL2 hardware results recorded October 29, 2026; earlier DVI results recorded October 25. Animation is schematic, not a recording or timing scale. No watts, joules or performance-per-watt measurements are claimed. Source repository is private; GitHub access is required.",
+    "github_private": true
   },
   {
     "id": "gpupm-lab",
@@ -219,7 +221,7 @@
     "category": "Linux kernel · Systems",
     "status": "Completed",
     "stage": "Emulation lab",
-    "headline": "Change performance states without breaking the contract.",
+    "headline": "Four states. Safer transitions.",
     "summary": "A shared C controller, Linux platform driver and CLI that enforce safe DVFS ordering, serialize concurrent requests and recover from injected faults in an ARM64 QEMU guest.",
     "metric": "400",
     "label": "concurrent sysfs requests validated",
@@ -274,7 +276,8 @@
       }
     ],
     "related": [],
-    "note": ""
+    "note": "",
+    "github_private": true
   },
   {
     "id": "tpm-integrity-monitor",
@@ -343,11 +346,129 @@
     "note": ""
   },
   {
+    "id": "gemma-anomaly",
+    "title": "Gemma anomaly review",
+    "category": "Applied AI · Open Model Hack",
+    "status": "Completed",
+    "headline": "Three agents. One incident.",
+    "summary": "A separate language-model layer that makes energy anomalies easier to review.",
+    "metric": "3 panel agents",
+    "label": "one shared anomaly adapter",
+    "tools": [
+      "Gemma",
+      "QLoRA",
+      "PEFT",
+      "TRL",
+      "vLLM",
+      "Lambda GPUs",
+      "Respan",
+      "Nango"
+    ],
+    "problem": "Individual electrical panels can produce related anomaly signals. The aim was to turn those signals into one reviewable incident without changing the existing appliance-inference service.",
+    "approach": [
+      "I built three logical panel agents around one Gemma adapter conditioned on panel identity. Their outputs are coordinated into a shared incident for review.",
+      "QLoRA with Hugging Face PEFT and TRL supported fine-tuning on Lambda GPUs; vLLM served the model. Respan captured traces and Nango connected a Google Sheets review workflow.",
+      "With only two verification rows in the anomaly table, I bootstrapped training labels by replaying the rule engine over archived readings."
+    ],
+    "result": [
+      "Completed a hackathon prototype with model serving, traceability and a human review path.",
+      "Kept the anomaly layer separate from the BiLSTM / ONNX production inference path."
+    ],
+    "note": "Completed refers to the prototype. Independent anomaly-detection accuracy and production alert outcomes are not established.",
+    "technical": [
+      "Panel identity conditions a shared adapter rather than requiring three separately fine-tuned models. The incident coordinator combines those panel-level outputs into one reviewable event.",
+      "QLoRA reduces the fine-tuning memory requirement; vLLM handles serving. Respan traces and the Sheets review workflow expose model behavior, but do not by themselves establish anomaly accuracy."
+    ],
+    "related": [
+      "fire-fission-reflection"
+    ],
+    "concepts": [
+      "Parameter-efficient tuning",
+      "Agent coordination",
+      "Human review"
+    ],
+    "implementation": [
+      {
+        "tool": "QLoRA + PEFT / TRL",
+        "use": "Fine-tune one shared adapter conditioned on panel identity."
+      },
+      {
+        "tool": "vLLM + Lambda GPUs",
+        "use": "Serve the model for the three panel agents."
+      },
+      {
+        "tool": "Respan + Nango",
+        "use": "Trace outputs and connect incidents to a Sheets review workflow."
+      }
+    ],
+    "takeaway": "I designed this as a reviewable anomaly-assistance prototype. Keeping the shared adapter separate from the existing inference pipeline made it possible to explore language-model explanations without replacing the system’s established predictions.",
+    "github": "https://github.com/hranjan004/gemma-anomaly"
+  },
+  {
+    "id": "esp32-microgrid-meter",
+    "title": "ESP32 Microgrid Meter",
+    "category": "Embedded · Energy sensing",
+    "status": "Ongoing",
+    "stage": "Benchmarked prototype",
+    "headline": "Measure the timing. Then the voltage.",
+    "summary": "ESP-IDF C benchmarks reached 3,846 samples/s per channel and 17.5× faster fixed-point math. Voltage sensing and Pi telemetry remain planned.",
+    "metric": "3,846 samples/s",
+    "label": "per channel · two-second ADC benchmark",
+    "tools": [
+      "C",
+      "ESP-IDF",
+      "ESP32-C3-DevKit-RUST",
+      "ADC / DMA",
+      "LEDC",
+      "Raspberry Pi",
+      "Wi-Fi / JSON (planned)",
+      "Kafka (planned)",
+      "MQTT / Home Assistant (planned)"
+    ],
+    "problem": "Microgrid Manager needs appliance-level measurements to compare with panel-level estimates. This project tests whether an ESP32-C3 can acquire and process the necessary signals before building the sensing front end.",
+    "approach": [
+      "Benchmarked two-channel continuous ADC acquisition, blocking reads, LEDC loopback timing and fixed-point versus software-float arithmetic in ESP-IDF C.",
+      "Designed an isolated 9 V AC transformer front end with a biased divider for voltage sensing. A power-meter proposal adds an SCT-013-030 current clamp; neither sensor has been purchased or wired.",
+      "Planned one JSON update per second over Wi-Fi to a Raspberry Pi, forwarding into Kafka with the eGauge field layout. MQTT publication to Home Assistant is a proposed extension, not an implemented integration."
+    ],
+    "result": [
+      "At 7.68 kS/s configured aggregate sampling, measured 3,846 samples/s per channel with no dropped or foreign samples during a two-second run.",
+      "Across 1,289 periods of a 60 Hz LEDC loopback signal, measured a mean period of 16,666.40 µs and a standard deviation of 0.49 µs. Timing measurements were taken with Wi-Fi off.",
+      "Fixed-point multiply-accumulate took 38.4 cycles/sample versus 673.1 for software float, a 17.5× speed advantage. Blocking ADC reads took 48.6 µs.",
+      "No appliance voltage, power accuracy or end-to-end telemetry latency has been measured. Only proposals and benchmark firmware are complete."
+    ],
+    "takeaway": "The benchmarks support further firmware development, but they do not establish measurement accuracy. The next steps are the isolated front end, sampling under Wi-Fi load, reference-meter calibration and Pi telemetry.",
+    "technical": [
+      "The board is an ESP32-C3-DevKit-RUST with RUST-2 I2C wiring; firmware is flashed from the Pi over USB. C is the current implementation language; a Rust sampling-loop port is a stretch goal.",
+      "Targets, not results: real power within 3% of a reference meter above 100 W; frequency agreement within 1 mHz; voltage sag/swell detection within one cycle. Proposed validation loads are a kettle and a fan or laptop charger, using a Kill A Watt P4400 reference.",
+      "Home Assistant was absent from the original proposals. Adding MQTT to the custom ESP-IDF firmware is the proposed integration path. No Pi deployment or newer hardware work has been verified."
+    ],
+    "concepts": [
+      "Continuous acquisition",
+      "Fixed-point processing",
+      "Benchmark scope"
+    ],
+    "implementation": [
+      {
+        "tool": "ESP-IDF C + ADC / DMA",
+        "use": "Benchmark two-channel acquisition and compare continuous sampling with blocking reads."
+      },
+      {
+        "tool": "LEDC + fixed-point C",
+        "use": "Measure loopback timing and arithmetic cost on a processor without an FPU."
+      },
+      {
+        "tool": "Raspberry Pi + Kafka + MQTT (planned)",
+        "use": "Forward appliance readings to Microgrid Manager and optionally Home Assistant."
+      }
+    ]
+  },
+  {
     "id": "gpt2-performance",
     "title": "GPT-2 on the CPU",
     "category": "Systems · Performance",
     "status": "Completed",
-    "headline": "Less time waiting on memory.",
+    "headline": "Fewer cache misses. More useful work.",
     "summary": "Profile first, then improve the kernels that actually dominate the workload.",
     "metric": "9.17% → 2–3%",
     "label": "reported L1 cache-miss rate",
@@ -401,7 +522,7 @@
     "title": "Osmosis",
     "category": "FPGA · Digital design",
     "status": "Completed",
-    "headline": "A game built from clock cycles.",
+    "headline": "A game. Built from logic.",
     "summary": "Eight molecules, one membrane, and a complete game in structural Verilog.",
     "metric": "640 × 480",
     "label": "VGA display pipeline",
@@ -456,7 +577,7 @@
     "title": "HTTP / HTTPS proxy",
     "category": "C · Concurrent systems",
     "status": "Completed",
-    "headline": "Making repeat requests work less.",
+    "headline": "Repeat requests. Half the wait.",
     "summary": "Concurrent request handling, bounded caching and encrypted traffic forwarding.",
     "metric": "50%",
     "label": "lower cached response time",
@@ -508,69 +629,11 @@
     "takeaway": "I learned to treat caching as a correctness problem before treating it as a speed optimization. The 50% improvement applies to my cached-response benchmark; response boundaries, cache policy and concurrent access determine whether that improvement is useful."
   },
   {
-    "id": "gemma-anomaly",
-    "title": "Gemma anomaly review",
-    "category": "Applied AI · Open Model Hack",
-    "status": "Completed",
-    "headline": "From panel alerts to one incident.",
-    "summary": "A separate language-model layer that makes energy anomalies easier to review.",
-    "metric": "3 panel agents",
-    "label": "one shared anomaly adapter",
-    "tools": [
-      "Gemma",
-      "QLoRA",
-      "PEFT",
-      "TRL",
-      "vLLM",
-      "Lambda GPUs",
-      "Respan",
-      "Nango"
-    ],
-    "problem": "Individual electrical panels can produce related anomaly signals. The aim was to turn those signals into one reviewable incident without changing the existing appliance-inference service.",
-    "approach": [
-      "I built three logical panel agents around one Gemma adapter conditioned on panel identity. Their outputs are coordinated into a shared incident for review.",
-      "QLoRA with Hugging Face PEFT and TRL supported fine-tuning on Lambda GPUs; vLLM served the model. Respan captured traces and Nango connected a Google Sheets review workflow.",
-      "With only two verification rows in the anomaly table, I bootstrapped training labels by replaying the rule engine over archived readings."
-    ],
-    "result": [
-      "Completed a hackathon prototype with model serving, traceability and a human review path.",
-      "Kept the anomaly layer separate from the BiLSTM / ONNX production inference path."
-    ],
-    "note": "Completed refers to the prototype. Independent anomaly-detection accuracy and production alert outcomes are not established.",
-    "technical": [
-      "Panel identity conditions a shared adapter rather than requiring three separately fine-tuned models. The incident coordinator combines those panel-level outputs into one reviewable event.",
-      "QLoRA reduces the fine-tuning memory requirement; vLLM handles serving. Respan traces and the Sheets review workflow expose model behavior, but do not by themselves establish anomaly accuracy."
-    ],
-    "related": [
-      "fire-fission-reflection"
-    ],
-    "concepts": [
-      "Parameter-efficient tuning",
-      "Agent coordination",
-      "Human review"
-    ],
-    "implementation": [
-      {
-        "tool": "QLoRA + PEFT / TRL",
-        "use": "Fine-tune one shared adapter conditioned on panel identity."
-      },
-      {
-        "tool": "vLLM + Lambda GPUs",
-        "use": "Serve the model for the three panel agents."
-      },
-      {
-        "tool": "Respan + Nango",
-        "use": "Trace outputs and connect incidents to a Sheets review workflow."
-      }
-    ],
-    "takeaway": "I designed this as a reviewable anomaly-assistance prototype. Keeping the shared adapter separate from the existing inference pipeline made it possible to explore language-model explanations without replacing the system’s established predictions."
-  },
-  {
     "id": "tesphase",
     "title": "Tesphase",
     "category": "Product · Mobile engineering",
     "status": "Completed",
-    "headline": "Customer needs, translated into software.",
+    "headline": "Listen first. Build what matters.",
     "summary": "A mobile product exploring better use of household solar without additional customer hardware.",
     "metric": "30+",
     "label": "customer-discovery interviews",
@@ -622,7 +685,7 @@
     "title": "Slug Board",
     "category": "Full stack · Team project",
     "status": "Completed",
-    "headline": "A clearer path into campus life.",
+    "headline": "Campus events. Connected.",
     "summary": "Event creation and participation workflows for UCSC students.",
     "metric": "CRUD + SQL",
     "label": "events, RSVPs and comments",
@@ -679,7 +742,7 @@
     "title": "HTTP server on FPGA",
     "category": "FPGA · Networking",
     "status": "Ongoing",
-    "headline": "Taking a server into hardware.",
+    "headline": "From sockets to silicon.",
     "summary": "Exploring request handling and buffering beyond the software implementation.",
     "metric": "C → RTL",
     "label": "software as a behavioral reference",
@@ -729,7 +792,7 @@
     "title": "Two-player Quick Add",
     "category": "FPGA · State machines",
     "status": "Completed",
-    "headline": "Fair rounds. Correct scores.",
+    "headline": "Two players. One fair game.",
     "summary": "A two-player arithmetic game with synchronized inputs and explicit round control.",
     "metric": "9-state FSM",
     "label": "round and score controller",
@@ -780,7 +843,7 @@
     "title": "Quick Decode & counter lab",
     "category": "FPGA · Logic design",
     "status": "Completed",
-    "headline": "From counters to reaction games.",
+    "headline": "Every cycle counts.",
     "summary": "A progression from a 16-bit counter to a structurally designed reaction game.",
     "metric": "16-bit",
     "label": "loadable up/down counter",
@@ -832,7 +895,7 @@
     "title": "Spiking neural networks",
     "category": "ML research · Temporal learning",
     "status": "Ongoing",
-    "headline": "Understanding why neurons stop learning.",
+    "headline": "Learning, one spike at a time.",
     "summary": "Experiments in spike encoding, normalization and trainable neuron dynamics.",
     "metric": "LIF dynamics",
     "label": "encoding and training stability",
@@ -886,7 +949,7 @@
     "title": "ESP32 Weather Station in Rust",
     "category": "Embedded · Rust",
     "status": "Ongoing",
-    "headline": "From a sensor to a server.",
+    "headline": "Local readings. One connected Pi.",
     "summary": "An ESP32-C3 client and Raspberry Pi service for collecting local and outdoor readings.",
     "metric": "ESP32 + Pi",
     "label": "device-to-server workflow",
@@ -937,7 +1000,7 @@
     "title": "Battle Boats",
     "category": "Embedded · C",
     "status": "Completed",
-    "headline": "A game driven by interrupts.",
+    "headline": "Your move. Powered by interrupts.",
     "summary": "Battleship-style logic on a PIC32MX microcontroller.",
     "metric": "PIC32MX",
     "label": "event-driven embedded control",
@@ -992,7 +1055,7 @@
     "category": "Systems · Network programming",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Serving files without losing consistency.",
+    "headline": "Many requests. Consistent files.",
     "summary": "A C server connecting HTTP parsing, file operations, worker threads and request logging.",
     "metric": "GET / PUT",
     "label": "parsing, files and concurrency",
@@ -1047,7 +1110,7 @@
     "category": "Systems · Synchronization",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Making shared state predictable.",
+    "headline": "Shared data. Clear rules.",
     "summary": "A bounded work queue and configurable reader–writer lock built with POSIX synchronization primitives.",
     "metric": "3 policies",
     "label": "reader, writer and bounded-reader modes",
@@ -1101,7 +1164,7 @@
     "category": "Systems · Unix fundamentals",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Turning byte streams into file operations.",
+    "headline": "Bytes in. Files out.",
     "summary": "A command-line get / set utility built around Unix file descriptors and explicit input validation.",
     "metric": "get / set",
     "label": "command protocol over standard input",
@@ -1153,7 +1216,7 @@
     "category": "AI · Adversarial search",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Choosing a move by looking ahead.",
+    "headline": "Look ahead. Choose better.",
     "summary": "Reflex and adversarial agents that balance food collection, ghost avoidance and search depth.",
     "metric": "Game-tree search",
     "label": "state evaluation and action selection",
@@ -1205,7 +1268,7 @@
     "category": "AI · Reinforcement learning",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Learning a policy from experience.",
+    "headline": "Learn by playing.",
     "summary": "Value iteration and Q-learning experiments on the exploration–exploitation tradeoff.",
     "metric": "Q(s, a)",
     "label": "learning action values from rewards",
@@ -1257,7 +1320,7 @@
     "category": "AI · Multi-agent behavior",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Knowing when to attack and when to defend.",
+    "headline": "Attack. Defend. Adapt.",
     "summary": "Cooperative Pac-Man agents with role switching, spatial features and trap-avoidance heuristics.",
     "metric": "Attack ↔ defend",
     "label": "context-dependent agent behavior",
@@ -1308,7 +1371,7 @@
     "category": "Algorithms · Data structures",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Counting a range without scanning every word.",
+    "headline": "Count the range. Skip the scan.",
     "summary": "An augmented AVL tree for insertions and lexicographic range-count queries.",
     "metric": "Rank queries",
     "label": "subtree sizes alongside balance metadata",
@@ -1360,7 +1423,7 @@
     "category": "Algorithms · Graph search",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Finding the shortest story between two actors.",
+    "headline": "Two actors. The shortest connection.",
     "summary": "An actor–movie graph that returns a shortest connection with the films that explain every step.",
     "metric": "BFS",
     "label": "shortest paths with movie provenance",
@@ -1412,7 +1475,7 @@
     "category": "Algorithms · C / C++",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Making the algorithm visible in the data structure.",
+    "headline": "Better structures. Clearer algorithms.",
     "summary": "A collection of linked-list, graph, word-analysis and backtracking implementations.",
     "metric": "Lists → graphs",
     "label": "from memory ownership to search",
@@ -1465,7 +1528,7 @@
     "category": "Networking · Emulation",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Debugging a network before buying hardware.",
+    "headline": "A network. Before the hardware.",
     "summary": "A Mininet topology exercise connecting hosts, switches and traffic-controlled links.",
     "metric": "Hosts + switches",
     "label": "repeatable network setup",
@@ -1516,7 +1579,7 @@
     "category": "Mobile & web · Chore coordination",
     "status": "Ongoing",
     "stage": "Prototype",
-    "headline": "A simpler starting point for shared chores.",
+    "headline": "Shared chores. A simpler start.",
     "summary": "Early interface and authentication work for a chore-and-reminder application.",
     "metric": "Welcome → login",
     "label": "mobile and web explorations",
@@ -1569,7 +1632,7 @@
     "category": "Mobile · Real-time messaging",
     "status": "Completed",
     "stage": "Prototype",
-    "headline": "From an empty screen to a working conversation.",
+    "headline": "Write. Sync. Stay connected.",
     "summary": "A Flutter and Firebase chat prototype with live messages and a scrollable conversation history.",
     "metric": "Live chat",
     "label": "locally confirmed message flow",
@@ -1622,7 +1685,7 @@
     "category": "Mobile · Application maintenance",
     "status": "Ongoing",
     "stage": "Maintenance",
-    "headline": "Keeping an existing recording app maintainable.",
+    "headline": "Record today. Keep it working.",
     "summary": "Swift and UIKit compatibility work on a legacy voice-recorder application targeting iOS 18.",
     "metric": "Record / replay",
     "label": "legacy UI and audio workflows",
@@ -1675,7 +1738,7 @@
     "category": "Hardware · Architecture study",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Making fetch, decode and execute tangible.",
+    "headline": "Eight bits. Built from the ground up.",
     "summary": "A staged build proposal for an educational computer assembled from TTL logic and breadboards.",
     "metric": "8-bit",
     "label": "architecture and build plan",
@@ -1727,7 +1790,7 @@
     "category": "Data · Exploratory project",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Turning a playlist into a data question.",
+    "headline": "Your playlist. A data question.",
     "summary": "An early Python project exploring playlist characteristics and regression-based analysis.",
     "metric": "API → analysis",
     "label": "project design and starter workflow",
@@ -1779,7 +1842,7 @@
     "category": "ML · Research planning",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Testing for signal in noisy market data.",
+    "headline": "Find the signal. Test the forecast.",
     "summary": "A team project plan using the Jane Street forecasting problem to study tabular and temporal models.",
     "metric": "Boosting + sequences",
     "label": "baseline and follow-up model plan",
@@ -1831,7 +1894,7 @@
     "category": "Electronics · Laboratory work",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Connecting a circuit equation to a measured waveform.",
+    "headline": "From equations to waveforms.",
     "summary": "Bench-lab analysis of circuit equivalents, transient responses and frequency-dependent filtering.",
     "metric": "Time + frequency",
     "label": "transient and steady-state analysis",
@@ -1884,7 +1947,7 @@
     "category": "Languages · Functional programming",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Describing an image as an expression.",
+    "headline": "Small expressions. Generative art.",
     "summary": "A Haskell expression-tree exercise exploring recursive composition and structural depth.",
     "metric": "Recursive AST",
     "label": "composition, traversal and depth",
@@ -1935,7 +1998,7 @@
     "category": "ML · Training fundamentals",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Getting the data and training loop to agree.",
+    "headline": "Good models start with good data.",
     "summary": "PyTorch and data-mining exercises focused on preprocessing, tensor shapes and validation.",
     "metric": "Data → loss",
     "label": "training and evaluation workflow",
