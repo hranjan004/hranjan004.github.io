@@ -60,14 +60,14 @@ role('Balat Enterprises','Jun 2024 - Sep 2024','Product Management Intern',[
 role('Vyavshay Technologies','Jul 2022 - Aug 2022','Marketing Intern',[
 'Integrated a <b>phone API in JavaScript</b> for an internal customer-service tool; market research and campaign analysis for a rural mobility app contributed to <b>15% higher retention</b>.'])
 sec('Projects')
-proj('<link href="https://hranjan004.github.io/projects/silicon-performance-lab.html" color="#24486b">Silicon Performance Lab</link> - FPGA Graphics &amp; Hardware Validation | <link href="https://github.com/hranjan004/silicon-performance-lab" color="#24486b">GitHub (private)</link>',
+proj('<link href="https://hranjan004.github.io/projects/silicon-performance-lab.html" color="#24486b">Silicon Performance Lab</link> - FPGA Graphics &amp; Hardware Validation | <link href="https://github.com/hranjan004/silicon-performance-lab" color="#24486b">GitHub</link>',
 'Verilog, C++17, Python, iCEBreaker UP5K, Yosys, nextpnr, Icarus Verilog',[
 'Increased throughput <b>11.2x to 702 jobs/s</b> with an asynchronous C++ runtime; validated <b>12,000 hardware jobs</b>.',
 'Scaled compute to <b>8 lanes at 30 MHz</b>; cut dot-product execution from <b>259 to 35 cycles</b>. Validated DVI rasterizer output across <b>2,113 hardware transactions</b> and <b>420,000 simulated pixel periods</b>.'])
 proj('<link href="https://hranjan004.github.io/projects/microgrid-manager.html" color="#24486b">Microgrid Manager</link> - Distributed Systems | <link href="https://github.com/hranjan004/iems-pi-edge" color="#24486b">GitHub</link> | <link href="https://lfedge.org/how-uc-santa-cruz-students-are-using-edgelake-and-ai-to-build-a-smarter-self-sufficient-home/" color="#24486b">LF Edge blog</link>',
 'Python, Kafka, MQTT, AnyLog / EdgeLake, PostgreSQL, PyTorch, ONNX, Docker',[
 'Led capstone models and dashboard delivery; streamed <b>~960 messages/min across 3 nodes</b> and served ONNX inference in <b>single-digit ms per panel</b>, presenting progress in weekly sponsor reviews.',
-'<b>GX10 - hack.dev UCSC AI hackathon</b> (<link href="https://github.com/hranjan004/microgrid-iems-gx10" color="#24486b">private GitHub</link>): built local Nemotron inference and forecasting on <b>NVIDIA GB10</b>; <b>91.91% held-out teacher agreement</b>.'])
+'<b>GX10 - hack.dev UCSC AI hackathon</b> (<link href="https://github.com/hranjan004/iems-pi-edge" color="#24486b">GitHub</link>): built local Nemotron inference and forecasting on <b>NVIDIA GB10</b>; <b>91.91% held-out teacher agreement</b>.'])
 proj('<link href="https://hranjan004.github.io/projects/esp32-microgrid-meter.html" color="#24486b">ESP32 Microgrid Meter</link> - Embedded Firmware &amp; Sampling Performance',
 'ESP-IDF C, ESP32-C3, ADC / DMA, Raspberry Pi; MQTT / Home Assistant integration design',[
 'Sustained <b>3,846 samples/s per channel</b> with zero drops in a <b>2-second ADC benchmark</b>; fixed-point processing ran <b>17.5x faster</b> than software float.'])
