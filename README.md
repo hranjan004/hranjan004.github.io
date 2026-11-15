@@ -2,44 +2,36 @@
 
 Static GitHub Pages portfolio at https://hranjan004.github.io/.
 
-## Final structure
+## Structure
 
-The homepage introduces Harsh, then presents selected work, writing and notes, experience, About, and original art. All projects are available in a searchable collection with status and scope filters. Detail pages retain technical depth without making the homepage dense.
+The homepage introduces Harsh through engineering results, selected projects, writing, experience and original art. The project collection contains 37 entries with search, status and scope filters; projects with repository links appear first. Concise cards lead to detailed implementation narratives, tools and expandable measurement context.
 
-- 37 project entries, each labeled Completed or Ongoing.
-- 21 essays and engineering notes, with searchable summaries and full readers.
-- Six artwork galleries preserving all 28 archive images, with statements and reflections.
-- Shared navigation, contact links and the latest supplied downloadable CV.
+- 37 projects, 21 essays and six artwork galleries across 68 HTML pages.
+- 58 distinct SVG illustrations: 15 bespoke text-free compositions and 43 refined diagrams.
+- All 28 original artwork images retained.
+- Existing destination links and the one-page Carlito resume preserved.
+- Shared motion control with a saved preference; reduced-motion, offscreen and hidden-tab handling.
 
 ## Source and build
 
-- `content.json`: project narratives, tools, outcomes and status.
-- `writing.json`: essays, summaries and source context.
-- `art-content.json`: artwork images, statements and reflections.
-- `build.py`: shared layout, homepage, experience and page generation.
-- `editorial.py`: essay formatting, summaries and reader navigation.
-- `visuals.py`: 53 distinct topic-specific SVG compositions and continuous motion sequences. Writing previews and readers both animate, using their own palettes. The same subject retains its identity on its card and detail page; unrelated subjects never share illustrations.
-- `styles.css`: one consolidated blue design system and responsive layouts.
-- `site.js`: writing search and project search / status / scope filters.
+- `content.json`: project copy, tools, results and status.
+- `writing.json` and `editorial.py`: essay content and reader layouts.
+- `art-content.json`: artwork galleries, statements and reflections.
+- `build.py`: shared layout and generated pages.
+- `visuals.py`, `motion_refinements.py` and `cinematic_motion.py`: palettes, compositions and native SVG motion.
+- `styles.css`: the established pale background, blue accents, typography and responsive layouts.
+- `site.js`: search, filters and motion controls.
 
-Run `python3 build.py` and commit the generated HTML with the source edits. Preview with `python3 -m http.server 4174 --bind 127.0.0.1`. GitHub Pages publishes the root of `main`; `.nojekyll` keeps it static.
+Run `python3 build.py`, then commit the generated HTML with source changes. Preview with `python3 -m http.server 4174 --bind 127.0.0.1`. GitHub Pages publishes the root of `main`; `.nojekyll` keeps the site static.
+
+Generate the resume with `python3 build_resume.py --font-dir /path/to/carlito/fonts`. This requires ReportLab and Carlito Regular, Bold, Italic and BoldItalic TTFs.
 
 ## Verification
 
-Run `python3 verify.py` for local links and anchors, reachable pages, page headings, image alt text, project status, essay exclusions, image coverage, SVG validity and composition/motion uniqueness. Add `--base-url http://127.0.0.1:4174/` to verify all linked resources over HTTP. The October 21 browser checks cover all 32 project pages at mobile width, desktop/mobile collection rendering, project filters, homepage navigation and writing-search regression.
+Run `python3 verify.py` to check page reachability, links and anchors, headings, image alternatives, content coverage, private references, SVG validity and illustration uniqueness. Add `--base-url http://127.0.0.1:4174/` to check local resources over HTTP. See `VERIFICATION.md` for the November 15, 2026 verification scope.
 
 ## Content boundaries
 
-The site reconciles the Complete Record with Essays, Project and Writing Archive and Collected Essays. Source PDFs, private chat URLs, deployment addresses and household appliance wattages are not published. The Intelligent Energy Management Systems essay and application statements are excluded; the Microgrid technical case study remains.
+Copy leads with results while distinguishing completed implementations, coursework, prototypes and proposals. Model agreement, physics-derived evaluation and independent measurements retain their respective scope. ESP32 benchmark results are separate from the planned sensing and telemetry build. Graphics illustrate concepts; they are not measured traces or captured product output.
 
-Microgrid is completed October 2026; the Tesphase role is CTO. The proxy's 50% cached-response-time result matches the resume and was explicitly confirmed by Harsh. The benchmark is scoped to cached requests. Rule-derived ML evaluation is distinguished from independent measurements. Slug Board is completed coursework with an incomplete MVP, as explained in its retrospective.
-
-Project graphics are conceptual illustrations, not measured traces or captured product output. Original artwork previews link to the same work in its gallery. Distinct process views from the archive are retained.
-
-The October 2026 conversation export added 20 project entries after reviewing 1,211 conversation records. Repeated debugging conversations are consolidated; implementation, coursework, maintenance, design studies and proposals are distinguished. Harsh confirmed ownership of the additionally named work in the export. Private transcripts, account details and secrets remain outside the repository. Historical assistant suggestions are not evidence of successful deployment or measured impact.
-
-Homepage writing now uses three animated essay previews. Every project exposes tools, concepts and a concise implementation summary on its card, plus three tool-to-purpose explanations in the detail page. Concept search and all 32 mobile case-study layouts were checked. Siya Cabs was removed at the user’s request.
-
-## November 15, 2026 update
-
-All 37 projects use concise headlines and retain explicit tools and measured results or scope. Projects with repository links appear first; private repositories are labeled. ESP32 Microgrid Meter separates completed firmware benchmarks from planned sensing and telemetry. The combined one-page resume is generated by `python3 build_resume.py --font-dir /path/to/carlito/fonts` (ReportLab and Carlito Regular/Bold/Italic/BoldItalic TTFs required). Education dates are September 2022–December 2026.
+Private transcripts, credentials and deployment addresses remain outside the repository. Source project claims are not independently re-benchmarked by the website checks. Original artwork previews retain the same identity as their galleries, including distinct process views.

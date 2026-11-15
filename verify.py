@@ -84,7 +84,7 @@ def verify(base_url=None):
     assert (ROOT/'index.html').read_text().count('class="essay-card"') == 3
     assert all('Tools → implementation' in (ROOT/'projects'/f"{p['id']}.html").read_text() for p in projects)
     assert not any('intelligent energy management' in p['title'].lower() or 'application' in p['title'].lower() for p in essays)
-    assert 'I build systems that work in the <em>real world.</em><br>And write about the world they work in.' in (ROOT/'index.html').read_text()
+    assert 'Performance you can measure.<br><em>Products people can use.</em>' in (ROOT/'index.html').read_text()
     if base_url:
         def get(file):
             url=urljoin(base_url,file.relative_to(ROOT).as_posix())

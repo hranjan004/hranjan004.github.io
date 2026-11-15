@@ -4,8 +4,8 @@
     "title": "Microgrid Manager",
     "category": "Edge AI · Energy systems",
     "status": "Completed",
-    "headline": "Three panels. One clearer picture.",
-    "summary": "Distributed telemetry across 3 panels and 3 EdgeLake / AnyLog nodes, with roughly 960 messages/min and single-digit-ms ONNX inference per panel.",
+    "headline": "From power readings to useful decisions.",
+    "summary": "I led the design of three BiLSTMs and a distributed energy pipeline: 0.932 heat-pump F1 on held-out physics-labeled data, with single-digit-ms ONNX inference per panel.",
     "metric": "3 panels",
     "label": "local appliance inference",
     "tools": [
@@ -23,18 +23,18 @@
       "MCP",
       "Home Assistant"
     ],
-    "problem": "A home with solar and batteries produces plenty of readings, but a homeowner needs to know which loads are running and what to do next. Our UCSC capstone focused on turning that telemetry into appliance estimates and understandable recommendations while keeping inference local.",
+    "problem": "A solar home produces continuous telemetry. Its operator needs a clearer answer: which appliances are running, how the energy system is behaving and what to do next. I led the UCSC capstone that brought those readings into a local inference and monitoring system.",
     "approach": [
-      "As capstone lead engineer, I owned model development, physics-informed labeling and the dashboard, working with Dr. Pat Mantey and the AnyLog team on infrastructure. I replaced unreliable LLM labels after all 3,433 sampled heat-pump windows had been labeled OFF.",
-      "I organized the system around Load, Generation, Storage and Decision Support, following Ali Adabi’s 2016 framework. eGauge readings flow through Kafka, AnyLog / EdgeLake and PostgreSQL into ONNX inference, a FastAPI backend and React dashboards. MQTT connects the solar telemetry.",
-      "I compared MATNilm with the BiLSTM and found that MATNilm had collapsed to nearly constant per-appliance guesses. I retained the BiLSTM based on its response to the data, rather than the appeal of a newer architecture.",
-      "Only 2 of 22 appliance outputs had independent measurement. I developed physics-informed labels and excluded ambiguous windows. For Panel 3, separating sustained loads, compressor cycling, discrete high-power events and paired pulse patterns addressed persistent false positives."
+      "As lead engineer, I designed and trained three two-layer PyTorch BiLSTMs with appliance-specific heads and weighted loss. Physics-informed labeling captured sustained loads, compressor cycles, high-power events and paired pulse patterns.",
+      "I engineered the deployment contract around each ONNX model: feature normalization, appliance names and thresholds travel with the graph. Independent output probabilities allow several appliances to run at once.",
+      "I connected Kafka and MQTT telemetry through three EdgeLake / AnyLog nodes and PostgreSQL to ONNX inference, FastAPI and React dashboards. Load, Generation, Storage and Decision Support organize the system around the operator’s decisions.",
+      "I coordinated model, labeling and dashboard delivery with weekly sponsor reviews, working with Dr. Pat Mantey and the AnyLog team on infrastructure."
     ],
     "result": [
-      "Delivered local inference across three panels and a usable residential monitoring dashboard. I completed the capstone in October 2026.",
-      "Restored a five-minute dashboard snapshot from zero to more than 1,800 readings by correcting a stale data-source reference. All 11 solar-path tests passed locally and inside the deployed inference container.",
-      "The project led to a co-authored LF Edge article on residential edge intelligence.",
-      "Our published LF Edge report describes single-digit milliseconds of CPU inference per panel, with appliance predictions written every 30 seconds."
+      "The BiLSTM work achieved 0.932 heat-pump F1 on held-out physics-labeled data.",
+      "The distributed pipeline handles roughly 960 messages/min across three nodes. The published LF Edge report records single-digit milliseconds of CPU inference per panel, with predictions written every 30 seconds.",
+      "Delivered local inference across three panels and a residential monitoring dashboard; completed the capstone in October 2026. All 11 solar-path tests passed locally and inside the deployed inference container.",
+      "Co-authored the LF Edge article documenting the residential edge-intelligence system."
     ],
     "note": "Rule-derived evaluation is not independent appliance accuracy. Rare loads still need broader ground-truth coverage; fully automated appliance control was outside the completed capstone scope.",
     "technical": [
@@ -42,7 +42,8 @@
       "A model deployment couples the ONNX graph with feature normalization, appliance names and thresholds. Checking those contracts prevents a numerically valid output vector from being interpreted against the wrong labels.",
       "Kafka / MQTT → EdgeLake / AnyLog → PostgreSQL → ONNX + rules → FastAPI → dashboard. I kept the interface and inference layers separate so a GUI change did not create a second model runtime.",
       "The deployment runs as roughly 11 Docker containers, brought up with a single docker compose command. Keeping ingestion, inference, storage and presentation services separate makes the operational boundaries explicit.",
-      "The Ask feature connects a local model through Ollama to an MCP client exposing 18 tools. It gives the dashboard a natural-language interface while keeping the local inference path separate from language-model responses."
+      "The Ask feature connects a local model through Ollama to an MCP client exposing 18 tools. It gives the dashboard a natural-language interface while keeping the local inference path separate from language-model responses.",
+      "Evaluation scope: 0.932 heat-pump F1 is measured against held-out physics-derived labels. Only two of 22 appliance outputs had independent measurement in the capstone; automated appliance control was outside its completed scope."
     ],
     "related": [
       "capstone-reflection"
@@ -66,7 +67,7 @@
         "use": "Expose readings, predictions and a local question interface."
       }
     ],
-    "takeaway": "The hardest part was deciding what the data could actually support. Only two of 22 appliance outputs had independent measurements, so I treated physics-informed labels as engineering assumptions to inspect—not a substitute for ground truth. Broader measurement coverage is the next step for rare loads; automated appliance control was outside this capstone.",
+    "takeaway": "The product is the complete path from a meter reading to a useful decision. Explicit model contracts, local inference and clear service boundaries make that path maintainable.",
     "github": "https://github.com/hranjan004/iems-pi-edge"
   },
   {
@@ -75,8 +76,8 @@
     "category": "Edge AI · Energy systems",
     "status": "Completed",
     "stage": "Hackathon prototype",
-    "headline": "From microgrid to hackathon.",
-    "summary": "Built on Microgrid Manager for the hack.dev-hosted UCSC AI hackathon: local Nemotron inference, GPU-trained forecasts and 91.91% held-out teacher agreement.",
+    "headline": "More intelligence. On one machine.",
+    "summary": "Local Nemotron inference and GPU-trained forecasts on one GX10. Built for the hack.dev UCSC AI hackathon; reached 91.91% held-out agreement with the BiLSTM teacher.",
     "metric": "91.91%",
     "label": "held-out agreement with the teacher",
     "tools": [
@@ -99,27 +100,28 @@
     ],
     "github": "https://github.com/hranjan004/iems-pi-edge",
     "github_private": false,
-    "problem": "At the hack.dev-hosted UCSC AI hackathon, I extended Microgrid Manager into a local GX10 intelligence demo. I wanted to take the residential microgrid beyond a dashboard that explains what just happened. The hackathon goal was to run local reasoning, appliance-state inference and forward-looking power predictions on a GX10, while keeping the evidence behind each prediction understandable. That meant changing the labeling and training pipeline as well as the serving architecture.",
+    "problem": "The hack.dev UCSC AI hackathon was an opportunity to extend Microgrid Manager from monitoring into local reasoning and forecasting. I brought training, inference and data services together on the GX10 while keeping each prediction tied to an explicit data and model contract.",
     "approach": [
-      "I brought the stack onto the GX10’s Grace Blackwell platform: GPU training on GB10, ARM-compatible data services and local model serving. Recorded meter data supported a self-contained event demo; the forecasting system later gained authenticated, read-only collection from the meter and solar source, with replay kept separate.",
-      "I used physical_labeler_v2 to produce physics-derived labels and trust weights, then retrained panel-specific BiLSTMs through rolling walk-forward validation. The pipeline preserves an 18-feature normalization contract and exports calibrated models to ONNX. Runtime gates reject physically implausible appliance combinations and power assignments.",
-      "I distilled the gated BiLSTM decisions into Nemotron 3.5 Lightning using rank-16 LoRA. Each training round merges the adapter, scores held-out windows and mines training-split mistakes for a fixed-size replay buffer. The live appliance engine serves a Q8_0 GGUF through llama.cpp, retains per-head BiLSTM fallback and applies the downstream rules after model output.",
-      "I separated local question answering from appliance inference: Ollama serves the Nemotron reasoning interface, while the fine-tuned model handles structured appliance-state decisions. A local knowledge-graph view uses small-model extraction, ArangoDB and a Three.js/WebGPU viewer, with verified system topology distinguished from extracted relationships.",
-      "For measured-power forecasts, I built a separate pipeline using 24 hours of meter context, weather and missingness flags. It compares a TiDE-inspired PyTorch model, CUDA XGBoost, seasonal baselines and blends, then chooses a validation winner per channel. Versioned models and an atomic champion pointer allow retraining without interrupting serving."
+      "I deployed the stack on the GX10’s Grace Blackwell platform: GB10 GPU training, ARM-compatible data services and local serving. Recorded meter data enabled a self-contained event demo; read-only meter and solar collection later added direct-source inputs.",
+      "I built the physics-labeling and rolling walk-forward training path for panel-specific BiLSTMs, preserving an 18-feature normalization contract and calibrated ONNX exports.",
+      "I distilled the gated BiLSTM into Nemotron 3.5 Lightning with rank-16 LoRA. Each round merges the adapter, scores held-out windows and refreshes a fixed-size training replay buffer. The live Q8_0 model serves through llama.cpp with per-head BiLSTM fallback.",
+      "I separated question answering from appliance inference: Ollama serves the reasoning interface, while the fine-tuned model produces structured appliance states. The system map combines verified deployment topology with separately labeled extracted relationships.",
+      "For power forecasts, I compared TiDE-inspired PyTorch, CUDA XGBoost, seasonal baselines and blends using meter history, weather and missingness flags. Versioned models and an atomic champion pointer let retraining proceed while serving continues."
     ],
     "result": [
-      "Round 2 reached 91.91% held-out agreement with the gated BiLSTM teacher, up from 82.14% in round 1, on the same 300 validation windows. This measures distillation fidelity, not independently metered appliance accuracy.",
-      "Deployed the fine-tuned local NILM engine with per-head fallback. The quantized Q8_0 model matched the merged BF16 model on 166 of 176 heads in the recorded comparison.",
-      "The forecasting dataset deduplicates more than 30.7 million meter records across 16 measured channels and incorporates roughly 977,000 solar records. Coverage filters preserve gaps instead of treating the seven-month span as continuous data.",
-      "Added prediction and system-map views, minute-level forecast refresh, 15-minute forecast origins and six-hour retraining checks. Candidate promotion requires at least a 1% normalized-MAE improvement on shared validation origins; a failed update leaves the serving model available."
+      "Reached 91.91% held-out agreement with the gated BiLSTM teacher on 300 validation windows, up from 82.14% in the first round.",
+      "Deployed the quantized local NILM engine with per-head fallback. Q8_0 matched the merged BF16 model on 166 of 176 head decisions in the recorded comparison.",
+      "Built a forecasting dataset from more than 30.7 million deduplicated meter records across 16 channels and roughly 977,000 solar records, with coverage filters that preserve missing intervals.",
+      "Added prediction and system-map views with minute-level forecast refresh and 15-minute forecast origins. Model promotion requires at least 1% improvement in normalized MAE on shared validation origins."
     ],
-    "takeaway": "The project pushed me to treat model quality, data provenance and deployment behavior as one system. A local LLM is useful only when its outputs have a defined contract, fallbacks are explicit and evaluation distinguishes agreement with a teacher from independent evidence. I kept appliance-state inference and measured-power forecasting separate because they answer different questions.",
+    "takeaway": "Model training and live serving share one machine, so versioning and promotion rules are part of the model design. Separating appliance states, forecasts and conversational answers gives each output a clear job and evaluation.",
     "technical": [
       "The NILM input contract uses 100 × 18 windows. The teacher target includes the same mutual-exclusion and power gates used in serving, rather than copying raw recall-biased network outputs. Hard-example mining draws from training data, never the held-out validation split.",
       "Forecast selection, empirical interval calibration and final testing use three disjoint 14-day blocks. Training windows cannot cross split boundaries, and normalization is fitted only on training data. Historical weather inputs use previously issued forecasts rather than realized future observations.",
       "Prediction intervals come from calibration residuals per channel and horizon. Reported test coverage can fall below the nominal 80%, so the dashboard exposes observed coverage rather than promising certainty.",
       "Forecasts require sufficient recent source coverage. Replay timestamps do not count as new live data for retraining, missing measured PV can withhold the solar baseline, and later direct-source collection provides provenance without Docker-control permissions.",
-      "Local training, model serving and data services share the GX10 memory pool. I separated model evaluation, merge, quantization and serving stages, retained model backups and fixed export handling so external ONNX weight files were not silently omitted from deployment."
+      "Local training, model serving and data services share the GX10 memory pool. I separated model evaluation, merge, quantization and serving stages, retained model backups and fixed export handling so external ONNX weight files were not silently omitted from deployment.",
+      "The 91.91% result measures distillation agreement with the gated BiLSTM teacher on 300 held-out windows. It is not independent, submetered appliance accuracy. The recorded deployment used six-hour retraining checks; candidate promotion preserves the current serving model when the required improvement is not met."
     ],
     "implementation": [
       {
@@ -148,8 +150,8 @@
     "category": "Performance engineering · FPGA",
     "status": "Ongoing",
     "stage": "Hardware validated",
-    "headline": "12,000 jobs. Checked on hardware.",
-    "summary": "A performance lab combining measured Core ML inference, FPGA graphics, and an asynchronous C++ runtime validated on a physical iCEBreaker: 12,000 checked jobs and 702 jobs/s sustained throughput.",
+    "headline": "11.2× the throughput. Proven on hardware.",
+    "summary": "An asynchronous C++ runtime delivered 11.2× higher throughput on a physical FPGA: 702 jobs/s across 12,000 validated jobs, alongside custom graphics and compute hardware.",
     "metric": "12,000",
     "label": "SPL2 jobs validated on hardware",
     "tools": [
@@ -172,30 +174,30 @@
       "Rasterization"
     ],
     "github": "https://github.com/hranjan004/silicon-performance-lab",
-    "problem": "Comparing processors is easy to get wrong when compilation, transfer overhead, simulation and actual execution are mixed together. I built a local lab that makes those boundaries visible: run a defined workload, inspect the raw samples and check the output before interpreting the performance.",
+    "problem": "Performance work needs a repeatable workload, a verified answer and a clean measurement interval. I built a lab that connects those three across Apple Core ML, FPGA graphics and a custom host/device runtime.",
     "approach": [
-      "I wrote a Swift Core ML runner for a deterministic four-layer convolution workload and compared CPU-only, CPU + Neural Engine, CPU + GPU and all-compute-unit policies. Each policy uses five warmups and three trials of 50 synchronous predictions; compilation, loading and validation stay outside the timed interval.",
-      "I built a dependency-free JavaScript dashboard and Node.js server for experiment controls, hardware inventory, latency charts and exports. The server allows one native experiment at a time and keeps saved results available without attached hardware.",
-      "For the iCEBreaker UP5K, I implemented integer recurrence lanes, BRAM transfers and a triangle rasterizer in Verilog. A 64×64 framebuffer feeds independent 640×480 RGB444 DVI scanout through a 12-bit Pmod, while UART supports framebuffer readback and workload commands.",
-      "I checked every raster pixel against a software reference, simulated a complete video frame, then synthesized, routed and tested the design on the physical board. A repeated UART runner records timestamps, cycle counts and host latency for every validated transaction. External power-trace integration is implemented separately.",
-      "I built SPL2, a C++17 asynchronous runtime with futures and at most 16 outstanding jobs. CRC-protected UART frames carry request IDs and epochs; credit-based flow control, ordered uploads, and watchdog recovery keep host and device state consistent.",
-      "I implemented banked resident vectors and 1/2/4/8-lane dot-product and XOR-reduction kernels. Timing sweeps selected eight lanes at 30 MHz; the 36 MHz candidate failed timing and was not selected."
+      "I built SPL2, a C++17 asynchronous runtime with futures and up to 16 outstanding jobs. CRC-protected UART frames, request epochs, credit-based flow control and watchdog recovery coordinate the host and FPGA.",
+      "I implemented banked vectors and 1/2/4/8-lane dot-product and XOR-reduction kernels. Timing sweeps selected eight lanes at 30 MHz.",
+      "In a separate graphics image, I built integer compute lanes, BRAM transfers and a Verilog triangle rasterizer. A 64×64 framebuffer feeds independent 640×480 RGB444 DVI scanout; UART supports commands and framebuffer readback.",
+      "I validated raster pixels against a software reference, simulated a complete frame, then synthesized, routed and exercised the physical iCEBreaker. The UART runner records cycle counts and host latency for every checked transaction.",
+      "I wrote a Swift Core ML runner for a deterministic four-layer convolution workload and a JavaScript / Node.js dashboard for controls, latency charts and exports. Five warmups and three 50-prediction trials separate execution timing from compilation, loading and output checks."
     ],
     "result": [
-      "On October 29, 2026, the physical iCEBreaker passed 12,000 SPL2 benchmark jobs with independently checked results. A 10,000-job run at depth 16 sustained 702.266 jobs/s; depth 1 measured 62.5021 jobs/s, an approximately 11.2× end-to-end throughput improvement.",
-      "Eight lanes complete a 256-pair dot product or XOR reduction in 35 device cycles, versus 259 cycles with one lane: 7.4× fewer cycles. At the selected 30 MHz clock, 35 cycles is 1.167 microseconds; this is distinct from USB/host latency.",
-      "The selected SPL2 image uses 3,835/5,280 logic cells, 30/30 RAM blocks and 8/8 DSP blocks. Routing reported 31.219 MHz against the 30 MHz constraint. Three deliberate invalid-vector requests were rejected, followed by three successful epoch recoveries.",
-      "On October 25, 2026, the physical iCEBreaker passed all 2,113 measured transactions: 938 compute, 938 memory and 237 raster runs. The external monitor displayed the rendered triangle.",
-      "The saved M4 experiment measured median prediction latency of 0.154 ms for CPU-only and 0.139 ms for CPU + Neural Engine on this synthetic workload. All 131,072 output elements were checked for consistency against the CPU reference.",
-      "Passed 13 dashboard/server and data-contract tests plus eight FPGA host-protocol and power-integration tests. Video simulation checked all 420,000 pixel periods for RGB, data enable and synchronization."
+      "Validated 12,000 SPL2 jobs on the physical iCEBreaker. A 10,000-job run at queue depth 16 sustained 702.266 jobs/s versus 62.5021 at depth 1—an 11.2× throughput improvement.",
+      "Eight lanes complete a 256-pair dot product or XOR reduction in 35 device cycles versus 259 with one lane: 7.4× fewer cycles. At 30 MHz, the device calculation takes 1.167 microseconds.",
+      "The selected image uses 3,835 of 5,280 logic cells, all 30 RAM blocks and all eight DSP blocks; routed timing reached 31.219 MHz. Three invalid-vector requests were rejected and followed by successful epoch recoveries.",
+      "The separate graphics image passed 2,113 physical transactions: 938 compute, 938 memory and 237 raster runs. The external monitor displayed the rendered triangle; simulation checked 420,000 pixel periods.",
+      "The saved M4 experiment measured 0.154 ms median CPU-only prediction latency and 0.139 ms for CPU + Neural Engine, with all 131,072 output elements checked against the CPU reference.",
+      "Passed 13 dashboard/server and data-contract tests plus eight host-protocol and power-integration tests."
     ],
-    "takeaway": "Keeping work in flight raised measured throughput by about 11.2×, while eight lanes reduced device cycles by 7.4×. The physical link still delivered only 22.5% of the ideal response ceiling, making transport and host overhead the next measurement target. The roughly 15-second sustained run is not long-duration qualification.",
+    "takeaway": "Keeping work in flight raised throughput 11.2×; adding lanes cut device cycles 7.4×. Measuring both identifies the next optimization target: transport and host overhead.",
     "technical": [
       "SPL2 is a separate compute-only image; it does not include the earlier DVI rasterizer. The October 25 graphics results and October 29 SPL2 results describe different bitstreams. UART simulation reached about 2,965 jobs/s; physical hardware measured 702 jobs/s. The physical 80%-of-link-ceiling target remains unmet.",
       "Core ML compute policies allow CPU fallback. Preferred-device information is scheduling evidence, so I do not treat it as a trace proving which accelerator executed every operation. The saved run was taken on battery power; repeated independent runs on AC power would support stronger comparisons.",
       "Video scanout runs independently of the UART request path. Hardware returned the expected 4,096 raster cycles and framebuffer pixels; configured-clock throughput is distinct from host round-trip timing. The repeated serial test does not saturate the compute engine or measure maximum board power.",
       "The FPGA is fixed-function graphics hardware. It renders a fixed triangle and supports defined compute and memory exercises; it is not a general shader processor.",
-      "Energy analysis requires measured power covering the same interval as completed work. The integration code is tested, while physical watts, joules and work-per-joule measurements remain future experiments."
+      "Energy analysis requires measured power covering the same interval as completed work. The integration code is tested, while physical watts, joules and work-per-joule measurements remain future experiments.",
+      "The 702 jobs/s result comes from a roughly 15-second sustained run, not long-duration qualification. The physical link reached 22.5% of its ideal response ceiling. Timing sweeps excluded a 36 MHz candidate that did not meet timing."
     ],
     "implementation": [
       {
@@ -221,8 +223,8 @@
     "category": "Linux kernel · Systems",
     "status": "Completed",
     "stage": "Emulation lab",
-    "headline": "Four states. Safer transitions.",
-    "summary": "A shared C controller, Linux platform driver and CLI that enforce safe DVFS ordering, serialize concurrent requests and recover from injected faults in an ARM64 QEMU guest.",
+    "headline": "Performance changes. Control stays intact.",
+    "summary": "A Linux driver that coordinates four performance states and recovers from injected faults. Validated 400 concurrent sysfs requests in an ARM64 QEMU guest.",
     "metric": "400",
     "label": "concurrent sysfs requests validated",
     "tools": [
@@ -242,7 +244,7 @@
       "Driver lifecycle"
     ],
     "github": "https://github.com/hranjan004/gpupm-lab",
-    "problem": "A power-state request is not just a new frequency value. Voltage and clock changes must happen in a safe order, concurrent callers must agree on ownership, and a lost completion or stalled controller must not leave the next request in an unsafe state. I built an emulated controller and a real Linux platform driver to exercise that entire contract.",
+    "problem": "A performance-state change must coordinate voltage, frequency and concurrent callers. I built a Linux driver and emulated controller that make the transition, completion and recovery rules executable.",
     "approach": [
       "I defined a shared C register-level model with four synthetic P-states, power-budget admission, thermal constraints, write-one-to-clear interrupt status and injectable faults. On a boost, voltage rises before frequency; on a downshift, frequency falls before voltage.",
       "I implemented a Linux platform driver with a transaction mutex for request ownership and an IRQ-safe spinlock for register access. Delayed work advances the controller, a software IRQ handler acknowledges completion, and sysfs exposes controls and status to a C CLI.",
@@ -254,7 +256,7 @@
       "The Linux guest completed 400 concurrent sysfs requests, fault-recovery checks, active-client removal and 10 module reload cycles. The tested kernel was Linux 6.1.190 ARM64.",
       "Measured 200 alternating P0/P3 requests per backend: native-emulator p95 was 3.898 ms and QEMU sysfs p95 was 25.218 ms. These characterize the software request paths and scheduling, not physical GPU transitions."
     ],
-    "takeaway": "The most important design decision was who owns an in-flight transition. Holding the transaction lock through completion and draining old work before the next request made concurrency and recovery easier to reason about. This completed emulation lab provides a testable foundation for a future real-bus backend.",
+    "takeaway": "One owner per transition and an explicit recovery path keep concurrency manageable. The shared controller model makes the same state transitions testable in a fast native harness and a Linux guest.",
     "technical": [
       "The shared model makes each voltage/frequency step inspectable. CURRENT stays at the last committed P-state until completion, while instantaneous voltage and frequency expose the intermediate transition.",
       "The worker invokes the common interrupt handler in software. The QEMU guest validates Linux synchronization and lifecycle behavior; physical interrupt delivery and MMIO bus ordering require a separate hardware or virtual-device backend.",
@@ -286,7 +288,7 @@
     "status": "Completed",
     "stage": "Security lab",
     "headline": "Trust the evidence. Catch the drift.",
-    "summary": "A Linux agent and remote verifier that check signed TPM measurements, reject replayed evidence and turn integrity drift into visible monitoring events.",
+    "summary": "Fresh TPM evidence, replay rejection and observable integrity checks. A Python verifier and Linux agent passed 22 tests, including eight-way concurrent replay.",
     "metric": "22 tests",
     "label": "passed with swtpm integration",
     "tools": [
@@ -309,7 +311,7 @@
       "Configuration drift"
     ],
     "github": "https://github.com/hranjan004/tpm-integrity-monitor",
-    "problem": "A device saying it is healthy is not enough. I wanted a verifier to demand fresh, signed evidence, compare it with an approved baseline and explain why a report passed or failed. The challenge was connecting cryptographic checks to a repeatable operational workflow: enrollment, evidence collection, rejection, recovery and monitoring.",
+    "problem": "Device integrity needs fresh evidence and an operational response. I built an enrollment-to-monitoring workflow that verifies signed measurements, rejects reused reports and exposes the reason for each verdict.",
     "approach": [
       "I built a Python Linux agent around tpm2-tools and swtpm. An administrator approves an attestation key and a baseline; the agent then requests a fresh verifier challenge and collects PCR measurements and configuration-file hashes.",
       "The TPM quote binds its measurements to the challenge and report. My FastAPI verifier checks freshness, the enrolled signing key, RSA signature, PCR selection and approved baseline before storing a verdict in SQLite. Single-use challenges make a previously valid quote unusable as a new report.",
@@ -321,12 +323,13 @@
       "Cross-checked a TPM-generated quote with both my Python verifier and tpm2_checkquote. Tests include eight-way concurrent replay and malformed, truncated and trailing evidence.",
       "The live demo produced two verified events, one replay rejection, one signature rejection, one configuration rejection and four PCR-drift rejections. Prometheus scraped the verdicts, and Grafana exposed the provisioned three-panel dashboard."
     ],
-    "takeaway": "The important distinction is between a signed statement and trustworthy enrollment. I made the operator’s approval of the key and baseline explicit, and kept report freshness separate from measurement correctness. The completed lab uses swtpm inside Linux containers; testing a physical TPM and the host’s measured-boot chain is the next step.",
+    "takeaway": "Freshness, identity and measurement integrity are separate checks. Making each visible gives an operator a usable security workflow, from enrollment through recovery.",
     "technical": [
       "Replay handling needs to remain correct when requests arrive together, not just sequentially. Atomic challenge consumption and persistent verifier state are tested under concurrent reuse and restart scenarios.",
       "Configuration hashes are agent-reported data, even when the quote binds them. I distinguish that binding from independently measured boot evidence: the lab does not validate EK certificates or replay measured-boot event logs.",
       "The verifier checks selected PCRs against an approved baseline. A matching quote supports a specific integrity claim about those measurements; it does not prove that every part of a machine is safe.",
-      "The repository includes a protocol walkthrough, threat model, physical-hardware setup guide and reproducible attack-and-recovery demo. Services bind to localhost by default; remote operation requires TLS and controlled provisioning."
+      "The repository includes a protocol walkthrough, threat model, physical-hardware setup guide and reproducible attack-and-recovery demo. Services bind to localhost by default; remote operation requires TLS and controlled provisioning.",
+      "This completed lab uses swtpm in Linux containers. Physical-TPM validation and the host measured-boot chain are separate next steps; enrollment requires operator approval of the attestation key and baseline."
     ],
     "implementation": [
       {
@@ -350,8 +353,8 @@
     "title": "Gemma anomaly review",
     "category": "Applied AI · Open Model Hack",
     "status": "Completed",
-    "headline": "Three agents. One incident.",
-    "summary": "A separate language-model layer that makes energy anomalies easier to review.",
+    "headline": "Three signals. One story to review.",
+    "summary": "Three panel agents, one shared Gemma adapter, one incident to review. I built the fine-tuning, serving and traceability path for a microgrid anomaly prototype.",
     "metric": "3 panel agents",
     "label": "one shared anomaly adapter",
     "tools": [
@@ -366,18 +369,19 @@
     ],
     "problem": "Individual electrical panels can produce related anomaly signals. The aim was to turn those signals into one reviewable incident without changing the existing appliance-inference service.",
     "approach": [
-      "I built three logical panel agents around one Gemma adapter conditioned on panel identity. Their outputs are coordinated into a shared incident for review.",
-      "QLoRA with Hugging Face PEFT and TRL supported fine-tuning on Lambda GPUs; vLLM served the model. Respan captured traces and Nango connected a Google Sheets review workflow.",
-      "With only two verification rows in the anomaly table, I bootstrapped training labels by replaying the rule engine over archived readings."
+      "I built three logical panel agents around one Gemma adapter, conditioned on panel identity, and coordinated their outputs into a shared incident.",
+      "I fine-tuned with QLoRA, Hugging Face PEFT and TRL on Lambda GPUs, served with vLLM, and connected Respan traces to a Google Sheets review workflow through Nango.",
+      "I generated rule-derived training labels by replaying the existing anomaly engine over archived readings."
     ],
     "result": [
-      "Completed a hackathon prototype with model serving, traceability and a human review path.",
-      "Kept the anomaly layer separate from the BiLSTM / ONNX production inference path."
+      "Delivered a hackathon prototype combining shared-adapter serving, execution traces and a human review path.",
+      "Integrated anomaly assistance alongside the existing BiLSTM / ONNX inference service."
     ],
     "note": "Completed refers to the prototype. Independent anomaly-detection accuracy and production alert outcomes are not established.",
     "technical": [
       "Panel identity conditions a shared adapter rather than requiring three separately fine-tuned models. The incident coordinator combines those panel-level outputs into one reviewable event.",
-      "QLoRA reduces the fine-tuning memory requirement; vLLM handles serving. Respan traces and the Sheets review workflow expose model behavior, but do not by themselves establish anomaly accuracy."
+      "QLoRA reduces the fine-tuning memory requirement; vLLM handles serving. Respan traces and the Sheets review workflow expose model behavior, but do not by themselves establish anomaly accuracy.",
+      "Training labels came from rule-engine replay because the source anomaly table contained only two verification rows. The prototype does not establish independently measured anomaly accuracy."
     ],
     "related": [
       "fire-fission-reflection"
@@ -401,7 +405,7 @@
         "use": "Trace outputs and connect incidents to a Sheets review workflow."
       }
     ],
-    "takeaway": "I designed this as a reviewable anomaly-assistance prototype. Keeping the shared adapter separate from the existing inference pipeline made it possible to explore language-model explanations without replacing the system’s established predictions.",
+    "takeaway": "One shared adapter keeps the model layer compact; panel identity preserves context. The incident coordinator turns separate signals into one reviewable output.",
     "github": "https://github.com/hranjan004/gemma-anomaly"
   },
   {
@@ -410,8 +414,8 @@
     "category": "Embedded · Energy sensing",
     "status": "Ongoing",
     "stage": "Benchmarked prototype",
-    "headline": "Measure the timing. Then the voltage.",
-    "summary": "ESP-IDF C benchmarks reached 3,846 samples/s per channel and 17.5× faster fixed-point math. Voltage sensing and Pi telemetry remain planned.",
+    "headline": "Small processor. Measured performance.",
+    "summary": "ESP-IDF C firmware sustained 3,846 samples/s per channel in a two-second benchmark, with 17.5× faster fixed-point processing. Appliance sensing and Pi telemetry are designed next steps.",
     "metric": "3,846 samples/s",
     "label": "per channel · two-second ADC benchmark",
     "tools": [
@@ -425,23 +429,23 @@
       "Kafka (planned)",
       "MQTT / Home Assistant (planned)"
     ],
-    "problem": "Microgrid Manager needs appliance-level measurements to compare with panel-level estimates. This project tests whether an ESP32-C3 can acquire and process the necessary signals before building the sensing front end.",
+    "problem": "Appliance-level measurements can strengthen Microgrid Manager’s panel-level estimates. I first benchmarked acquisition and arithmetic on the ESP32-C3, then specified the isolated sensing and telemetry design.",
     "approach": [
-      "Benchmarked two-channel continuous ADC acquisition, blocking reads, LEDC loopback timing and fixed-point versus software-float arithmetic in ESP-IDF C.",
-      "Designed an isolated 9 V AC transformer front end with a biased divider for voltage sensing. A power-meter proposal adds an SCT-013-030 current clamp; neither sensor has been purchased or wired.",
-      "Planned one JSON update per second over Wi-Fi to a Raspberry Pi, forwarding into Kafka with the eGauge field layout. MQTT publication to Home Assistant is a proposed extension, not an implemented integration."
+      "Wrote ESP-IDF C benchmarks for two-channel continuous ADC acquisition, blocking reads, LEDC loopback timing and fixed-point arithmetic.",
+      "Designed an isolated 9 V AC transformer front end with a biased divider. The power-meter proposal adds an SCT-013-030 current clamp.",
+      "Specified one JSON update per second over Wi-Fi to a Raspberry Pi, then Kafka forwarding using the eGauge field layout. MQTT publication to Home Assistant is a proposed extension."
     ],
     "result": [
-      "At 7.68 kS/s configured aggregate sampling, measured 3,846 samples/s per channel with no dropped or foreign samples during a two-second run.",
-      "Across 1,289 periods of a 60 Hz LEDC loopback signal, measured a mean period of 16,666.40 µs and a standard deviation of 0.49 µs. Timing measurements were taken with Wi-Fi off.",
-      "Fixed-point multiply-accumulate took 38.4 cycles/sample versus 673.1 for software float, a 17.5× speed advantage. Blocking ADC reads took 48.6 µs.",
-      "No appliance voltage, power accuracy or end-to-end telemetry latency has been measured. Only proposals and benchmark firmware are complete."
+      "Sustained 3,846 samples/s per channel with no dropped or foreign samples during a two-second continuous-ADC run.",
+      "Measured 16,666.40 µs mean period and 0.49 µs standard deviation across 1,289 periods of a 60 Hz LEDC loopback signal, with Wi-Fi off.",
+      "Fixed-point multiply-accumulate took 38.4 cycles/sample versus 673.1 for software float—a 17.5× improvement. A blocking ADC read took 48.6 µs."
     ],
-    "takeaway": "The benchmarks support further firmware development, but they do not establish measurement accuracy. The next steps are the isolated front end, sampling under Wi-Fi load, reference-meter calibration and Pi telemetry.",
+    "takeaway": "Continuous acquisition and fixed-point arithmetic give this small processor a practical processing budget. The next build stages are the isolated front end, reference-meter calibration and Pi telemetry.",
     "technical": [
       "The board is an ESP32-C3-DevKit-RUST with RUST-2 I2C wiring; firmware is flashed from the Pi over USB. C is the current implementation language; a Rust sampling-loop port is a stretch goal.",
       "Targets, not results: real power within 3% of a reference meter above 100 W; frequency agreement within 1 mHz; voltage sag/swell detection within one cycle. Proposed validation loads are a kettle and a fan or laptop charger, using a Kill A Watt P4400 reference.",
-      "Home Assistant was absent from the original proposals. Adding MQTT to the custom ESP-IDF firmware is the proposed integration path. No Pi deployment or newer hardware work has been verified."
+      "Home Assistant was absent from the original proposals. Adding MQTT to the custom ESP-IDF firmware is the proposed integration path. No Pi deployment or newer hardware work has been verified.",
+      "Completed work consists of two proposals and benchmark firmware. The voltage transformer and current clamp have not been bought or wired; appliance voltage, power accuracy and end-to-end telemetry latency have not been measured."
     ],
     "concepts": [
       "Continuous acquisition",
@@ -468,8 +472,8 @@
     "title": "GPT-2 on the CPU",
     "category": "Systems · Performance",
     "status": "Completed",
-    "headline": "Fewer cache misses. More useful work.",
-    "summary": "Profile first, then improve the kernels that actually dominate the workload.",
+    "headline": "Make every cache line count.",
+    "summary": "Cut the hot kernel’s L1 data-cache miss rate from 9.17% to 2–3% using Linux perf, cache tiling and AVX2 vectorization in GPT-2 matrix multiplication.",
     "metric": "9.17% → 2–3%",
     "label": "reported L1 cache-miss rate",
     "tools": [
@@ -479,15 +483,15 @@
       "Cache tiling",
       "OpenMP"
     ],
-    "problem": "A C GPT-2 training loop spent much of its CPU time in matrix multiplication. Parallelism was constrained by the course build environment, so I started by improving the serial kernels.",
+    "problem": "Matrix multiplication dominated the CPU training loop. I used hardware counters to choose where to optimize, then improved the memory access and arithmetic inside those kernels.",
     "approach": [
-      "Linux perf identified backward matrix multiplication at 33.09% of sampled cycles and forward multiplication at 23.88%. That evidence set the optimization order.",
-      "I tiled the computation to improve data reuse and used AVX2 fused multiply-add instructions to process eight floats at a time. I worked within the existing test-driver and library constraints.",
-      "Related experiments examined thread scaling, page-size effects and NUMA locality to connect software changes with processor behavior."
+      "Linux perf attributed 33.09% of sampled cycles to backward matrix multiplication and 23.88% to forward multiplication, setting the optimization priorities.",
+      "I tiled the computation for data reuse and used AVX2 fused multiply-add instructions to process eight floats at a time within the existing build constraints.",
+      "Related experiments examined thread scaling, page sizes and NUMA locality to connect code changes with processor behavior."
     ],
     "result": [
-      "Follow-up profiling reported a reduction in the hot kernel’s L1 data-cache miss rate from 9.17% to approximately 2–3%.",
-      "The project produced a concrete link between memory access patterns, vectorized computation and hardware-counter measurements."
+      "Reduced the hot kernel’s L1 data-cache miss rate from 9.17% to approximately 2–3% in follow-up profiling.",
+      "Implemented cache tiling and vectorized matrix arithmetic, using hardware counters to evaluate the changes."
     ],
     "note": "This is a kernel cache-behavior result. The archived material does not establish a reproducible end-to-end training speedup.",
     "technical": [
@@ -515,15 +519,15 @@
         "use": "Split matrix work across CPU threads within the existing build."
       }
     ],
-    "takeaway": "This work changed how I approach optimization: inspect the memory traffic, isolate the hot kernel, then measure the effect of each change. The cache-miss improvement is a kernel-level result; measuring its contribution to a complete training run is a separate experiment."
+    "takeaway": "Profile the expensive work, improve locality, then vectorize. Separate measurements make it possible to connect an optimization to the behavior it actually changes."
   },
   {
     "id": "osmosis",
     "title": "Osmosis",
     "category": "FPGA · Digital design",
     "status": "Completed",
-    "headline": "A game. Built from logic.",
-    "summary": "Eight molecules, one membrane, and a complete game in structural Verilog.",
+    "headline": "A world built from clock cycles.",
+    "summary": "Eight moving molecules and a selective membrane at 640 × 480. I built the game in structural Verilog and verified two display frames with zero sync or RGB-blanking errors.",
     "metric": "640 × 480",
     "label": "VGA display pipeline",
     "tools": [
@@ -537,9 +541,9 @@
     ],
     "problem": "The challenge was to build a playable VGA game under strict structural-RTL constraints: continuous assignments and flip-flop primitives, with no procedural blocks in the hardware design.",
     "approach": [
-      "I separated pixel timing from frame-based movement and composed collision handling, membrane controls, randomized motion, a timer and win/lose state logic.",
-      "When every molecule appeared at the origin, I traced the failure to reset ending before the derived clock began. FDRE initialization parameters established the intended positions at configuration time.",
-      "I used behavioral simulation stubs, focused timing and game-logic tests, and bitmap rendering to check both the logic and the actual visible output."
+      "I separated pixel timing from frame-based movement and composed collision handling, membrane controls, randomized motion, a timer and game-state logic.",
+      "I used FDRE configuration-time initialization to establish molecule positions before the derived clock began, alongside synchronous runtime reset.",
+      "Behavioral simulation stubs, timing tests and bitmap rendering checked the control logic and visible output."
     ],
     "result": [
       "The provided display testbench completed two frames with zero sync errors and zero RGB-blanking errors.",
@@ -570,15 +574,15 @@
         "use": "Check display timing and visible object positions."
       }
     ],
-    "takeaway": "The satisfying part was connecting small synchronous components into a visible, interactive system. Frame timing, membrane rules and molecule state all had to agree before the display behaved like a game."
+    "takeaway": "Pixel timing and game state run at different rates. Clear boundaries between them let small synchronous components form a responsive, visible system."
   },
   {
     "id": "caching-proxy",
     "title": "HTTP / HTTPS proxy",
     "category": "C · Concurrent systems",
     "status": "Completed",
-    "headline": "Repeat requests. Half the wait.",
-    "summary": "Concurrent request handling, bounded caching and encrypted traffic forwarding.",
+    "headline": "The fastest repeat request is already here.",
+    "summary": "50% lower cached-response time in my benchmark. A concurrent C proxy combines bounded FIFO / LRU caching with HTTPS CONNECT tunneling.",
     "metric": "50%",
     "label": "lower cached response time",
     "tools": [
@@ -590,7 +594,7 @@
       "Clang",
       "Sanitizers"
     ],
-    "problem": "Repeated HTTP requests can duplicate origin work, while concurrent clients introduce shared-state hazards. I built a proxy to explore both response reuse and the correctness of network handling.",
+    "problem": "Repeated requests should reuse completed work. I built a concurrent proxy that balances faster cached responses with bounded storage, correct response framing and synchronized access.",
     "approach": [
       "I implemented FIFO and LRU eviction with a shared cache, keyed by the requested resource. Cache updates are synchronized, and incomplete or oversized responses are excluded.",
       "The documented detached-thread variant uses POSIX threads for clients and CONNECT tunneling for HTTPS, relaying encrypted bytes without terminating the client’s TLS session.",
@@ -626,7 +630,7 @@
         "use": "Forward encrypted traffic as a bidirectional byte tunnel."
       }
     ],
-    "takeaway": "I learned to treat caching as a correctness problem before treating it as a speed optimization. The 50% improvement applies to my cached-response benchmark; response boundaries, cache policy and concurrent access determine whether that improvement is useful."
+    "takeaway": "The cache improves latency when a complete response can be safely reused. Bounded entries and explicit synchronization keep the performance benefit tied to correct network behavior."
   },
   {
     "id": "tesphase",
@@ -634,7 +638,7 @@
     "category": "Product · Mobile engineering",
     "status": "Completed",
     "headline": "Listen first. Build what matters.",
-    "summary": "A mobile product exploring better use of household solar without additional customer hardware.",
+    "summary": "30+ customer interviews became a React Native solar app with authentication, real-time sync and push notifications. I led the roadmap and architecture; Tesphase won SC Launchpad 2025.",
     "metric": "30+",
     "label": "customer-discovery interviews",
     "tools": [
@@ -645,16 +649,17 @@
     ],
     "problem": "Solar homeowners needed an approachable way to coordinate their energy use. At Tesphase, my role as CTO was to connect customer needs with a practical product roadmap and working application.",
     "approach": [
-      "I used more than 30 customer interviews to understand the workflows worth building first, then translated those findings into engineering priorities.",
-      "React Native provided the mobile interface, Supabase supported authentication and real-time data, and Node.js supported backend workflows. I owned the roadmap and architecture."
+      "I translated more than 30 NSF I-Corps customer interviews into product priorities and owned the engineering roadmap.",
+      "I led a React Native mobile architecture with Supabase authentication and real-time data, plus Node.js backend workflows."
     ],
     "result": [
-      "Shipped authentication, real-time database synchronization and push notifications.",
-      "Tesphase won SC Launchpad 2025. My CTO role ran from April through September 2025."
+      "Delivered authentication, real-time database synchronization and push notifications.",
+      "Won SC Launchpad 2025. I served as CTO from April through September 2025."
     ],
     "note": "Proposed bill savings in the early lean canvas were product hypotheses, not measured customer outcomes.",
     "technical": [
-      "Authentication establishes the user identity used by application data. Real-time synchronization and push notifications serve different paths: updating shared state in the app versus drawing attention to an event. Product interviews informed which workflows received engineering effort first."
+      "Authentication establishes the user identity used by application data. Real-time synchronization and push notifications serve different paths: updating shared state in the app versus drawing attention to an event. Product interviews informed which workflows received engineering effort first.",
+      "Early energy-savings estimates were product hypotheses for customer validation, not measured savings."
     ],
     "related": [
       "royce"
@@ -678,7 +683,7 @@
         "use": "Connect backend workflows to the product roadmap."
       }
     ],
-    "takeaway": "As CTO, I connected product priorities to implementation: authentication, synchronization and notifications had to support a coherent customer experience. Early savings estimates remained product hypotheses to test with customers."
+    "takeaway": "Customer discovery gave the roadmap its order. Architecture and delivery turned those priorities into working product features."
   },
   {
     "id": "slug-board",
@@ -686,7 +691,7 @@
     "category": "Full stack · Team project",
     "status": "Completed",
     "headline": "Campus events. Connected.",
-    "summary": "Event creation and participation workflows for UCSC students.",
+    "summary": "Event creation, RSVPs, upvotes and comments for campus life. I owned the SQL schema and event workflows and coordinated a React / Supabase migration as Scrum Master.",
     "metric": "CRUD + SQL",
     "label": "events, RSVPs and comments",
     "tools": [
@@ -704,13 +709,14 @@
       "As Sprint 2 Scrum Master, I helped coordinate the stack migration alongside feature delivery."
     ],
     "result": [
-      "Implemented event CRUD, SQL updates and event-card interaction work as part of the team project.",
-      "We finished the coursework with an incomplete MVP. Backend integration was the main obstacle, and my retrospective examines how earlier shared tests and clearer interfaces could have improved delivery."
+      "Implemented event CRUD, SQL schema and updates, and event-card interaction logic for RSVPs, upvotes and comments.",
+      "Coordinated the React / Supabase stack migration as Sprint 2 Scrum Master."
     ],
     "note": "The archived reflection reports a 37.5% team completion rate for the MVP stage. It documents the learning and integration failures rather than a successful product launch.",
     "technical": [
       "The retrospective identifies the critical integration boundary: event-card interactions depended on authentication, API behavior and database queries that were not consistently verified together.",
-      "The corrective approach is to validate endpoints and database contracts before wiring the interface, integrate across user stories earlier, and keep local branches synchronized. These are lessons from the retrospective, not claims of a subsequently rebuilt MVP."
+      "The corrective approach is to validate endpoints and database contracts before wiring the interface, integrate across user stories earlier, and keep local branches synchronized. These are lessons from the retrospective, not claims of a subsequently rebuilt MVP.",
+      "The coursework finished with 37.5% of the planned MVP. Backend integration remained incomplete; the event-workflow contribution does not represent a completed production application."
     ],
     "related": [
       "slug-board-reflection",
@@ -735,7 +741,7 @@
         "use": "Coordinate the stack migration and feature work across the team."
       }
     ],
-    "takeaway": "Our team reached 37.5% of the planned MVP. That experience made early integration, explicit API contracts and small end-to-end demonstrations more important to me than a collection of independently finished features."
+    "takeaway": "Event discovery depends on a complete path through identity, APIs and database state. Shared interface contracts and early integration are the central engineering lessons from this team project."
   },
   {
     "id": "fpga-http",
@@ -743,7 +749,7 @@
     "category": "FPGA · Networking",
     "status": "Ongoing",
     "headline": "From sockets to silicon.",
-    "summary": "Exploring request handling and buffering beyond the software implementation.",
+    "summary": "A C server becomes the behavioral reference for an FPGA design. This ongoing port explores request parsing, buffering and board bring-up.",
     "metric": "C → RTL",
     "label": "software as a behavioral reference",
     "tools": [
@@ -785,7 +791,7 @@
         "use": "Work toward an end-to-end hardware request; this milestone remains open."
       }
     ],
-    "takeaway": "My next milestone is a complete HTTP request served by the FPGA board. I am using the software server as a behavioral reference while working through the hardware port and bring-up."
+    "takeaway": "The software reference defines the behavior; the hardware port makes buffering, state sequencing and interfaces explicit. The next milestone is a complete request served on the FPGA."
   },
   {
     "id": "quick-add",
@@ -793,7 +799,7 @@
     "category": "FPGA · State machines",
     "status": "Completed",
     "headline": "Two players. One fair game.",
-    "summary": "A two-player arithmetic game with synchronized inputs and explicit round control.",
+    "summary": "A nine-state controller gives two players one fair response window. Synchronized inputs, score logic and game-over handling passed both recorded testbenches.",
     "metric": "9-state FSM",
     "label": "round and score controller",
     "tools": [
@@ -805,8 +811,8 @@
     ],
     "problem": "Expanding a single-player game requires a shared response window, independent player state and correct handling of simultaneous inputs.",
     "approach": [
-      "I used synchronized and latched button inputs so both players could answer in the same round.",
-      "I traced a one-cycle mismatch between score updates and game-over detection, then added the missing transitions that prevented an extra round at zero points."
+      "I synchronized and latched button inputs so both players could answer inside the same round window.",
+      "I coordinated score updates and game-over transitions across clock boundaries, including lockout at zero points."
     ],
     "result": [
       "Both recorded testbenches passed after the fix, including ties, simultaneous wrong answers, no-response rounds and game-over lockout."
@@ -836,15 +842,15 @@
         "use": "Check ties, missed answers and game-over transitions."
       }
     ],
-    "takeaway": "The most useful tests were the awkward rounds: simultaneous inputs, wrong answers, ties and no response. They forced the state machine to define exactly when a round begins, resolves and locks out further input."
+    "takeaway": "A shared response window makes fairness an explicit hardware rule. Tests for ties, simultaneous inputs and no response exercise that rule at its boundaries."
   },
   {
     "id": "quick-decode",
     "title": "Quick Decode & counter lab",
     "category": "FPGA · Logic design",
     "status": "Completed",
-    "headline": "Every cycle counts.",
-    "summary": "A progression from a 16-bit counter to a structurally designed reaction game.",
+    "headline": "Small circuits. A larger foundation.",
+    "summary": "From a 16-bit counter to a reaction game: structural Verilog, seven-segment output and one-hot control formed the foundation for my later VGA work.",
     "metric": "16-bit",
     "label": "loadable up/down counter",
     "tools": [
@@ -888,7 +894,7 @@
         "use": "Add pseudo-random behavior and reaction-game sequencing."
       }
     ],
-    "takeaway": "These labs taught me to reason in clock edges and state transitions. That foundation carried into the larger Osmosis design, where counters, timing and display logic have to cooperate continuously."
+    "takeaway": "Counters, arithmetic and display logic form a reusable digital-design foundation. These labs carried directly into the timing and state machines of Osmosis."
   },
   {
     "id": "spiking-networks",
@@ -896,7 +902,7 @@
     "category": "ML research · Temporal learning",
     "status": "Ongoing",
     "headline": "Learning, one spike at a time.",
-    "summary": "Experiments in spike encoding, normalization and trainable neuron dynamics.",
+    "summary": "Spike encoding, neuron dynamics and training experiments with UCSC’s Neuromorphic Computing Group. Moving runs to Colab Pro cut reported epoch time from about seven minutes to under two.",
     "metric": "LIF dynamics",
     "label": "encoding and training stability",
     "tools": [
@@ -907,14 +913,14 @@
       "CIFAR-10",
       "MNIST"
     ],
-    "problem": "In Professor Eshraghian’s Neuromorphic Computing Group at UCSC, I explore how spiking networks preserve useful activity across time while supporting gradient-based learning. Several experiments stalled even when their architectures appeared plausible.",
+    "problem": "In UCSC’s Neuromorphic Computing Group, I study how spike encoding, neuron dynamics and normalization shape learning over time.",
     "approach": [
       "On MNIST and CIFAR-10, I compared rate, Poisson and latency encodings, investigated threshold-dependent batch normalization and tuned membrane decay, firing thresholds and timesteps.",
       "Layer activity, membrane behavior and loss traces helped separate dead neurons from optimizer and normalization failures.",
       "A separate UCF101 prototype combined frozen ResNet18 features with a small spiking classifier. It remains a demonstration with a split-validation concern."
     ],
     "result": [
-      "Built training pipelines and documented failure modes across multiple network configurations.",
+      "Built training pipelines and diagnostic traces across multiple spiking-network configurations.",
       "Moving experiments to Colab Pro reduced reported epoch time from about seven minutes to under two."
     ],
     "note": "No validated accuracy or energy-efficiency advantage over a conventional CNN is claimed.",
@@ -942,7 +948,7 @@
         "use": "Run training and examine loss and spike-health traces."
       }
     ],
-    "takeaway": "Changing an encoding changes the signal a spiking network sees. Comparing rate, Poisson and latency representations helped me separate data-representation issues from training and architecture problems."
+    "takeaway": "Encoding, membrane dynamics and normalization shape the signal together. Inspecting spike activity alongside the loss makes that interaction visible."
   },
   {
     "id": "weather-station",
@@ -950,7 +956,7 @@
     "category": "Embedded · Rust",
     "status": "Ongoing",
     "headline": "Local readings. One connected Pi.",
-    "summary": "An ESP32-C3 client and Raspberry Pi service for collecting local and outdoor readings.",
+    "summary": "An ESP32-C3 client in Rust connects onboard readings and outdoor weather to a Raspberry Pi HTTP service. Configuration, acquisition and reporting share an explicit device/server contract.",
     "metric": "ESP32 + Pi",
     "label": "device-to-server workflow",
     "tools": [
@@ -967,7 +973,7 @@
       "The Raspberry Pi serves location data and accepts posted readings, separating device acquisition from server-side logging."
     ],
     "result": [
-      "Implemented the coursework device/server workflow for the device/server workflow; embedded coursework is ongoing."
+      "Implemented the device/server coursework workflow for configuration, acquisition and posted readings; embedded coursework is ongoing."
     ],
     "note": "The onboard sensor reading should not be presented as a calibrated ambient-temperature measurement.",
     "technical": [
@@ -993,7 +999,7 @@
         "use": "Provide location configuration and accept device data."
       }
     ],
-    "takeaway": "The device/server boundary is the central challenge: configuration, HTTP requests and returned weather data need a clear contract. I treat the onboard sensor as a device reading rather than a calibrated ambient-temperature measurement."
+    "takeaway": "A clear device/server contract separates configuration from acquisition and reporting. That makes the firmware and Pi service easier to develop independently."
   },
   {
     "id": "battle-boats",
@@ -1001,7 +1007,7 @@
     "category": "Embedded · C",
     "status": "Completed",
     "headline": "Your move. Powered by interrupts.",
-    "summary": "Battleship-style logic on a PIC32MX microcontroller.",
+    "summary": "Event-driven C on a PIC32MX: timer interrupts, UART messaging and OLED output bring Battleship-style state machines onto physical hardware.",
     "metric": "PIC32MX",
     "label": "event-driven embedded control",
     "tools": [
@@ -1020,7 +1026,7 @@
       "My implementation connects an Agent state machine to message parsing, negotiation, field state and OLED rendering. UART and circular-buffer modules carry the board-to-board message path."
     ],
     "result": [
-      "Implemented the embedded game in C, building experience with event-driven C and hardware interfaces."
+      "Implemented Battleship-style gameplay on a PIC32MX in C, connecting state machines, UART messages, timer interrupts and OLED rendering."
     ],
     "note": "No measured latency or performance benchmark is claimed.",
     "technical": [
@@ -1047,7 +1053,7 @@
         "use": "Connect hardware events to gameplay and display state."
       }
     ],
-    "takeaway": "Working with physical inputs made event handling concrete. I had to think about how the game responds to a sequence of events, not just whether a function produces the right answer in isolation."
+    "takeaway": "The agent owns game state; peripheral drivers deliver events. That division keeps turn-taking and hardware behavior understandable as the system grows."
   },
   {
     "id": "concurrent-http",
@@ -1056,7 +1062,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Many requests. Consistent files.",
-    "summary": "A C server connecting HTTP parsing, file operations, worker threads and request logging.",
+    "summary": "A multithreaded C file server coordinates GET / PUT requests, worker dispatch, resource locks and audit logging under concurrent access.",
     "metric": "GET / PUT",
     "label": "parsing, files and concurrency",
     "tools": [
@@ -1070,8 +1076,8 @@
     ],
     "problem": "Concurrent clients can read and overwrite the same file. A server needs to parse partial network input correctly and coordinate file access so its responses and audit log tell a consistent story.",
     "approach": [
-      "I developed the server from a single-connection GET / PUT implementation into a concurrent design. The work covered request-line validation, header parsing, content lengths, response codes and cleanup of sockets and file descriptors.",
-      "I worked through worker dispatch, per-resource reader–writer locking and serialized audit logging. Debugging crossed several boundaries: listener APIs, partial reads, malformed requests and differences between local and submission builds."
+      "I extended a single-connection GET / PUT server into a concurrent design, covering request validation, content lengths, response codes and socket/file cleanup.",
+      "I implemented worker dispatch, per-resource reader–writer locking and serialized audit logging, with explicit handling for partial network reads."
     ],
     "result": [
       "Implemented the HTTP file-server coursework and documented the progression from protocol parsing to concurrent request handling.",
@@ -1102,7 +1108,7 @@
         "use": "Work through build failures and protocol behavior."
       }
     ],
-    "takeaway": "The project connects protocol parsing to resource ownership. A request is only handled correctly when parsing, file access, response construction and cleanup remain consistent under concurrent work."
+    "takeaway": "Correct concurrency crosses the whole request path: parsing, file access, response construction and audit order. Resource ownership ties those pieces together."
   },
   {
     "id": "concurrency-primitives",
@@ -1110,8 +1116,8 @@
     "category": "Systems · Synchronization",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Shared data. Clear rules.",
-    "summary": "A bounded work queue and configurable reader–writer lock built with POSIX synchronization primitives.",
+    "headline": "Shared work. Ordered access.",
+    "summary": "One bounded work queue and three reader–writer admission policies. Built in C with pthreads, mutexes and condition variables.",
     "metric": "3 policies",
     "label": "reader, writer and bounded-reader modes",
     "tools": [
@@ -1156,7 +1162,7 @@
         "use": "Implement reader, writer and bounded-reader admission policies."
       }
     ],
-    "takeaway": "A lock’s waiting policy is part of its behavior. Making that policy explicit helped me reason about contention and the different needs of readers and writers."
+    "takeaway": "Admission policy changes who makes progress under contention. Exposing three policies makes that tradeoff part of the lock’s interface."
   },
   {
     "id": "file-io",
@@ -1165,7 +1171,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Bytes in. Files out.",
-    "summary": "A command-line get / set utility built around Unix file descriptors and explicit input validation.",
+    "summary": "A C command-line utility turns get / set requests into explicit Unix file operations, with byte-counted input and resource cleanup.",
     "metric": "get / set",
     "label": "command protocol over standard input",
     "tools": [
@@ -1208,7 +1214,7 @@
         "use": "Build and debug the command-line utility."
       }
     ],
-    "takeaway": "This work taught me to keep byte counts, boundaries and cleanup visible. Those details became the foundation for handling HTTP request bodies and files later."
+    "takeaway": "Byte counts and file descriptors make the protocol concrete. Explicit input boundaries and cleanup keep command parsing aligned with the filesystem operations it requests."
   },
   {
     "id": "pacman-search",
@@ -1217,7 +1223,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Look ahead. Choose better.",
-    "summary": "Reflex and adversarial agents that balance food collection, ghost avoidance and search depth.",
+    "summary": "Reflex, minimax and alpha–beta agents turn a game tree into the next move. Python coursework connects heuristic evaluation with adversarial search.",
     "metric": "Game-tree search",
     "label": "state evaluation and action selection",
     "tools": [
@@ -1260,7 +1266,7 @@
         "use": "Explore chance-based opponents and score food/ghost tradeoffs."
       }
     ],
-    "takeaway": "I learned to evaluate a search policy in context. Layout, search depth and the evaluation function can change the outcome substantially, so a single successful run is only the start of the investigation."
+    "takeaway": "The evaluation function gives the search its priorities; depth determines how far it can test them. Keeping those decisions separate makes agent behavior easier to inspect."
   },
   {
     "id": "pacman-learning",
@@ -1269,7 +1275,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Learn by playing.",
-    "summary": "Value iteration and Q-learning experiments on the exploration–exploitation tradeoff.",
+    "summary": "Value iteration and Q-learning agents make the exploration–exploitation tradeoff visible in Gridworld and Pac-Man.",
     "metric": "Q(s, a)",
     "label": "learning action values from rewards",
     "tools": [
@@ -1312,7 +1318,7 @@
         "use": "Compare exploration-based learning with model-based planning."
       }
     ],
-    "takeaway": "Separating training from evaluation made the experiments easier to interpret. Exploration helps an agent discover useful behavior, but it also changes what a score means while the agent is still learning."
+    "takeaway": "Exploration gathers experience; evaluation measures the resulting policy. Separate training and test episodes make learning-rate and discount choices comparable."
   },
   {
     "id": "pacman-capture",
@@ -1321,7 +1327,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Attack. Defend. Adapt.",
-    "summary": "Cooperative Pac-Man agents with role switching, spatial features and trap-avoidance heuristics.",
+    "summary": "Two agents balance collecting food with protecting territory. A Python policy combines role switching, maze distances and spatial heuristics.",
     "metric": "Attack ↔ defend",
     "label": "context-dependent agent behavior",
     "tools": [
@@ -1332,12 +1338,11 @@
     ],
     "problem": "Two agents must collect food, protect home territory and avoid interfering with each other. A fixed offensive or defensive role cannot respond to every board state.",
     "approach": [
-      "I developed weighted features for food, capsules, visible opponents, teammate distance and return behavior. The policy switches between attack and defense as threats change.",
-      "I investigated stop/reverse penalties, narrow corridors and corner traps, and adjusted distance-based behavior when excessive avoidance caused agents to oscillate."
+      "I developed weighted features for food, capsules, visible opponents, teammate distance and returning home, with attack/defense switching as the board changes.",
+      "I tuned stop/reverse penalties, corridor handling and trap-avoidance behavior using maze-distance features."
     ],
     "result": [
-      "Implemented a team-agent policy and wrote a technical retrospective explaining its representation, decision rules and limitations.",
-      "The result is a concrete study of coordination under competing objectives."
+      "Implemented a cooperative team policy and documented its representation, decision rules and evaluation limits."
     ],
     "note": "The archive supports implementation and report work, but does not establish a tournament placement or a controlled improvement over a baseline.",
     "technical": [
@@ -1363,7 +1368,7 @@
         "use": "Switch between attack and defense and penalize traps or reversal."
       }
     ],
-    "takeaway": "A team policy has to balance collecting rewards with protecting what it already has. The project pushed me to make those competing objectives explicit in the agent’s representation and decision rules."
+    "takeaway": "A useful team policy makes competing goals explicit: collect rewards, protect territory and coordinate movement."
   },
   {
     "id": "avl-wordrange",
@@ -1372,7 +1377,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Count the range. Skip the scan.",
-    "summary": "An augmented AVL tree for insertions and lexicographic range-count queries.",
+    "summary": "An augmented AVL tree uses subtree sizes to answer word-range queries through rank traversal, keeping balance and query metadata together.",
     "metric": "Rank queries",
     "label": "subtree sizes alongside balance metadata",
     "tools": [
@@ -1384,12 +1389,11 @@
     ],
     "problem": "A word index needs to accept insertions while answering how many entries lie between two keys. An unbalanced tree or a full traversal makes those queries unnecessarily expensive.",
     "approach": [
-      "I worked on an AVL tree that stores both height and subtree size, with rotations maintaining balance and the metadata needed for rank queries.",
-      "I traced zero and negative range counts through size updates, rotation order and comparisons, distinguishing numeric-looking strings from the assignment’s lexicographic keys."
+      "I implemented an AVL tree that stores height and subtree size, with rotations maintaining both balance and rank-query metadata.",
+      "I checked insertion sequences, rotation order and lexicographic comparisons against expected range counts."
     ],
     "result": [
-      "Implemented the indexed-query coursework and investigated failures with explicit insertion sequences and expected range counts.",
-      "The intended design answers a range count using two rank traversals rather than enumerating every matching node."
+      "Built the indexed-query coursework around two rank traversals per range count, with explicit checks of subtree-size invariants."
     ],
     "note": "Logarithmic query complexity is a property of the correctly maintained AVL design, not a measured speedup. The archive includes debugging cases without a final comprehensive pass report.",
     "technical": [
@@ -1415,7 +1419,7 @@
         "use": "Trace incorrect counts through height, size and comparison updates."
       }
     ],
-    "takeaway": "Subtree sizes turn a balanced search tree into a rank index. The difficult part is preserving that metadata through every rotation; range counts are only as reliable as those invariants."
+    "takeaway": "Subtree sizes turn a balanced tree into a rank index. Maintaining them through rotations is what makes range queries efficient and reliable."
   },
   {
     "id": "six-degrees",
@@ -1424,7 +1428,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Two actors. The shortest connection.",
-    "summary": "An actor–movie graph that returns a shortest connection with the films that explain every step.",
+    "summary": "Find a shortest actor connection—and the films behind every step. A C++ graph pairs breadth-first search with traceable path reconstruction.",
     "metric": "BFS",
     "label": "shortest paths with movie provenance",
     "tools": [
@@ -1440,8 +1444,8 @@
       "Breadth-first search tracks visited actors and records both the previous actor and the film used to reach each node. I reconstruct the path from that parent map."
     ],
     "result": [
-      "Built a file-driven graph query program that expresses the connection as an actor-and-film chain.",
-      "Worked through parsing, disconnected inputs and path reconstruction rather than treating traversal alone as the finished feature."
+      "Built a file-driven C++ program that reconstructs a shortest connection as an actor-and-film chain.",
+      "Handled parsing, disconnected inputs and predecessor reconstruction as part of the query interface."
     ],
     "note": "The archived implementation uses pairwise cast connections; a movie with a large cast can create many edges. No large-dataset performance claim is made.",
     "technical": [
@@ -1467,7 +1471,7 @@
         "use": "Recover both the actors and films explaining the path."
       }
     ],
-    "takeaway": "The useful output is an understandable actor-and-film chain. I treated parsing, disconnected inputs and path reconstruction as part of the algorithm’s interface. Pairwise cast edges are simple to query, but grow quickly for large casts."
+    "takeaway": "A shortest path becomes useful when it explains each connection. Recording film provenance during traversal preserves that explanation at the output."
   },
   {
     "id": "algorithms-lab",
@@ -1475,8 +1479,8 @@
     "category": "Algorithms · C / C++",
     "status": "Completed",
     "stage": "Coursework",
-    "headline": "Better structures. Clearer algorithms.",
-    "summary": "A collection of linked-list, graph, word-analysis and backtracking implementations.",
+    "headline": "Build the structures. Understand the work.",
+    "summary": "C and C++ implementations spanning linked lists, graph traversal, word indexes and constraint search. Each makes memory ownership and algorithm state explicit.",
     "metric": "Lists → graphs",
     "label": "from memory ownership to search",
     "tools": [
@@ -1493,8 +1497,8 @@
       "I worked on N-Queens with preset placements and an explicit search stack, alongside stack-based anagram generation and smaller simulation exercises. Debugging focused on preserving fixed constraints while undoing only speculative choices."
     ],
     "result": [
-      "Created a set of command-line coursework programs with file-based inputs and outputs.",
-      "Fixed a backtracking error that caused a valid preset N-Queens board to return “No solution.”"
+      "Built command-line coursework programs with file-based inputs and outputs across data structures and constraint search.",
+      "Corrected N-Queens backtracking to preserve valid preset placements."
     ],
     "note": "These are educational implementations, grouped here rather than presented as separate production products.",
     "technical": [
@@ -1520,7 +1524,7 @@
         "use": "Resume constraint search while preserving fixed N-Queens placements."
       }
     ],
-    "takeaway": "Small counterexamples were often more useful than large test inputs. In N-Queens, a valid preset board that returned “No solution” helped isolate the mistake in the search logic."
+    "takeaway": "Explicit state makes algorithms debuggable. Small counterexamples expose ownership, traversal and backtracking errors before they disappear inside a larger input."
   },
   {
     "id": "mininet-network",
@@ -1529,7 +1533,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "A network. Before the hardware.",
-    "summary": "A Mininet topology exercise connecting hosts, switches and traffic-controlled links.",
+    "summary": "A repeatable Python / Mininet topology connects hosts through two switches and traffic-controlled links for hands-on network experiments.",
     "metric": "Hosts + switches",
     "label": "repeatable network setup",
     "tools": [
@@ -1544,8 +1548,8 @@
       "I configured host/link definitions and used the Mininet environment to inspect interface state and distinguish host commands from the surrounding Linux shell."
     ],
     "result": [
-      "Developed the virtual-network lab setup and an operational understanding of where network commands execute.",
-      "The topology provides a repeatable environment for exploring connectivity without a physical switch bench."
+      "Developed a Python / Mininet lab topology with two switches, emulated hosts and traffic-controlled links.",
+      "Used the topology to inspect interface state and distinguish host commands from commands inside node namespaces."
     ],
     "note": "This is a topology and configuration exercise; the export does not establish a verified routing policy or measured throughput.",
     "technical": [
@@ -1571,7 +1575,7 @@
         "use": "Inspect interfaces and distinguish host commands from the outer shell."
       }
     ],
-    "takeaway": "The lab made network boundaries tangible: a command running on the host is different from one running inside an emulated node. A repeatable virtual topology makes those distinctions easier to explore."
+    "takeaway": "A repeatable virtual topology brings network boundaries into view before a physical bench is required."
   },
   {
     "id": "saaf",
@@ -1580,7 +1584,7 @@
     "status": "Ongoing",
     "stage": "Prototype",
     "headline": "Shared chores. A simpler start.",
-    "summary": "Early interface and authentication work for a chore-and-reminder application.",
+    "summary": "Welcome screens and authentication prototypes for shared chores. React Native and Next.js explorations establish the entry point for a future reminder workflow.",
     "metric": "Welcome → login",
     "label": "mobile and web explorations",
     "tools": [
@@ -1593,8 +1597,8 @@
     ],
     "problem": "Chore coordination starts with a low-friction entry into the application. Before building reminder logic, the interface and development environment need a reliable foundation.",
     "approach": [
-      "I explored a React Native welcome screen with a centered identity and message, then worked through simulator startup and Metro configuration.",
-      "A separate web exploration used Next.js and Supabase for the login path. The history includes dependency installation and project-structure debugging across the two approaches."
+      "I prototyped the React Native welcome screen and configured its simulator and Metro workflow.",
+      "A separate Next.js / Supabase exploration established the web login path."
     ],
     "result": [
       "Established the app concept, welcome-screen work and authentication scaffold.",
@@ -1624,7 +1628,7 @@
         "use": "Work through dependency and project-configuration failures."
       }
     ],
-    "takeaway": "The next step is connecting the existing screens and authentication work to a persistent chore workflow. I am treating the React Native mobile experiment and the Next.js web experiment as separate prototypes while deciding what the core experience should be."
+    "takeaway": "The current prototypes establish entry and authentication. The next product milestone connects them to persisted chores and reminders."
   },
   {
     "id": "stanchat",
@@ -1633,7 +1637,7 @@
     "status": "Completed",
     "stage": "Prototype",
     "headline": "Write. Sync. Stay connected.",
-    "summary": "A Flutter and Firebase chat prototype with live messages and a scrollable conversation history.",
+    "summary": "Send a message, see it arrive, scroll back through the conversation. A local Flutter / Firebase prototype connects the complete message path.",
     "metric": "Live chat",
     "label": "locally confirmed message flow",
     "tools": [
@@ -1677,7 +1681,7 @@
         "use": "Configure the integration and reach a working local chat demo."
       }
     ],
-    "takeaway": "Getting a message from the composer into the conversation view made the data flow concrete. The local prototype supports sending, displaying and scrolling through messages; account workflows and broader device testing are the next steps."
+    "takeaway": "One complete message path makes the architecture testable: compose, persist, receive and render. The local prototype establishes that path before broader account and release work."
   },
   {
     "id": "voice-recorder",
@@ -1685,8 +1689,8 @@
     "category": "Mobile · Application maintenance",
     "status": "Ongoing",
     "stage": "Maintenance",
-    "headline": "Record today. Keep it working.",
-    "summary": "Swift and UIKit compatibility work on a legacy voice-recorder application targeting iOS 18.",
+    "headline": "Keep the recordings. Modernize the app.",
+    "summary": "Swift / UIKit modernization of a legacy recording app targeting iOS 18, spanning audio controls, delegate callbacks and persisted recording metadata.",
     "metric": "Record / replay",
     "label": "legacy UI and audio workflows",
     "tools": [
@@ -1730,7 +1734,7 @@
         "use": "Replace an incompatible rating dependency as part of iOS 18 work."
       }
     ],
-    "takeaway": "Maintaining an existing application requires understanding the assumptions behind its UI and recording lifecycle. My contribution focused on modernization and compatibility, with device validation still part of the remaining work."
+    "takeaway": "Modernization begins with the recording lifecycle: audio state, callbacks and file metadata must stay aligned as the interface changes. Device validation completes that work."
   },
   {
     "id": "ttl-computer",
@@ -1738,8 +1742,8 @@
     "category": "Hardware · Architecture study",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Eight bits. Built from the ground up.",
-    "summary": "A staged build proposal for an educational computer assembled from TTL logic and breadboards.",
+    "headline": "Eight bits. Every part accounted for.",
+    "summary": "An 8-bit computer architecture and staged build proposal: ALU, registers, program counter, memory and control, planned as independently testable modules.",
     "metric": "8-bit",
     "label": "architecture and build plan",
     "tools": [
@@ -1782,7 +1786,7 @@
         "use": "Define integration checks; physical completion remains a future milestone."
       }
     ],
-    "takeaway": "The proposal breaks the computer into buildable stages so each subsystem can be understood and tested before integration. Assembling and validating the hardware is the next major milestone."
+    "takeaway": "The proposal makes each datapath module independently testable, then stages integration around the fetch–decode–execute cycle."
   },
   {
     "id": "spotify-analyzer",
@@ -1790,8 +1794,8 @@
     "category": "Data · Exploratory project",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Your playlist. A data question.",
-    "summary": "An early Python project exploring playlist characteristics and regression-based analysis.",
+    "headline": "Start with a playlist. Ask a better question.",
+    "summary": "A Python project proposal turning playlist data into an analysis workflow: API retrieval, structured features and a planned regression experiment.",
     "metric": "API → analysis",
     "label": "project design and starter workflow",
     "tools": [
@@ -1834,7 +1838,7 @@
         "use": "Organize starter documentation; evaluated modeling is still proposed."
       }
     ],
-    "takeaway": "The proposal starts with the analysis question, but the next practical task is data access. A reproducible dataset and an evaluation plan need to come before claims about prediction or recommendation quality."
+    "takeaway": "The analysis question defines the dataset and target. Reproducible retrieval and held-out evaluation are the next steps in the proposed workflow."
   },
   {
     "id": "market-forecasting",
@@ -1842,8 +1846,8 @@
     "category": "ML · Research planning",
     "status": "Ongoing",
     "stage": "Proposal",
-    "headline": "Find the signal. Test the forecast.",
-    "summary": "A team project plan using the Jane Street forecasting problem to study tabular and temporal models.",
+    "headline": "A forecast starts with a fair test.",
+    "summary": "A team research plan for the Jane Street forecasting problem, pairing an XGBoost baseline with feature selection and a possible LSTM comparison.",
     "metric": "Boosting + sequences",
     "label": "baseline and follow-up model plan",
     "tools": [
@@ -1886,7 +1890,7 @@
         "use": "Define out-of-period evaluation before claiming predictive value."
       }
     ],
-    "takeaway": "The essential design choice is respecting time. The proposal calls for validation on later periods so the model is tested on information it could not have seen during training."
+    "takeaway": "Respecting time is the key evaluation decision. Later-period validation gives the baseline and a sequence model a common test."
   },
   {
     "id": "circuit-labs",
@@ -1895,7 +1899,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "From equations to waveforms.",
-    "summary": "Bench-lab analysis of circuit equivalents, transient responses and frequency-dependent filtering.",
+    "summary": "Circuit theory meets measured amplitude and phase. Lab reports cover DC equivalents, transients and filter frequency response.",
     "metric": "Time + frequency",
     "label": "transient and steady-state analysis",
     "tools": [
@@ -1939,7 +1943,7 @@
         "use": "Compare frequency-dependent gain and phase with the model."
       }
     ],
-    "takeaway": "The connection between equations and measurement became much clearer when I compared transient and frequency behavior. Amplitude and timing observations provide different views of the same circuit."
+    "takeaway": "Transient and frequency measurements describe the same circuit from different angles. Comparing both connects component choices to the observed response."
   },
   {
     "id": "expression-art",
@@ -1948,7 +1952,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Small expressions. Generative art.",
-    "summary": "A Haskell expression-tree exercise exploring recursive composition and structural depth.",
+    "summary": "A Haskell expression tree turns coordinates, arithmetic and trigonometry into composable image formulas with inspectable structure.",
     "metric": "Recursive AST",
     "label": "composition, traversal and depth",
     "tools": [
@@ -1990,7 +1994,7 @@
         "use": "Work through construction and inspection of compound expressions."
       }
     ],
-    "takeaway": "Representing an image formula as a tree makes its structure inspectable. Recursion then becomes a practical tool for measuring depth and composing operations, rather than just a programming exercise."
+    "takeaway": "A typed tree turns an image formula into inspectable structure. Recursive traversal supports composition and measures its depth."
   },
   {
     "id": "ml-foundations",
@@ -1999,7 +2003,7 @@
     "status": "Completed",
     "stage": "Coursework",
     "headline": "Good models start with good data.",
-    "summary": "PyTorch and data-mining exercises focused on preprocessing, tensor shapes and validation.",
+    "summary": "PyTorch training exercises connect preprocessing, tensor shapes, loss functions and validation—the foundation for my later energy-inference work.",
     "metric": "Data → loss",
     "label": "training and evaluation workflow",
     "tools": [
@@ -2043,6 +2047,6 @@
         "use": "Check predictions without tracking gradients."
       }
     ],
-    "takeaway": "These exercises built my habits around training loops, validation and debugging. They provided a foundation for later work where the labels and the data pipeline matter as much as the model itself."
+    "takeaway": "The training loop is a chain of contracts between data, tensors, loss and validation. These exercises established the debugging habits behind my later ML deployments."
   }
 ]

@@ -216,6 +216,9 @@ def illustration(identity, static=False):
     # Color communicates roles: structures, connectors, moving events.
     for element in root.iter():
         tag=element.tag
+        if element.attrib.pop('data-polished', None):
+            # Bespoke scenes carry a deliberately composed palette and finish.
+            continue
         if tag in ['path','rect','circle','ellipse']:
             role=element.attrib.pop('data-role', '')
             fill=element.get('fill')
@@ -249,20 +252,25 @@ def illustration(identity, static=False):
       <marker id="{token}-arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto"><path d="M0 0 L5 3 L0 6" fill="none" stroke="{b}" stroke-width="1"/></marker>
       <linearGradient id="{token}-backdrop" x1="0" y1="0" x2="1" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
       <linearGradient id="{token}-surface" x1="0" y1="0" x2="0" y2="1"><stop stop-color="{depth}"/><stop offset="1" stop-color="{bg}"/></linearGradient>
-      <filter id="{token}-ambient" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="28"/></filter>
+      <radialGradient id="{token}-wash-a"><stop stop-color="{a}" stop-opacity=".08"/><stop offset="1" stop-color="{a}" stop-opacity="0"/></radialGradient>
+      <radialGradient id="{token}-wash-b"><stop stop-color="{b}" stop-opacity=".08"/><stop offset="1" stop-color="{b}" stop-opacity="0"/></radialGradient>
       <filter id="{token}-glow" x="-150%" y="-150%" width="400%" height="400%"><feGaussianBlur in="SourceGraphic" stdDeviation="1.3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
     </defs>'''
     # Quiet, static atmosphere keeps attention on the subject's motion.
-    ambience=f'<g filter="url(#{token}-ambient)" stroke="none" opacity=".08"><ellipse cx="130" cy="65" rx="130" ry="75" fill="{a}"/><ellipse cx="470" cy="170" rx="120" ry="65" fill="{b}"/></g>'
+    ambience=f'<g stroke="none"><ellipse cx="130" cy="65" rx="165" ry="100" fill="url(#{token}-wash-a)"/><ellipse cx="470" cy="170" rx="150" ry="90" fill="url(#{token}-wash-b)"/></g>'
     frame=f'<path d="M30 45 V25 H50 M550 25 H570 V45 M570 195 V215 H550 M50 215 H30 V195" fill="none" stroke="{a}" stroke-opacity=".1" stroke-width="1"/>'
     content=ET.tostring(root,encoding='unicode')
     backdrop='' if identity in PROJECT_IDS else f'<rect width="600" height="240" fill="url(#{token}-backdrop)" stroke="none"/>'
     shapes=defs+backdrop+ambience+frame+content
     if static:
         shapes=re.sub(r'<animate(?:Motion|Transform)?\b[^>]*/>','',shapes)
-    return f'<svg class="topic-visual" data-visual="{identity}" viewBox="0 0 600 240" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{shapes}</svg>'
+    return f'<svg class="topic-visual" data-visual="{identity}" viewBox="0 0 600 240" style="--scene-a:{a};--scene-b:{b};--scene-c:{c};--scene-depth:{depth}" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{shapes}</svg>'
 
 # Acquisition benchmark; sensing and telemetry are planned.
 PALETTES['esp32-microgrid-meter'] = ('#17343b','#254750','#81d8c5','#b9c9ff','#efd49b')
 SCENES['esp32-microgrid-meter'] = (rect(60,70,130,80)+text(125,105,'ADC / DMA',13)+text(125,130,'2 CHANNELS',10)+line('M190 110 H240')+rect(240,70,130,80)+text(305,105,'FIXED POINT',12)+text(305,130,'17.5x',12)+line('M370 110 H420',stroke_dasharray='5 7')+rect(420,70,120,80)+text(480,105,'PI / MQTT',12)+text(480,130,'PLANNED',10)+circle(210,110,5,animate('cx','195;235;195',3.83),fill='currentColor')+text(300,205,'BENCHMARKED FIRMWARE · SENSING NEXT',11))
 PROJECT_IDS.add('esp32-microgrid-meter')
+
+# Final editorial motion pass: preserve palettes, replace word-heavy diagrams.
+from cinematic_motion import refine as cinematic_refine
+SCENES = cinematic_refine(SCENES)
